@@ -1,6 +1,7 @@
+import * as React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/admin/events/')({
+export const Route = createFileRoute('/_admin/events/list')({
   component: EventsRoute,
 })
 

@@ -309,7 +309,7 @@ function DesignSystemPage() {
               </Sheet>
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger>
                   <Button variant="outline">Dropdown Menu</Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
@@ -342,7 +342,7 @@ function DesignSystemPage() {
               </ContextMenu>
 
               <HoverCard>
-                <HoverCardTrigger asChild>
+                <HoverCardTrigger>
                   <Button variant="link">Hover me</Button>
                 </HoverCardTrigger>
                 <HoverCardContent>
@@ -352,7 +352,7 @@ function DesignSystemPage() {
 
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger asChild>
+                  <TooltipTrigger>
                     <Button variant="outline">Hover for Tooltip</Button>
                   </TooltipTrigger>
                   <TooltipContent>
@@ -414,7 +414,7 @@ function DesignSystemPage() {
               </Accordion>
 
               <Collapsible>
-                <CollapsibleTrigger asChild>
+                <CollapsibleTrigger>
                   <Button variant="outline">Can I use this in my project?</Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="mt-2 text-sm text-muted-foreground p-4 bg-muted rounded-md">
