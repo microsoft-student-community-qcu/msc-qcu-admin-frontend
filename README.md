@@ -105,3 +105,24 @@ Please follow @microsoft-student-community-qcu/frontend-team
 ---
 
 > Refer to the cloud services documentation for the services used in each branch.
+
+### Git Workflow Example
+
+Here are the standard commands to create a new feature and push it for review:
+
+1. Switch to the `develop` branch and ensure it's up to date:
+   ```bash
+   git checkout develop
+   git pull origin develop
+   ```
+2. Create and switch to a new feature branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Stage, commit, and push your changes:
+   ```bash
+   git add .
+   git commit -m "feat: description of your changes"
+   git push -u origin feature/your-feature-name
+   ```
+4. Open a Pull Request targeting the `develop` branch and request approval from the required teams.
