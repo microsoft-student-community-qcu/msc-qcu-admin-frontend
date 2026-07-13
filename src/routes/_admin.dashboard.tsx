@@ -86,7 +86,6 @@ function DashboardRoute() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-size240 shrink-0">
         <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group">
-          <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
             <CardTitle className="text-sm font-medium">Total Applicants</CardTitle>
             <Users className="w-4 h-4 text-muted-foreground" />
@@ -101,7 +100,6 @@ function DashboardRoute() {
         </Card>
         
         <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group">
-          <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
             <CardTitle className="text-sm font-medium">Upcoming Events</CardTitle>
             <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -115,7 +113,6 @@ function DashboardRoute() {
         </Card>
 
         <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group">
-          <div className="absolute inset-0 bg-linear-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
             <CardTitle className="text-sm font-medium">Pending Approvals</CardTitle>
             <ClipboardList className="w-4 h-4 text-muted-foreground" />
@@ -129,7 +126,6 @@ function DashboardRoute() {
         </Card>
         
         <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group">
-          <div className="absolute inset-0 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
             <CardTitle className="text-sm font-medium">Active Members</CardTitle>
             <Activity className="w-4 h-4 text-muted-foreground" />

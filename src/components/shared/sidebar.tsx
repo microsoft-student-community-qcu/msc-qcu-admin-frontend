@@ -60,7 +60,7 @@ export function Sidebar() {
 
   return (
     <ShadcnSidebar variant="sidebar" collapsible="icon" className="border-r border-border bg-sidebar">
-      <SidebarHeader>
+      <SidebarHeader className="h-14 border-b border-sidebar-border justify-center py-0 px-2!">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton 
