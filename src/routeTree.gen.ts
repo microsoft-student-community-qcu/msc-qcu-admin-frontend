@@ -14,8 +14,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
+import { Route as AdminApplicationsRouteImport } from './routes/_admin.applications'
 import { Route as AdminEventsListRouteImport } from './routes/_admin.events.list'
-import { Route as AdminApplicationsListRouteImport } from './routes/_admin.applications.list'
 
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
@@ -41,14 +41,14 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminEventsListRoute = AdminEventsListRouteImport.update({
   id: '/events/list',
   path: '/events/list',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminApplicationsListRoute = AdminApplicationsListRouteImport.update({
-  id: '/applications/list',
-  path: '/applications/list',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -57,8 +57,8 @@ export interface FileRoutesByFullPath {
   '/design-system': typeof DesignSystemRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
+  '/applications': typeof AdminApplicationsRoute
   '/dashboard': typeof AdminDashboardRoute
-  '/applications/list': typeof AdminApplicationsListRoute
   '/events/list': typeof AdminEventsListRoute
 }
 export interface FileRoutesByTo {
@@ -66,8 +66,8 @@ export interface FileRoutesByTo {
   '/design-system': typeof DesignSystemRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
+  '/applications': typeof AdminApplicationsRoute
   '/dashboard': typeof AdminDashboardRoute
-  '/applications/list': typeof AdminApplicationsListRoute
   '/events/list': typeof AdminEventsListRoute
 }
 export interface FileRoutesById {
@@ -76,8 +76,8 @@ export interface FileRoutesById {
   '/design-system': typeof DesignSystemRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
+  '/_admin/applications': typeof AdminApplicationsRoute
   '/_admin/dashboard': typeof AdminDashboardRoute
-  '/_admin/applications/list': typeof AdminApplicationsListRoute
   '/_admin/events/list': typeof AdminEventsListRoute
 }
 export interface FileRouteTypes {
@@ -87,8 +87,8 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/login'
     | '/notifications'
+    | '/applications'
     | '/dashboard'
-    | '/applications/list'
     | '/events/list'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -96,8 +96,8 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/login'
     | '/notifications'
+    | '/applications'
     | '/dashboard'
-    | '/applications/list'
     | '/events/list'
   id:
     | '__root__'
@@ -105,8 +105,8 @@ export interface FileRouteTypes {
     | '/design-system'
     | '/login'
     | '/notifications'
+    | '/_admin/applications'
     | '/_admin/dashboard'
-    | '/_admin/applications/list'
     | '/_admin/events/list'
   fileRoutesById: FileRoutesById
 }
@@ -154,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminDashboardRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/applications': {
+      id: '/_admin/applications'
+      path: '/applications'
+      fullPath: '/applications'
+      preLoaderRoute: typeof AdminApplicationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/events/list': {
       id: '/_admin/events/list'
       path: '/events/list'
@@ -161,25 +168,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventsListRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_admin/applications/list': {
-      id: '/_admin/applications/list'
-      path: '/applications/list'
-      fullPath: '/applications/list'
-      preLoaderRoute: typeof AdminApplicationsListRouteImport
-      parentRoute: typeof AdminRoute
-    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminApplicationsRoute: typeof AdminApplicationsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
-  AdminApplicationsListRoute: typeof AdminApplicationsListRoute
   AdminEventsListRoute: typeof AdminEventsListRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminApplicationsRoute: AdminApplicationsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
-  AdminApplicationsListRoute: AdminApplicationsListRoute,
   AdminEventsListRoute: AdminEventsListRoute,
 }
 

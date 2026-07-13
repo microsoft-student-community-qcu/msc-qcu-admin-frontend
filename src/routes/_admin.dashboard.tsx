@@ -12,68 +12,18 @@ import {
   ChartLegendContent
 } from "@/components/ui/chart"
 import { Badge } from '@/components/ui/badge'
+import {
+  applicationsData,
+  appChartConfig,
+  departmentData,
+  deptChartConfig,
+  recentApplications,
+  recentEvents
+} from '@/mocks/dashboard'
 
 export const Route = createFileRoute('/_admin/dashboard')({
   component: DashboardRoute,
 })
-
-const applicationsData = [
-  { month: "Jan", apps: 120 },
-  { month: "Feb", apps: 150 },
-  { month: "Mar", apps: 180 },
-  { month: "Apr", apps: 220 },
-  { month: "May", apps: 250 },
-  { month: "Jun", apps: 310 },
-]
-
-const appChartConfig = {
-  apps: {
-    label: "Applications",
-    color: "var(--color-primary)",
-  },
-} satisfies ChartConfig
-
-const departmentData = [
-  { department: "IT", students: 275, fill: "var(--color-IT)" },
-  { department: "CS", students: 200, fill: "var(--color-CS)" },
-  { department: "Engineering", students: 150, fill: "var(--color-Engineering)" },
-  { department: "Business", students: 100, fill: "var(--color-Business)" },
-]
-
-const deptChartConfig = {
-  students: {
-    label: "Students",
-  },
-  IT: {
-    label: "IT",
-    color: "var(--color-chart-1)",
-  },
-  CS: {
-    label: "CS",
-    color: "var(--color-chart-2)",
-  },
-  Engineering: {
-    label: "Engineering",
-    color: "var(--color-chart-3)",
-  },
-  Business: {
-    label: "Business",
-    color: "var(--color-chart-4)",
-  },
-} satisfies ChartConfig
-
-const recentApplications = [
-  { id: "APP-001", name: "Juan Dela Cruz", role: "Frontend Developer", status: "Pending", time: "2 hours ago" },
-  { id: "APP-002", name: "Maria Santos", role: "UI/UX Designer", status: "Approved", time: "5 hours ago" },
-  { id: "APP-003", name: "Pedro Penduko", role: "Backend Developer", status: "Rejected", time: "1 day ago" },
-  { id: "APP-004", name: "Ana Reyes", role: "Project Manager", status: "Pending", time: "1 day ago" },
-]
-
-const recentEvents = [
-  { id: "EVT-001", name: "Tech Summit 2026", date: "Aug 15, 2026", status: "Upcoming", attendees: 120, image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&h=300&fit=crop" },
-  { id: "EVT-002", name: "React Workshop", date: "Jul 20, 2026", status: "Upcoming", attendees: 45, image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&h=300&fit=crop" },
-  { id: "EVT-003", name: "General Assembly", date: "Jul 10, 2026", status: "Completed", attendees: 250, image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&h=300&fit=crop" },
-]
 
 function DashboardRoute() {
   const totalStudents = React.useMemo(() => {
@@ -142,100 +92,118 @@ function DashboardRoute() {
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 lg:grid-rows-2 gap-size240 flex-1 min-h-0">
-        <Card className="shadow-4 border-transparent bg-background flex flex-col lg:col-span-2 lg:row-span-1 h-full min-h-0">
-          <CardHeader className="shrink-0">
-            <CardTitle>Application Growth</CardTitle>
-            <CardDescription>
-              Showing total applications for the last 6 months
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex-1 pb-0 min-h-0 flex flex-col">
-            <ChartContainer config={appChartConfig} className="aspect-auto flex-1 w-full min-h-0">
-              <AreaChart
-                data={applicationsData}
-                margin={{
-                  left: 0,
-                  right: 0,
-                  top: 10,
-                  bottom: 10,
-                }}
-              >
-                <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="month"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                />
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent indicator="line" />}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="apps"
-                  fill="var(--color-apps)"
-                  fillOpacity={0.2}
-                  stroke="var(--color-apps)"
-                  strokeWidth={2}
-                />
-              </AreaChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-4 border-transparent bg-background flex flex-col lg:col-span-1 lg:row-span-1 h-full min-h-0">
-          <CardHeader className="shrink-0">
-            <CardTitle>Department Distribution</CardTitle>
-            <CardDescription>Breakdown of active members by department</CardDescription>
-          </CardHeader>
-          <CardContent className="flex-1 pb-0 flex items-center justify-center min-h-0">
-            <ChartContainer config={deptChartConfig} className="mx-auto aspect-square h-full min-h-0">
-              <PieChart>
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent hideLabel />}
-                />
-                <Pie
-                  data={departmentData}
-                  dataKey="students"
-                  nameKey="department"
-                  innerRadius={60}
-                  outerRadius={95}
-                  strokeWidth={5}
+        
+        {/* Row 1 Left Side: Equal-width Charts Container */}
+        <div className="lg:col-span-3 lg:row-span-1 grid grid-cols-1 md:grid-cols-2 gap-size240 min-h-0">
+          <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0">
+            <CardHeader className="shrink-0">
+              <CardTitle>Application Growth</CardTitle>
+              <CardDescription>
+                Showing total applications for the last 6 months
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-0 min-h-0 flex flex-col">
+              <ChartContainer config={appChartConfig} className="aspect-auto flex-1 w-full min-h-0">
+                <AreaChart
+                  data={applicationsData}
+                  margin={{
+                    left: 0,
+                    right: 0,
+                    top: 10,
+                    bottom: 10,
+                  }}
                 >
-                  <Label
-                    content={({ viewBox }) => {
-                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                        return (
-                          <foreignObject
-                            x={viewBox.cx - 75}
-                            y={viewBox.cy - 75}
-                            width={150}
-                            height={100}
-                          >
-                            <div className="flex h-full w-full flex-col items-center justify-center text-center">
-                              <span className="text-3xl font-bold text-foreground leading-none">
-                                {totalStudents.toLocaleString()}
-                              </span>
-                              <span className="text-xs text-muted-foreground mt-1">
-                                Total Students
-                              </span>
-                            </div>
-                          </foreignObject>
-                        )
-                      }
-                    }}
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
                   />
-                </Pie>
-                <ChartLegend
-                  content={<ChartLegendContent />}
-                  className="mt-4 flex-wrap gap-2"
-                />
-              </PieChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="line" />}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="apps"
+                    fill="var(--color-apps)"
+                    fillOpacity={0.2}
+                    stroke="var(--color-apps)"
+                    strokeWidth={2}
+                  />
+                </AreaChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0">
+            <CardHeader className="shrink-0">
+              <CardTitle>Department Distribution</CardTitle>
+              <CardDescription>Breakdown of active members by department</CardDescription>
+            </CardHeader>
+            <CardContent className="flex-1 pb-4 flex flex-row items-center justify-between gap-size320 min-h-0">
+              <div className="w-1/2 h-full flex items-center justify-center">
+                <ChartContainer config={deptChartConfig} className="aspect-square h-full max-h-[220px]">
+                  <PieChart>
+                    <ChartTooltip
+                      cursor={false}
+                      content={<ChartTooltipContent hideLabel />}
+                    />
+                    <Pie
+                      data={departmentData}
+                      dataKey="students"
+                      nameKey="department"
+                      innerRadius={55}
+                      outerRadius={85}
+                      strokeWidth={5}
+                    >
+                      <Label
+                        content={({ viewBox }) => {
+                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                            return (
+                              <foreignObject
+                                x={viewBox.cx - 60}
+                                y={viewBox.cy - 60}
+                                width={120}
+                                height={120}
+                              >
+                                <div className="flex h-full w-full flex-col items-center justify-center text-center">
+                                  <span className="text-2xl font-bold text-foreground leading-none">
+                                    {totalStudents.toLocaleString()}
+                                  </span>
+                                  <span className="text-[10px] text-muted-foreground mt-1">
+                                    Total Students
+                                  </span>
+                                </div>
+                              </foreignObject>
+                            )
+                          }
+                        }}
+                      />
+                    </Pie>
+                  </PieChart>
+                </ChartContainer>
+              </div>
+              <div className="flex-1 flex flex-col gap-size80 pr-size160 justify-center">
+                {departmentData.map((item) => {
+                  const config = deptChartConfig[item.department as keyof typeof deptChartConfig];
+                  return (
+                    <div key={item.department} className="flex items-center gap-size80 text-xs">
+                      <div 
+                        className="h-2.5 w-2.5 shrink-0 rounded-[2px]" 
+                        style={{ backgroundColor: `var(--color-${item.department})` }}
+                      />
+                      <span className="text-muted-foreground">{config?.label}</span>
+                      <span className="font-semibold text-foreground ml-auto tabular-nums">{item.students}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <Card className="shadow-4 border-transparent bg-background flex flex-col lg:col-span-1 lg:row-span-2 h-full min-h-0">
           <CardHeader className="shrink-0">
             <div className="flex items-center justify-between">
@@ -259,13 +227,48 @@ function DashboardRoute() {
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <Badge 
-                      variant={app.status === 'Approved' ? 'default' : app.status === 'Rejected' ? 'destructive' : 'secondary'}
-                      className="font-normal text-xs"
-                    >
-                      {app.status}
-                    </Badge>
-                    <span className="text-xs flex items-center text-muted-foreground">
+                    {(() => {
+                      if (app.status === "APPROVED") {
+                        return (
+                          <Badge 
+                            variant="default"
+                            className="font-normal text-xs bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/15"
+                          >
+                            Approved
+                          </Badge>
+                        )
+                      }
+                      if (app.status === "REJECTED") {
+                        return (
+                          <Badge variant="destructive" className="font-normal text-xs">
+                            Rejected
+                          </Badge>
+                        )
+                      }
+                      if (app.status === "PENDING_REVIEW") {
+                        if (app.manual_application) {
+                          return (
+                            <Badge 
+                              variant="outline"
+                              className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/15"
+                            >
+                              Quarantined
+                            </Badge>
+                          )
+                        }
+                        return (
+                          <Badge variant="secondary" className="font-normal text-xs">
+                            Pending Review
+                          </Badge>
+                        )
+                      }
+                      return (
+                        <Badge variant="outline" className="font-normal text-xs">
+                          {app.status}
+                        </Badge>
+                      )
+                    })()}
+                    <span className="text-xs flex items-center text-muted-foreground mt-1">
                       <Clock className="w-3 h-3 mr-1" />
                       {app.time}
                     </span>
