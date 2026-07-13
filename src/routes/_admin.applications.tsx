@@ -591,7 +591,7 @@ function ApplicationsRoute() {
                           <div className="py-size100 px-size160 space-y-size100 text-sm">
                         <div className="grid grid-cols-3 py-1.5 border-b border-border/30 gap-2 items-center">
                           <span className="text-muted-foreground font-medium col-span-1">QCU Student ID</span>
-                          <span className="col-span-2 text-left font-mono font-semibold text-foreground bg-muted/60 py-0.5 w-fit">
+                          <span className="col-span-2 text-left text-foreground">
                             {selectedApplicant.studentId}
                           </span>
                         </div>

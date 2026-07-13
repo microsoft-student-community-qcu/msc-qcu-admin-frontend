@@ -30,6 +30,17 @@ export function Header() {
   const toggleTheme = () => {
     const nextDark = !isDark
     setIsDark(nextDark)
+
+    // Suppress all transitions during the theme flip so the switch is instant.
+    // Double-RAF ensures removal happens *after* the browser paints the new
+    // theme — a single RAF fires before paint and can still let transitions start.
+    document.documentElement.classList.add('no-transitions')
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove('no-transitions')
+      })
+    })
+
     if (nextDark) {
       document.documentElement.classList.add('dark')
       localStorage.setItem('theme', 'dark')
