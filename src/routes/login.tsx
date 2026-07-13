@@ -61,10 +61,11 @@ function LoginRoute() {
           
           {/* Logo */}
           <div className="mb-size200 flex items-center gap-size80">
-            <img src={logo} alt="QCU MSC" className="h-6 object-contain" />
-            <span className="font-semibold text-lg tracking-tight text-foreground">
-              QCU MSC
-            </span>
+            <img src={logo} alt="QCU MSC" className="h-8 object-contain shrink-0" />
+            <div className="grid flex-1 min-w-0 text-left leading-tight">
+              <span className="text-sm font-bold tracking-tight text-foreground">Quezon City University</span>
+              <span className="text-[10px] uppercase tracking-normal text-muted-foreground">Microsoft Student Community</span>
+            </div>
           </div>
 
           {step === 1 && (
@@ -81,13 +82,11 @@ function LoginRoute() {
                   onChange={(e) => setEmail(e.target.value)}
                   autoFocus
                   required
-                  className="w-full border-b border-muted-foreground bg-transparent py-1 text-sm outline-none transition-colors focus:border-b-2 focus:border-primary placeholder:text-muted-foreground/70"
+                  className="w-full border-b border-muted-foreground bg-transparent py-1 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_1px_0_0_var(--primary)] placeholder:text-muted-foreground/70"
                 />
               </div>
 
-              <div className="text-sm mb-size320">
-                No account? <a href="#" className="text-primary hover:underline">Create one!</a>
-              </div>
+              <div className="h-5 mb-size320" />
 
               <div className="flex justify-end">
                 <Button type="submit" className="rounded-none px-8 min-w-[108px] min-h-9 text-md">
@@ -111,7 +110,7 @@ function LoginRoute() {
                   onChange={(e) => setPassword(e.target.value)}
                   autoFocus
                   required
-                  className="w-full border-b border-muted-foreground bg-transparent py-1 text-sm outline-none transition-colors focus:border-b-2 focus:border-primary placeholder:text-muted-foreground/70"
+                  className="w-full border-b border-muted-foreground bg-transparent py-1 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_1px_0_0_var(--primary)] placeholder:text-muted-foreground/70"
                 />
               </div>
 
