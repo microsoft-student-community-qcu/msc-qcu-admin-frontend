@@ -13,6 +13,7 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as AdminRouteImport } from './routes/_admin'
+import { Route as AdminMembersRouteImport } from './routes/_admin.members'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
 import { Route as AdminApplicationsRouteImport } from './routes/_admin.applications'
 import { Route as AdminEventsListRouteImport } from './routes/_admin.events.list'
@@ -35,6 +36,11 @@ const DesignSystemRoute = DesignSystemRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/_admin',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminMembersRoute = AdminMembersRouteImport.update({
+  id: '/members',
+  path: '/members',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/dashboard',
@@ -59,6 +65,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof NotificationsRoute
   '/applications': typeof AdminApplicationsRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/members': typeof AdminMembersRoute
   '/events/list': typeof AdminEventsListRoute
 }
 export interface FileRoutesByTo {
@@ -68,6 +75,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof NotificationsRoute
   '/applications': typeof AdminApplicationsRoute
   '/dashboard': typeof AdminDashboardRoute
+  '/members': typeof AdminMembersRoute
   '/events/list': typeof AdminEventsListRoute
 }
 export interface FileRoutesById {
@@ -78,6 +86,7 @@ export interface FileRoutesById {
   '/notifications': typeof NotificationsRoute
   '/_admin/applications': typeof AdminApplicationsRoute
   '/_admin/dashboard': typeof AdminDashboardRoute
+  '/_admin/members': typeof AdminMembersRoute
   '/_admin/events/list': typeof AdminEventsListRoute
 }
 export interface FileRouteTypes {
@@ -89,6 +98,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/applications'
     | '/dashboard'
+    | '/members'
     | '/events/list'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/applications'
     | '/dashboard'
+    | '/members'
     | '/events/list'
   id:
     | '__root__'
@@ -107,6 +118,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/_admin/applications'
     | '/_admin/dashboard'
+    | '/_admin/members'
     | '/_admin/events/list'
   fileRoutesById: FileRoutesById
 }
@@ -147,6 +159,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/members': {
+      id: '/_admin/members'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof AdminMembersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/dashboard': {
       id: '/_admin/dashboard'
       path: '/dashboard'
@@ -174,12 +193,14 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminApplicationsRoute: typeof AdminApplicationsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminMembersRoute: typeof AdminMembersRoute
   AdminEventsListRoute: typeof AdminEventsListRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminApplicationsRoute: AdminApplicationsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminMembersRoute: AdminMembersRoute,
   AdminEventsListRoute: AdminEventsListRoute,
 }
 

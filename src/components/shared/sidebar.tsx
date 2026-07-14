@@ -18,6 +18,7 @@ import {
   PeopleRegular,
   CalendarLtrRegular,
   SignOutRegular,
+  PersonRegular,
 } from "@fluentui/react-icons";
 import logo from "@/assets/qcu-msc-logo.png";
 import {
@@ -42,6 +43,11 @@ const items = [
     title: "Applicants",
     url: "/applications",
     icon: PeopleRegular,
+  },
+  {
+    title: "Members",
+    url: "/members",
+    icon: PersonRegular,
   },
   {
     title: "Events",
@@ -96,7 +102,7 @@ export function Sidebar() {
             Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               {items.map((item) => {
                 const isActive = location.pathname.startsWith(item.url);
                 return (
@@ -105,7 +111,7 @@ export function Sidebar() {
                       isActive={isActive}
                       tooltip={item.title}
                       render={<Link to={item.url} />}
-                      className="text-base h-11 p-1 gap-3 [&>svg]:size-6 group-data-[collapsible=icon]:p-1!"
+                      className="text-sm h-11 p-1 gap-3 [&>svg]:size-6 group-data-[collapsible=icon]:p-1!"
                     >
                       <item.icon />
                       <span className="truncate">{item.title}</span>

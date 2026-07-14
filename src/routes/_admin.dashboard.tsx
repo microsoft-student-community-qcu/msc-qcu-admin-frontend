@@ -94,8 +94,8 @@ function DashboardRoute() {
       <div className="grid grid-cols-1 lg:grid-cols-4 lg:grid-rows-2 gap-size240 flex-1 min-h-0">
         
         {/* Row 1 Left Side: Equal-width Charts Container */}
-        <div className="lg:col-span-3 lg:row-span-1 grid grid-cols-1 md:grid-cols-2 gap-size240 min-h-0">
-          <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0">
+        <div className="lg:col-span-3 lg:row-span-1 grid grid-cols-1 md:grid-cols-5 gap-size240 min-h-0">
+          <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-3">
             <CardHeader className="shrink-0">
               <CardTitle>Application Growth</CardTitle>
               <CardDescription>
@@ -137,14 +137,14 @@ function DashboardRoute() {
             </CardContent>
           </Card>
 
-          <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0">
+          <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-2">
             <CardHeader className="shrink-0">
               <CardTitle>Department Distribution</CardTitle>
               <CardDescription>Breakdown of active members by department</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-4 flex flex-row items-center justify-between gap-size320 min-h-0">
-              <div className="w-1/2 h-full flex items-center justify-center">
-                <ChartContainer config={deptChartConfig} className="aspect-square h-full max-h-[220px]">
+            <CardContent className="flex-1 pb-4 flex flex-row items-center justify-between gap-size240 min-h-0">
+              <div className="w-[58%] h-full flex items-center justify-center relative">
+                <ChartContainer config={deptChartConfig} className="aspect-square w-full h-full max-h-[280px]">
                   <PieChart>
                     <ChartTooltip
                       cursor={false}
@@ -154,48 +154,34 @@ function DashboardRoute() {
                       data={departmentData}
                       dataKey="students"
                       nameKey="department"
-                      innerRadius={55}
-                      outerRadius={85}
+                      innerRadius="60%"
+                      outerRadius="98%"
                       strokeWidth={5}
-                    >
-                      <Label
-                        content={({ viewBox }) => {
-                          if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                            return (
-                              <foreignObject
-                                x={viewBox.cx - 60}
-                                y={viewBox.cy - 60}
-                                width={120}
-                                height={120}
-                              >
-                                <div className="flex h-full w-full flex-col items-center justify-center text-center">
-                                  <span className="text-2xl font-bold text-foreground leading-none">
-                                    {totalStudents.toLocaleString()}
-                                  </span>
-                                  <span className="text-[10px] text-muted-foreground mt-1">
-                                    Total Students
-                                  </span>
-                                </div>
-                              </foreignObject>
-                            )
-                          }
-                        }}
-                      />
-                    </Pie>
+                    />
                   </PieChart>
                 </ChartContainer>
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span className="text-xl sm:text-2xl font-bold text-foreground leading-none">
+                    {totalStudents.toLocaleString()}
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] text-muted-foreground mt-1">
+                    Total Students
+                  </span>
+                </div>
               </div>
-              <div className="flex-1 flex flex-col gap-size80 pr-size160 justify-center">
+              <div className="w-[42%] flex flex-col gap-size80 pr-size160 justify-center min-w-0">
                 {departmentData.map((item) => {
                   const config = deptChartConfig[item.department as keyof typeof deptChartConfig];
                   return (
-                    <div key={item.department} className="flex items-center gap-size80 text-xs">
+                    <div key={item.department} className="flex items-center gap-size80 text-xs min-w-0">
                       <div 
                         className="h-2.5 w-2.5 shrink-0 rounded-[2px]" 
                         style={{ backgroundColor: `var(--color-${item.department})` }}
                       />
-                      <span className="text-muted-foreground">{config?.label}</span>
-                      <span className="font-semibold text-foreground ml-auto tabular-nums">{item.students}</span>
+                      <span className="text-muted-foreground truncate flex-1 min-w-0" title={config?.label}>
+                        {config?.label}
+                      </span>
+                      <span className="font-semibold text-foreground shrink-0 tabular-nums ml-2">{item.students}</span>
                     </div>
                   )
                 })}
@@ -216,7 +202,7 @@ function DashboardRoute() {
           <CardContent className="flex-1 min-h-0 overflow-y-auto pb-4">
             <div className="space-y-4">
               {recentApplications.map((app) => (
-                <div key={app.id} className="flex items-center justify-between p-3 bg-card border border-border shadow-2 hover:shadow-4 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-200">
+                <div key={app.id} className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200">
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0">
                       {app.name.charAt(0)}
@@ -250,7 +236,7 @@ function DashboardRoute() {
                           return (
                             <Badge 
                               variant="outline"
-                              className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/15"
+                              className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-emerald-400 border border-amber-500/30 hover:bg-amber-500/15"
                             >
                               Quarantined
                             </Badge>
@@ -333,14 +319,14 @@ function DashboardRoute() {
           </CardHeader>
           <CardContent className="flex-1 min-h-0 overflow-y-auto pb-4">
             <div className="space-y-4">
-              <div className="flex flex-col gap-2 p-3 bg-card border border-border shadow-2 hover:shadow-4 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-200">
+              <div className="flex flex-col gap-2 p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">System Update</span>
                   <span className="text-xs text-muted-foreground">2m ago</span>
                 </div>
                 <p className="text-xs text-muted-foreground leading-snug">Maintenance scheduled for tomorrow at 2 AM.</p>
               </div>
-              <div className="flex flex-col gap-2 p-3 bg-card border border-border shadow-2 hover:shadow-4 hover:-translate-y-0.5 transition-[transform,box-shadow] duration-200">
+              <div className="flex flex-col gap-2 p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">New Message</span>
                   <span className="text-xs text-muted-foreground">1h ago</span>
