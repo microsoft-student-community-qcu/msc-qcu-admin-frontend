@@ -135,19 +135,17 @@ export const eventChartConfig = {
   },
 } satisfies ChartConfig;
 
-export const checkInVelocityData = [
-  { time: "1:00 PM", arrivals: 15 },
-  { time: "1:15 PM", arrivals: 35 },
-  { time: "1:30 PM", arrivals: 75 },
-  { time: "1:45 PM", arrivals: 110 },
-  { time: "2:00 PM", arrivals: 45 },
-  { time: "2:15 PM", arrivals: 20 },
-  { time: "2:30 PM", arrivals: 5 },
+export const eventRatingsData = [
+  { rating: "5 Stars", count: 230 },
+  { rating: "4 Stars", count: 110 },
+  { rating: "3 Stars", count: 32 },
+  { rating: "2 Stars", count: 12 },
+  { rating: "1 Star", count: 5 },
 ];
 
-export const checkInChartConfig = {
-  arrivals: {
-    label: "Arrivals",
-    color: "var(--color-chart-2)",
+export const eventRatingsConfig = {
+  count: {
+    label: "Reviews",
+    color: "var(--color-primary)",
   },
 } satisfies ChartConfig;

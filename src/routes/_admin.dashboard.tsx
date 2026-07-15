@@ -9,7 +9,7 @@ import { RecentApplicationsList } from "@/features/dashboard/components/RecentAp
 import { EventGrid } from "@/features/dashboard/components/EventGrid";
 import { InboxPanel } from "@/features/dashboard/components/InboxPanel";
 import { EventAttendanceChart } from "@/features/dashboard/components/EventAttendanceChart";
-import { CheckInVelocityChart } from "@/features/dashboard/components/CheckInVelocityChart";
+import { EventRatingsChart } from "@/features/dashboard/components/EventRatingsChart";
 
 export const Route = createFileRoute("/_admin/dashboard")({
   component: DashboardRoute,
@@ -49,7 +49,7 @@ function DashboardRoute() {
           <div className="lg:col-span-2">
             <EventAttendanceChart />
           </div>
-          <CheckInVelocityChart />
+          <EventRatingsChart />
 
           {/* Row 2: Lists & Feeds */}
           <div className="lg:col-span-2">
