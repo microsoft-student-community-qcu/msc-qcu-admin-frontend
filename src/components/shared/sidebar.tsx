@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import {
   Sidebar as ShadcnSidebar,
@@ -56,14 +57,42 @@ const items = [
   },
 ];
 
+interface UserProfile {
+  name: string;
+  email: string;
+  role: "ADMIN_HR" | "ADMIN_LOGISTICS";
+  avatarFallback: string;
+}
+
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = React.useState<UserProfile | null>(null);
+
+  React.useEffect(() => {
+    const rawUser = sessionStorage.getItem("currentUser");
+    if (rawUser) {
+      try {
+        setCurrentUser(JSON.parse(rawUser) as UserProfile);
+      } catch (err) {
+        console.error("Failed to parse user session", err);
+      }
+    }
+  }, []);
 
   const handleLogout = () => {
     sessionStorage.clear();
     navigate({ to: "/login" });
   };
+
+  const visibleItems = React.useMemo(() => {
+    if (currentUser?.role === "ADMIN_LOGISTICS") {
+      // Logistics can only see Dashboard and Events
+      return items.filter((item) => item.url === "/dashboard" || item.url.startsWith("/events"));
+    }
+    // HR/Super Admin can see everything
+    return items;
+  }, [currentUser]);
 
   return (
     <ShadcnSidebar
@@ -103,7 +132,7 @@ export function Sidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
-              {items.map((item) => {
+              {visibleItems.map((item) => {
                 const isActive = location.pathname.startsWith(item.url);
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -132,15 +161,17 @@ export function Sidebar() {
               className="p-1 h-12 hover:bg-transparent! active:bg-transparent! cursor-default group-data-[collapsible=icon]:p-0!"
             >
               <Avatar className="h-9 w-9 rounded-none shrink-0 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8">
-                <AvatarImage src="" alt="Admin User" />
-                <AvatarFallback className=" bg-primary/10 rounded-none text-primary text-md font-semibold">
-                  AU
+                <AvatarImage src="" alt={currentUser?.name || "Admin User"} />
+                <AvatarFallback className="bg-primary/10 rounded-none text-primary text-md font-semibold">
+                  {currentUser?.avatarFallback || "AU"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 min-w-0 text-left leading-tight">
-                <span className="truncate text-base font-semibold text-foreground">Admin User</span>
+                <span className="truncate text-base font-semibold text-foreground">
+                  {currentUser?.name || "Admin User"}
+                </span>
                 <span className="truncate text-xs font-medium text-muted-foreground">
-                  admin@qcu.edu.ph
+                  {currentUser?.email || "admin@qcu.edu.ph"}
                 </span>
               </div>
             </SidebarMenuButton>
@@ -153,7 +184,7 @@ export function Sidebar() {
               render={
                 <Button
                   variant="destructive"
-                  className="w-full h-9 text-base shadow-sm transition-transform duration-300 ease-in-out translate-y-0 group-data-[collapsible=icon]:translate-y-full"
+                  className="w-full h-9 text-base shadow-sm transition-transform duration-300 ease-in-out translate-y-0 group-data-[collapsible=icon]:translate-y-full cursor-pointer"
                 >
                   <span className="font-medium">Log out</span>
                 </Button>
@@ -168,8 +199,12 @@ export function Sidebar() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleLogout} variant="destructive">
+                <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleLogout}
+                  variant="destructive"
+                  className="cursor-pointer"
+                >
                   Log out
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -180,3 +215,5 @@ export function Sidebar() {
     </ShadcnSidebar>
   );
 }
+
+export default Sidebar;

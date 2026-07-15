@@ -1,18 +1,19 @@
 ---
 name: frontend-expert
-description: Use when creating React/TypeScript components, pages, or features. For modern patterns including Suspense, useSuspenseQuery, lazy loading, MUI v7 styling, TanStack Router, and performance optimization.
+description: Use when creating React/TypeScript components, pages, or features. For modern patterns including Suspense, useSuspenseQuery, lazy loading, Tailwind CSS v4, Microsoft Fluent design tokens, TanStack Router, and performance optimization.
 ---
 
-# Frontend Expert
+# Frontend Expert (Tailwind CSS v4 & Fluent UI Edition)
 
-Modern React/TypeScript development patterns for high-performance applications.
+Modern React/TypeScript development patterns for high-performance, premium applications in this workspace.
 
 ## 🎯 Overview
 
 This skill provides comprehensive guidelines for building production-grade React applications with:
 - **Suspense-first architecture** - No loading spinners, no early returns
-- **Type-safe patterns** - Strict TypeScript, no `any` types
+- **Type-safe patterns** - Strict TypeScript, no `any` types, Zod validation
 - **Performance by default** - Lazy loading, memoization, cache strategies
+- **Fluent UI & Tailwind v4** - Adherence to Fluent elevation, typography, and spacing ramps
 - **Organized structure** - Feature-based directory organization
 
 ## 📋 Quick Start: Component Checklist
@@ -20,24 +21,25 @@ This skill provides comprehensive guidelines for building production-grade React
 ```markdown
 - [ ] Use `React.FC<Props>` pattern with TypeScript
 - [ ] Lazy load if heavy component: `React.lazy(() => import())`
-- [ ] Wrap in `<SuspenseLoader>` for loading states
-- [ ] Use `useSuspenseQuery` for data fetching
+- [ ] Wrap in `<Suspense>` for loading states
+- [ ] Use `useSuspenseQuery` for data fetching (via TanStack Query)
 - [ ] Import aliases: `@/`, `~types`, `~components`, `~features`
-- [ ] Styles: Inline if <100 lines, separate file if >100 lines
+- [ ] Spacing: ONLY use Fluent spacing ramp (e.g. `p-size160`, `gap-size80`)
+- [ ] Elevation: ONLY use Fluent shadow classes (e.g. `shadow-4`, `shadow-8`)
+- [ ] Icons: ONLY use `@fluentui/react-icons` (no lucide, radix, or heroicons)
 - [ ] Use `useCallback` for event handlers passed to children
+- [ ] Use `sonner` (toast) for user notifications (no custom toast alerts)
 - [ ] Default export at bottom
 - [ ] No early returns with loading spinners
-- [ ] Use `useMuiSnackbar` for user notifications
 ```
 
 ## 📋 Quick Start: Feature Checklist
 
 ```markdown
-- [ ] Create `features/{feature-name}/` directory
-- [ ] Create subdirectories: `api/`, `components/`, `hooks/`, `helpers/`, `types/`
-- [ ] Create API service file: `api/{feature}Api.ts`
+- [ ] Create `src/features/{feature-name}/` directory
+- [ ] Create subdirectories: `components/`, `hooks/`, `helpers/`, `types/`
 - [ ] Set up TypeScript types in `types/`
-- [ ] Create route in `routes/{feature-name}/index.tsx`
+- [ ] Create route in `src/routes/` using TanStack Router
 - [ ] Lazy load feature components
 - [ ] Use Suspense boundaries
 - [ ] Export public API from feature `index.ts`
@@ -49,9 +51,9 @@ This skill provides comprehensive guidelines for building production-grade React
 
 | Alias | Resolves To | Example |
 |-------|-------------|---------|
-| `@/` | `src/` | `import { apiClient } from '@/lib/apiClient'` |
+| `@/` | `src/` | `import { cn } from '@/lib/utils'` |
 | `~types` | `src/types` | `import type { User } from '~types/user'` |
-| `~components` | `src/components` | `import { SuspenseLoader } from '~components/SuspenseLoader'` |
+| `~components` | `src/components` | `import { Sidebar } from '~components/shared/sidebar'` |
 | `~features` | `src/features` | `import { authApi } from '~features/auth'` |
 
 ---
@@ -61,29 +63,45 @@ This skill provides comprehensive guidelines for building production-grade React
 ### No Early Returns for Loading
 
 ```typescript
-// ❌ NEVER - Causes layout shift
+// ❌ NEVER - Causes layout shift and looks unpolished
 if (isLoading) {
-    return <LoadingSpinner />;
+    return <div className="spinner">Loading...</div>;
 }
 
-// ✅ ALWAYS - Consistent layout
-<SuspenseLoader>
+// ✅ ALWAYS - Wrap in Suspense at the parent level or use skeletal fallbacks
+<Suspense fallback={<SkeletonLoader />}>
     <Content />
-</SuspenseLoader>
+</Suspense>
 ```
 
-### MUI v7 Grid Syntax
+### Fluent UI & Tailwind v4 Custom Tokens
+
+Always reference the design guidelines in [design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md):
 
 ```typescript
-<Grid size={{ xs: 12, md: 6 }}>  // ✅ v7 syntax
-<Grid xs={12} md={6}>             // ❌ Old syntax
+// ❌ NEVER use standard tailwind classes
+className="p-4 gap-2 shadow-md rounded-md"
+
+// ✅ ALWAYS use Fluent tokens
+className="p-size160 gap-size80 shadow-4 rounded-md"
 ```
 
-### API Route Format
+### Base UI Context Safety
 
 ```typescript
-'/form/route'      // ✅ Correct
-'/api/form/route'  // ❌ Wrong
+// ❌ NEVER mix bare menu items in Radix/Base UI dropdowns
+<DropdownMenuContent>
+  <DropdownMenuItem>Profile</DropdownMenuItem>
+  <DropdownMenuItem>Logout</DropdownMenuItem>
+</DropdownMenuContent>
+
+// ✅ ALWAYS wrap in DropdownMenuGroup to prevent context crashes
+<DropdownMenuContent>
+  <DropdownMenuGroup>
+    <DropdownMenuItem>Profile</DropdownMenuItem>
+    <DropdownMenuItem>Logout</DropdownMenuItem>
+  </DropdownMenuGroup>
+</DropdownMenuContent>
 ```
 
 ---
@@ -94,56 +112,18 @@ if (isLoading) {
 - `React.FC<Props>` for type safety
 - `React.lazy()` for code splitting
 - Named const + default export pattern
-- **[📖 Full Guide: references/component-patterns.md](references/component-patterns.md)**
+- **[📖 Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
 
 ### Data Fetching
 - `useSuspenseQuery` as primary pattern
-- Cache-first strategy
-- API service layer in `features/{feature}/api/`
-- **[📖 Full Guide: references/data-fetching.md](references/data-fetching.md)**
+- Query keys structured logically
+- Bridge to API client in `src/services/`
+- **[📖 Full Guide: objective.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/rules/objective.md)**
 
-### File Organization
-- `features/`: Domain-specific code
-- `components/`: Truly reusable
-- **[📖 Full Guide: references/file-organization.md](references/file-organization.md)**
-
-### Styling with MUI v7
-- `sx` prop with `SxProps<Theme>`
-- Inline if <100 lines, separate if >100 lines
-- **[📖 Full Guide: references/styling-guide.md](references/styling-guide.md)**
-
-### TanStack Router
-- Folder-based routing
-- `createFileRoute` with lazy loading
-- **[📖 Full Guide: references/routing-guide.md](references/routing-guide.md)**
-
-### Loading & Error States
-- SuspenseLoader for all loading states
-- `useMuiSnackbar` for notifications
-- **[📖 Full Guide: references/loading-and-error-states.md](references/loading-and-error-states.md)**
-
-### Performance
-- `useMemo` for expensive computations
-- `useCallback` for handlers passed to children
-- `React.memo` for expensive components
-- **[📖 Full Guide: references/performance.md](references/performance.md)**
-
-### TypeScript Standards
-- Strict mode, no `any`
-- Explicit return types
-- Type imports with `import type`
-- **[📖 Full Guide: references/typescript-standards.md](references/typescript-standards.md)**
-
-### Common Patterns
-- React Hook Form + Zod
-- DataGrid wrappers
-- Dialog standards
-- **[📖 Full Guide: references/common-patterns.md](references/common-patterns.md)**
-
-### Complete Examples
-- Full component examples
-- Feature structure template
-- **[📖 Full Guide: references/complete-examples.md](references/complete-examples.md)**
+### Styling
+- Tailwind CSS v4 config-driven values
+- Strict adherence to spacing, typography, shadow, and transition tokens
+- **[📖 Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
 
 ---
 
@@ -151,50 +131,52 @@ if (isLoading) {
 
 ```typescript
 import React, { useState, useCallback } from 'react';
-import { Box, Paper } from '@mui/material';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { featureApi } from '../api/featureApi';
-import type { FeatureData } from '~types/feature';
+import { ArrowRightRegular } from '@fluentui/react-icons';
+import { toast } from 'sonner';
 
 interface MyComponentProps {
-    id: number;
+    id: string;
     onAction?: () => void;
 }
 
 export const MyComponent: React.FC<MyComponentProps> = ({ id, onAction }) => {
-    const [state, setState] = useState<string>('');
+    const [isActive, setIsActive] = useState<boolean>(false);
 
+    // Primary data fetching
     const { data } = useSuspenseQuery({
-        queryKey: ['feature', id],
-        queryFn: () => featureApi.getFeature(id),
+        queryKey: ['item', id],
+        queryFn: async () => {
+            const res = await fetch(`/api/v1/items/${id}`);
+            if (!res.ok) throw new Error('Failed to fetch');
+            return res.json();
+        },
     });
 
     const handleAction = useCallback(() => {
-        setState('updated');
+        setIsActive(true);
+        toast.success("Action processed successfully!");
         onAction?.();
     }, [onAction]);
 
     return (
-        <Box sx={{ p: 2 }}>
-            <Paper sx={{ p: 3 }}>
-                {/* Content */}
-            </Paper>
-        </Box>
+        <div className="p-size160 bg-card shadow-4 rounded-lg flex flex-col gap-size80 border border-border">
+            <h3 className="text-xl font-semibold font-sans tracking-tight text-foreground">
+                {data.name}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+                {data.description}
+            </p>
+            <button
+                onClick={handleAction}
+                className="flex items-center justify-center gap-size40 bg-primary text-primary-foreground p-size80 rounded-md font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+                <span>Proceed</span>
+                <ArrowRightRegular className="w-5 h-5" />
+            </button>
+        </div>
     );
 };
 
 export default MyComponent;
 ```
-
----
-
-## 📚 Core Principles
-
-1. **Lazy Load Everything Heavy** - Routes, DataGrid, charts, editors
-2. **Suspense for Loading** - SuspenseLoader, not early returns
-3. **useSuspenseQuery** - Primary data fetching pattern
-4. **Features are Organized** - api/, components/, hooks/, helpers/ subdirs
-5. **Styles Based on Size** - <100 inline, >100 separate
-6. **Import Aliases** - Use @/, ~types, ~components, ~features
-7. **No Early Returns** - Prevents layout shift
-8. **useMuiSnackbar** - All user notifications

@@ -9,20 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as AdminRouteImport } from './routes/_admin'
+import { Route as AdminNotificationsRouteImport } from './routes/_admin.notifications'
 import { Route as AdminMembersRouteImport } from './routes/_admin.members'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
 import { Route as AdminApplicationsRouteImport } from './routes/_admin.applications'
 import { Route as AdminEventsListRouteImport } from './routes/_admin.events.list'
 
-const NotificationsRoute = NotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -36,6 +31,11 @@ const DesignSystemRoute = DesignSystemRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/_admin',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminMembersRoute = AdminMembersRouteImport.update({
   id: '/members',
@@ -62,20 +62,20 @@ export interface FileRoutesByFullPath {
   '/': typeof AdminRouteWithChildren
   '/design-system': typeof DesignSystemRoute
   '/login': typeof LoginRoute
-  '/notifications': typeof NotificationsRoute
   '/applications': typeof AdminApplicationsRoute
   '/dashboard': typeof AdminDashboardRoute
   '/members': typeof AdminMembersRoute
+  '/notifications': typeof AdminNotificationsRoute
   '/events/list': typeof AdminEventsListRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AdminRouteWithChildren
   '/design-system': typeof DesignSystemRoute
   '/login': typeof LoginRoute
-  '/notifications': typeof NotificationsRoute
   '/applications': typeof AdminApplicationsRoute
   '/dashboard': typeof AdminDashboardRoute
   '/members': typeof AdminMembersRoute
+  '/notifications': typeof AdminNotificationsRoute
   '/events/list': typeof AdminEventsListRoute
 }
 export interface FileRoutesById {
@@ -83,10 +83,10 @@ export interface FileRoutesById {
   '/_admin': typeof AdminRouteWithChildren
   '/design-system': typeof DesignSystemRoute
   '/login': typeof LoginRoute
-  '/notifications': typeof NotificationsRoute
   '/_admin/applications': typeof AdminApplicationsRoute
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/members': typeof AdminMembersRoute
+  '/_admin/notifications': typeof AdminNotificationsRoute
   '/_admin/events/list': typeof AdminEventsListRoute
 }
 export interface FileRouteTypes {
@@ -95,30 +95,30 @@ export interface FileRouteTypes {
     | '/'
     | '/design-system'
     | '/login'
-    | '/notifications'
     | '/applications'
     | '/dashboard'
     | '/members'
+    | '/notifications'
     | '/events/list'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/design-system'
     | '/login'
-    | '/notifications'
     | '/applications'
     | '/dashboard'
     | '/members'
+    | '/notifications'
     | '/events/list'
   id:
     | '__root__'
     | '/_admin'
     | '/design-system'
     | '/login'
-    | '/notifications'
     | '/_admin/applications'
     | '/_admin/dashboard'
     | '/_admin/members'
+    | '/_admin/notifications'
     | '/_admin/events/list'
   fileRoutesById: FileRoutesById
 }
@@ -126,18 +126,10 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   DesignSystemRoute: typeof DesignSystemRoute
   LoginRoute: typeof LoginRoute
-  NotificationsRoute: typeof NotificationsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/notifications': {
-      id: '/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof NotificationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -158,6 +150,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_admin/notifications': {
+      id: '/_admin/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/_admin/members': {
       id: '/_admin/members'
@@ -194,6 +193,7 @@ interface AdminRouteChildren {
   AdminApplicationsRoute: typeof AdminApplicationsRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminMembersRoute: typeof AdminMembersRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminEventsListRoute: typeof AdminEventsListRoute
 }
 
@@ -201,6 +201,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminApplicationsRoute: AdminApplicationsRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminMembersRoute: AdminMembersRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminEventsListRoute: AdminEventsListRoute,
 }
 
@@ -210,7 +211,6 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   DesignSystemRoute: DesignSystemRoute,
   LoginRoute: LoginRoute,
-  NotificationsRoute: NotificationsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

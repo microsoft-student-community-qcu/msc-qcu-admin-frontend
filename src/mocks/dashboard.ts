@@ -1,4 +1,4 @@
-import { ChartConfig } from "@/components/ui/chart"
+import { ChartConfig } from "@/components/ui/chart";
 
 export const applicationsData = [
   { month: "Jan", apps: 120 },
@@ -7,14 +7,14 @@ export const applicationsData = [
   { month: "Apr", apps: 220 },
   { month: "May", apps: 250 },
   { month: "Jun", apps: 310 },
-]
+];
 
 export const appChartConfig = {
   apps: {
     label: "Applications",
     color: "var(--color-primary)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export const departmentData = [
   { department: "Engineering", students: 275, fill: "var(--color-Engineering)" },
@@ -23,14 +23,14 @@ export const departmentData = [
   { department: "Operations", students: 100, fill: "var(--color-Operations)" },
   { department: "Research", students: 80, fill: "var(--color-Research)" },
   { department: "General", students: 87, fill: "var(--color-General)" },
-]
+];
 
 export const deptChartConfig = {
   students: {
     label: "Students",
   },
   Engineering: {
-    label: "Engineering & Dev",
+    label: "Engineering / Development",
     color: "var(--color-chart-1)",
   },
   Design: {
@@ -38,7 +38,7 @@ export const deptChartConfig = {
     color: "var(--color-chart-2)",
   },
   Marketing: {
-    label: "Marketing & Comms",
+    label: "Marketing & Communications",
     color: "var(--color-chart-3)",
   },
   Operations: {
@@ -53,17 +53,101 @@ export const deptChartConfig = {
     label: "General Member",
     color: "var(--color-muted-foreground)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export const recentApplications = [
-  { id: "APP-001", name: "Juan Dela Cruz", role: "Engineering / Development", status: "PENDING_REVIEW", manual_application: true, time: "2 hours ago" },
-  { id: "APP-002", name: "Maria Santos", role: "Design & Creatives", status: "APPROVED", manual_application: false, time: "5 hours ago" },
-  { id: "APP-003", name: "Pedro Penduko", role: "Engineering / Development", status: "REJECTED", manual_application: false, time: "1 day ago" },
-  { id: "APP-004", name: "Ana Reyes", role: "Marketing & Communications", status: "PENDING_REVIEW", manual_application: false, time: "1 day ago" },
-]
+  {
+    id: "APP-001",
+    name: "Juan Dela Cruz",
+    role: "Engineering / Development",
+    status: "PENDING_REVIEW",
+    manual_application: true,
+    time: "2 hours ago",
+  },
+  {
+    id: "APP-002",
+    name: "Maria Santos",
+    role: "Design & Creatives",
+    status: "APPROVED",
+    manual_application: false,
+    time: "5 hours ago",
+  },
+  {
+    id: "APP-003",
+    name: "Pedro Penduko",
+    role: "Engineering / Development",
+    status: "REJECTED",
+    manual_application: false,
+    time: "1 day ago",
+  },
+  {
+    id: "APP-004",
+    name: "Ana Reyes",
+    role: "Marketing & Communications",
+    status: "PENDING_REVIEW",
+    manual_application: false,
+    time: "1 day ago",
+  },
+];
 
 export const recentEvents = [
-  { id: "EVT-001", name: "Tech Summit 2026", date: "Aug 15, 2026", status: "Upcoming", attendees: 120, image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&h=300&fit=crop" },
-  { id: "EVT-002", name: "React Workshop", date: "Jul 20, 2026", status: "Upcoming", attendees: 45, image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&h=300&fit=crop" },
-  { id: "EVT-003", name: "General Assembly", date: "Jul 10, 2026", status: "Completed", attendees: 250, image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&h=300&fit=crop" },
-]
+  {
+    id: "EVT-001",
+    name: "Tech Summit 2026",
+    date: "Aug 15, 2026",
+    status: "Upcoming",
+    attendees: 120,
+    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=500&h=300&fit=crop",
+  },
+  {
+    id: "EVT-002",
+    name: "React Workshop",
+    date: "Jul 20, 2026",
+    status: "Upcoming",
+    attendees: 45,
+    image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=500&h=300&fit=crop",
+  },
+  {
+    id: "EVT-003",
+    name: "General Assembly",
+    date: "Jul 10, 2026",
+    status: "Completed",
+    attendees: 250,
+    image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&h=300&fit=crop",
+  },
+];
+
+export const eventAttendanceData = [
+  { event: "General Assembly", registered: 260, attended: 250 },
+  { event: "React Workshop", registered: 55, attended: 45 },
+  { event: "Tech Summit", registered: 140, attended: 120 },
+  { event: "Dev Showdown", registered: 95, attended: 80 },
+];
+
+export const eventChartConfig = {
+  registered: {
+    label: "Registered",
+    color: "var(--color-primary)",
+  },
+  attended: {
+    label: "Attended (Checked In)",
+    color: "var(--color-chart-2)",
+  },
+} satisfies ChartConfig;
+
+export const checkInVelocityData = [
+  { time: "1:00 PM", arrivals: 15 },
+  { time: "1:15 PM", arrivals: 35 },
+  { time: "1:30 PM", arrivals: 75 },
+  { time: "1:45 PM", arrivals: 110 },
+  { time: "2:00 PM", arrivals: 45 },
+  { time: "2:15 PM", arrivals: 20 },
+  { time: "2:30 PM", arrivals: 5 },
+];
+
+export const checkInChartConfig = {
+  arrivals: {
+    label: "Arrivals",
+    color: "var(--color-chart-2)",
+  },
+} satisfies ChartConfig;
