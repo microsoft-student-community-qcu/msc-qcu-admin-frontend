@@ -23,39 +23,47 @@ export async function fetchApplicants(): Promise<Applicant[]> {
   if (!json.success) {
     throw new Error(json.message || "Failed to fetch applicants");
   }
-
   return json.data.applicants.map((backendApp: any) => {
-    const firstName = backendApp.firstName || "";
-    const lastName = backendApp.lastName || "";
-    const middleInitial = backendApp.middleInitial || "";
-    const name = `${firstName} ${middleInitial ? middleInitial + " " : ""}${lastName}`.trim().replace(/\s+/g, ' ');
+    const firstName = (backendApp.firstName || "").trim();
+    const lastName = (backendApp.lastName || "").trim();
+    const middleInitial = (backendApp.middleInitial || "").trim();
+
+    let name = "";
+    if (lastName && firstName) {
+      name = `${lastName}, ${firstName}${middleInitial ? " " + middleInitial : ""}`;
+    } else if (firstName) {
+      name = `${firstName}${middleInitial ? " " + middleInitial : ""}`;
+    } else if (lastName) {
+      name = lastName;
+    }
+    name = name.trim().replace(/\s+/g, ' ');
 
     return {
       id: backendApp.id,
-      studentId: backendApp.studentId || "N/A",
-      name: name || "Anonymous",
+      studentId: backendApp.studentId || "",
+      name: name,
       email: backendApp.email,
-      department: backendApp.membershipRole || "General",
-      corUrl: backendApp.certificateOfRegistration || "/dummy.pdf",
-      cvUrl: backendApp.curriculumVitae || "/dummy.pdf",
-      submissionDate: backendApp.createdAt || new Date().toISOString(),
+      department: backendApp.membershipRole,
+      corUrl: backendApp.certificateOfRegistration,
+      cvUrl: backendApp.curriculumVitae,
+      submissionDate: backendApp.createdAt,
       status: backendApp.status,
-      idCardUrl: backendApp.idImagePath || "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=600&auto=format&fit=crop&q=80",
-      manualApplication: backendApp.manual_application || false,
-      college: backendApp.college || "N/A",
-      program: backendApp.program || "N/A",
-      section: backendApp.section || "N/A",
-      campus: backendApp.campus || "N/A",
-      dateOfBirth: backendApp.dateOfBirth ? new Date(backendApp.dateOfBirth).toISOString().split('T')[0] : "N/A",
-      placeOfBirth: backendApp.placeOfBirth || "N/A",
-      gender: backendApp.gender ? backendApp.gender.charAt(0) + backendApp.gender.slice(1).toLowerCase() : "N/A",
-      houseAddress: backendApp.houseAddress || "N/A",
-      cellphone: backendApp.cellphoneNumber || "N/A",
-      interests: backendApp.interestsSkillsHobbies || "",
-      pastOrganizations: backendApp.organizationHistory || "",
+      idCardUrl: backendApp.idImagePath || undefined,
+      manualApplication: backendApp.manual_application,
+      college: backendApp.college,
+      program: backendApp.program,
+      section: backendApp.section,
+      campus: backendApp.campus,
+      dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
+      placeOfBirth: backendApp.placeOfBirth,
+      gender: backendApp.gender.charAt(0) + backendApp.gender.slice(1).toLowerCase(),
+      houseAddress: backendApp.houseAddress,
+      cellphone: backendApp.cellphoneNumber,
+      interests: backendApp.interestsSkillsHobbies,
+      pastOrganizations: backendApp.organizationHistory,
       portfolioUrl: backendApp.portfolio || undefined,
       githubUrl: backendApp.githubOrProjectLinks || undefined,
-      facebookUrl: backendApp.facebookLink || undefined,
+      facebookUrl: backendApp.facebookLink,
       previousWorks: backendApp.previousWorksAchievements || undefined,
     };
   });

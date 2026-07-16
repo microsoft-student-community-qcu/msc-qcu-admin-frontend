@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftRegular } from "@fluentui/react-icons";
+import { ArrowLeftRegular, EyeRegular, EyeOffRegular } from "@fluentui/react-icons";
 import logo from "@/assets/qcu-msc-logo.png";
 import { cn } from "@/lib/utils";
 import { useLoginForm } from "../hooks/useLoginForm";
@@ -20,6 +20,8 @@ export const LoginForm: React.FC = () => {
     handleLogin,
     handleBack,
   } = useLoginForm(cardRef);
+
+  const [showPassword, setShowPassword] = React.useState(false);
 
   return (
     <div
@@ -89,16 +91,28 @@ export const LoginForm: React.FC = () => {
               Enter password
             </h1>
 
-            <div className="mb-size80">
+            <div className="mb-size80 relative flex items-center">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoFocus
                 required
-                className="w-full border-b border-muted-foreground bg-transparent py-1 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_1px_0_0_var(--primary)] placeholder:text-muted-foreground/70"
+                className="w-full border-b border-muted-foreground bg-transparent py-1 pr-7 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_1px_0_0_var(--primary)] placeholder:text-muted-foreground/70"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-0 pr-1 text-muted-foreground hover:text-foreground transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOffRegular fontSize={23} />
+                ) : (
+                  <EyeRegular fontSize={23} />
+                )}
+              </button>
             </div>
 
             <div className="h-5 text-sm mb-size160 text-left shrink-0">

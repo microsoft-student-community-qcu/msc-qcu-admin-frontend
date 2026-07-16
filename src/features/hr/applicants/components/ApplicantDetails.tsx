@@ -152,9 +152,9 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
               </SelectTrigger>
               <SelectContent className="rounded-none shadow-8">
                 <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
+                <SelectItem value="FOR_COMPLIANCE">For Compliance</SelectItem>
                 <SelectItem value="APPROVED">Approve / Member</SelectItem>
                 <SelectItem value="REJECTED">Reject Application</SelectItem>
-                <SelectItem value="FOR_COMPLIANCE">For Compliance</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -293,33 +293,43 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="p-size120 flex flex-col items-center gap-2">
-                    <div
-                      onClick={() => {
-                        onZoomImage(applicant.idCardUrl, `${applicant.name} - Student ID`);
-                      }}
-                      className="w-full h-[280px] bg-muted/30 border border-border overflow-hidden relative cursor-pointer group flex items-center justify-center"
-                    >
-                      <img
-                        src={applicant.idCardUrl}
-                        alt="Student ID card"
-                        className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200"
-                      />
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
-                        <span className="text-white text-xs font-semibold flex items-center gap-1">
-                          <EyeRegular className="w-4 h-4" /> Click to Zoom
-                        </span>
+                    {applicant.idCardUrl ? (
+                      <>
+                        <div
+                          onClick={() => {
+                            onZoomImage(applicant.idCardUrl!, `${applicant.name} - Student ID`);
+                          }}
+                          className="w-48 aspect-54/86 bg-muted/30 border border-border overflow-hidden relative cursor-pointer group flex items-center justify-center"
+                        >
+                          <img
+                            src={applicant.idCardUrl}
+                            alt="Student ID card"
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+                            <span className="text-white text-xs font-semibold flex items-center gap-1">
+                              <EyeRegular className="w-4 h-4" /> Click to Zoom
+                            </span>
+                          </div>
+                        </div>
+                        <a
+                          href={applicant.idCardUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full flex items-center justify-center gap-1.5 p-1.5 border border-border hover:bg-muted/30 transition-colors text-center font-medium text-xs rounded-none cursor-pointer text-foreground"
+                          title="Open Student ID in new tab"
+                        >
+                          <OpenRegular className="w-3.5 h-3.5 shrink-0" />
+                          <span>Open Full Image</span>
+                        </a>
+                      </>
+                    ) : (
+                      // Empty state — ID photo not yet available from backend
+                      <div className="w-48 aspect-54/86 border border-dashed border-border/50 flex flex-col items-center justify-center gap-2 text-muted-foreground/60">
+                        <PersonRegular className="w-10 h-10" />
+                        <span className="text-xs italic">No ID photo available</span>
                       </div>
-                    </div>
-                    <a
-                      href={applicant.idCardUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="w-full flex items-center justify-center gap-1.5 p-1.5 border border-border hover:bg-muted/30 transition-colors text-center font-medium text-xs rounded-none cursor-pointer text-foreground"
-                      title="Open Student ID in new tab"
-                    >
-                      <OpenRegular className="w-3.5 h-3.5 shrink-0" />
-                      <span>Open Full Image</span>
-                    </a>
+                    )}
                   </CardContent>
                 </Card>
               </div>
