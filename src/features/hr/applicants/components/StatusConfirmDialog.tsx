@@ -25,6 +25,7 @@ const STATUS_LABELS: Record<string, string> = {
   APPROVED: "Approved",
   REJECTED: "Rejected",
   CANCELLED: "Cancelled",
+  FOR_COMPLIANCE: "For Compliance",
 };
 
 export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({

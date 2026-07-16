@@ -25,29 +25,36 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
   member,
   onContact,
 }) => {
-  if (!member) return null;
+  const [activeMember, setActiveMember] = React.useState<Applicant | null>(null);
+
+  React.useEffect(() => {
+    if (member) {
+      setActiveMember(member);
+    }
+  }, [member]);
 
   return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+    <Sheet open={isOpen && !!activeMember} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-md border-l border-border bg-background p-0 flex flex-col h-full shadow-2xl">
-        <div className="flex flex-col h-full min-h-0">
-          {/* Drawer Header */}
-          <SheetHeader className="p-size240 border-b border-border bg-muted/20 shrink-0">
-            <div className="flex items-center gap-size160">
-              <Avatar className="h-14 w-14 rounded-none border border-border/80 shadow-sm">
-                <AvatarFallback className="rounded-none bg-primary/10 text-primary text-lg font-bold">
-                  {member.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <SheetTitle className="text-base font-bold text-foreground leading-tight text-left">
-                  {member.name}
+        {activeMember && (
+          <div className="flex flex-col h-full min-h-0">
+            {/* Drawer Header */}
+            <SheetHeader className="p-size240 border-b border-border bg-muted/20 shrink-0">
+              <div className="flex items-center gap-size160">
+                <Avatar className="h-14 w-14 rounded-none border border-border/80 shadow-sm">
+                  <AvatarFallback className="rounded-none bg-primary/10 text-primary text-lg font-bold">
+                    {activeMember.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <SheetTitle className="text-base font-bold text-foreground leading-tight text-left">
+                    {activeMember.name}
                 </SheetTitle>
                 <SheetDescription className="text-xs text-muted-foreground font-mono mt-1 text-left">
-                  ID: {member.studentId}
+                  ID: {activeMember.studentId}
                 </SheetDescription>
               </div>
             </div>
@@ -64,11 +71,11 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                 <div className="p-size120 bg-muted/20 border border-border space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Department:</span>
-                    <span className="font-bold text-foreground">{member.department}</span>
+                    <span className="font-bold text-foreground">{activeMember.department}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Member UUID:</span>
-                    <span className="font-mono text-foreground">{member.id}</span>
+                    <span className="font-mono text-foreground">{activeMember.id}</span>
                   </div>
                 </div>
               </div>
@@ -81,21 +88,21 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                 <div className="p-size120 bg-muted/20 border border-border space-y-2.5">
                   <div>
                     <span className="text-muted-foreground block">College</span>
-                    <span className="font-medium text-foreground text-xs">{member.college}</span>
+                    <span className="font-medium text-foreground text-xs">{activeMember.college}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Program</span>
-                    <span className="font-medium text-foreground text-xs">{member.program}</span>
+                    <span className="font-medium text-foreground text-xs">{activeMember.program}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <span className="text-muted-foreground block">Section</span>
-                      <span className="font-medium text-foreground text-xs">{member.section}</span>
+                      <span className="font-medium text-foreground text-xs">{activeMember.section}</span>
                     </div>
                     <div>
                       <span className="text-muted-foreground block">Campus</span>
                       <span className="font-medium text-foreground text-xs">
-                        {member.campus} Campus
+                        {activeMember.campus} Campus
                       </span>
                     </div>
                   </div>
@@ -111,20 +118,20 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                   <div>
                     <span className="text-muted-foreground block">Email Address</span>
                     <a
-                      href={`mailto:${member.email}`}
+                      href={`mailto:${activeMember.email}`}
                       className="text-primary hover:underline font-medium text-xs break-all"
                     >
-                      {member.email}
+                      {activeMember.email}
                     </a>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Mobile Number</span>
-                    <span className="font-medium text-foreground text-xs">{member.cellphone}</span>
+                    <span className="font-medium text-foreground text-xs">{activeMember.cellphone}</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Address</span>
                     <span className="font-medium text-foreground text-xs">
-                      {member.houseAddress}
+                      {activeMember.houseAddress}
                     </span>
                   </div>
                 </div>
@@ -139,60 +146,60 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                   <div>
                     <span className="text-muted-foreground block">Interests</span>
                     <p className="text-foreground text-xs leading-relaxed mt-0.5">
-                      {member.interests}
+                      {activeMember.interests}
                     </p>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Previous Experience</span>
                     <p className="text-foreground text-xs leading-relaxed mt-0.5">
-                      {member.pastOrganizations}
+                      {activeMember.pastOrganizations}
                     </p>
                   </div>
                 </div>
               </div>
 
               {/* Portfolios & External Links */}
-              {(member.portfolioUrl || member.githubUrl || member.facebookUrl) && (
+              {(activeMember.portfolioUrl || activeMember.githubUrl || activeMember.facebookUrl) && (
                 <div className="space-y-size80">
                   <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                     External Links
                   </h4>
                   <div className="flex flex-col gap-1.5">
-                    {member.portfolioUrl && (
+                    {activeMember.portfolioUrl && (
                       <a
-                        href={member.portfolioUrl}
+                        href={activeMember.portfolioUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-between p-size80 border border-border bg-card hover:bg-muted transition-colors text-xs font-medium min-w-0"
                       >
                         <span className="truncate mr-2 text-primary hover:underline">
-                          {member.portfolioUrl}
+                          {activeMember.portfolioUrl}
                         </span>
                         <ArrowRightRegular className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                       </a>
                     )}
-                    {member.githubUrl && (
+                    {activeMember.githubUrl && (
                       <a
-                        href={member.githubUrl}
+                        href={activeMember.githubUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-between p-size80 border border-border bg-card hover:bg-muted transition-colors text-xs font-medium min-w-0"
                       >
                         <span className="truncate mr-2 text-primary hover:underline">
-                          {member.githubUrl}
+                          {activeMember.githubUrl}
                         </span>
                         <ArrowRightRegular className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                       </a>
                     )}
-                    {member.facebookUrl && (
+                    {activeMember.facebookUrl && (
                       <a
-                        href={member.facebookUrl}
+                        href={activeMember.facebookUrl}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-between p-size80 border border-border bg-card hover:bg-muted transition-colors text-xs font-medium min-w-0"
                       >
                         <span className="truncate mr-2 text-primary hover:underline">
-                          {member.facebookUrl}
+                          {activeMember.facebookUrl}
                         </span>
                         <ArrowRightRegular className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                       </a>
@@ -207,7 +214,7 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
           <div className="p-size160 border-t border-border bg-muted/10 flex gap-2 shrink-0">
             <Button
               className="flex-1 rounded-none h-9 text-xs cursor-pointer"
-              onClick={() => onContact(member)}
+              onClick={() => onContact(activeMember)}
             >
               <MailRegular className="w-4 h-4 mr-2" />
               Send Email
@@ -221,6 +228,7 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
             </Button>
           </div>
         </div>
+        )}
       </SheetContent>
     </Sheet>
   );

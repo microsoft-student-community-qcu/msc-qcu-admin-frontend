@@ -7,7 +7,7 @@ export interface Applicant {
   corUrl: string;
   cvUrl: string;
   submissionDate: string;
-  status: "APPROVED" | "PENDING_REVIEW" | "REJECTED" | "CANCELLED";
+  status: "APPROVED" | "PENDING_REVIEW" | "REJECTED" | "CANCELLED" | "FOR_COMPLIANCE";
   idCardUrl: string;
   // New fields from the application form
   college: string;
@@ -218,7 +218,7 @@ export const mockApplicants: Applicant[] = [
     corUrl: "/dummy.pdf",
     cvUrl: "/dummy.pdf",
     submissionDate: "2026-07-13T12:00:00Z",
-    status: "PENDING_REVIEW",
+    status: "CANCELLED",
     idCardUrl:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&auto=format&fit=crop&q=80",
     college: "College of Education",
@@ -249,7 +249,7 @@ export const mockApplicants: Applicant[] = [
     corUrl: "/dummy.pdf",
     cvUrl: "/dummy.pdf",
     submissionDate: "2026-07-12T09:30:00Z",
-    status: "PENDING_REVIEW",
+    status: "FOR_COMPLIANCE",
     idCardUrl:
       "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&auto=format&fit=crop&q=80",
     college: "College of Business Administration",

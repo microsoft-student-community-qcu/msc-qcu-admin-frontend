@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Applicant } from "@/mocks/applicants";
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "FOR_COMPLIANCE" | "CANCELLED";
 
 interface ApplicantListProps {
   applicants: Applicant[];
@@ -23,6 +23,8 @@ interface ApplicantListProps {
     PENDING_REVIEW: number;
     APPROVED: number;
     REJECTED: number;
+    FOR_COMPLIANCE: number;
+    CANCELLED: number;
   };
 }
 
@@ -84,6 +86,22 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
             className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
           >
             Rejected ({tabCounts.REJECTED})
+          </Button>
+          <Button
+            variant={activeTab === "FOR_COMPLIANCE" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => onActiveTabChange("FOR_COMPLIANCE")}
+            className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
+          >
+            Compliance ({tabCounts.FOR_COMPLIANCE})
+          </Button>
+          <Button
+            variant={activeTab === "CANCELLED" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => onActiveTabChange("CANCELLED")}
+            className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
+          >
+            Cancelled ({tabCounts.CANCELLED})
           </Button>
         </div>
       </div>
@@ -161,6 +179,14 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                             className="bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
                           >
                             Cancelled
+                          </Badge>
+                        )}
+                        {applicant.status === "FOR_COMPLIANCE" && (
+                          <Badge
+                            variant="outline"
+                            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
+                          >
+                            For Compliance
                           </Badge>
                         )}
                       </div>

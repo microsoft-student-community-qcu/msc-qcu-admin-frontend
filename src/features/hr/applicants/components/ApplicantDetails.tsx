@@ -35,7 +35,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
 }) => {
   if (!applicant) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center">
+      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-background border border-border shadow-4">
         <PeopleRegular className="w-12 h-12 mb-3 text-muted-foreground/30" />
         <h3 className="text-base font-bold text-foreground">No Applicant Selected</h3>
         <p className="text-sm max-w-xs mt-1">
@@ -47,7 +47,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full min-h-0">
+    <div className="flex-1 flex flex-col h-full min-h-0 bg-background border border-border shadow-4">
       {/* Detail Header */}
       <div className="p-size240 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-size160 bg-muted/10 shrink-0">
         <div className="flex items-center gap-size160">
@@ -100,6 +100,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                     APPROVED: "Approved",
                     REJECTED: "Rejected",
                     CANCELLED: "Cancelled",
+                    FOR_COMPLIANCE: "For Compliance",
                   }[applicant.status] ?? applicant.status}
                 </SelectValue>
               </SelectTrigger>
@@ -107,7 +108,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                 <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
                 <SelectItem value="APPROVED">Approve / Member</SelectItem>
                 <SelectItem value="REJECTED">Reject Application</SelectItem>
-                <SelectItem value="CANCELLED">Cancel Application</SelectItem>
+                <SelectItem value="FOR_COMPLIANCE">For Compliance</SelectItem>
               </SelectContent>
             </Select>
           </div>

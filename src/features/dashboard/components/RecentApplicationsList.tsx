@@ -67,6 +67,26 @@ export const RecentApplicationsList: React.FC = () => {
                       </Badge>
                     );
                   }
+                  if (app.status === "FOR_COMPLIANCE") {
+                    return (
+                      <Badge
+                        variant="outline"
+                        className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/15"
+                      >
+                        For Compliance
+                      </Badge>
+                    );
+                  }
+                  if (app.status === "CANCELLED") {
+                    return (
+                      <Badge
+                        variant="outline"
+                        className="font-normal text-xs bg-slate-500/10 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400 border border-slate-500/20 hover:bg-slate-500/15"
+                      >
+                        Cancelled
+                      </Badge>
+                    );
+                  }
                   return (
                     <Badge variant="outline" className="font-normal text-xs">
                       {app.status}

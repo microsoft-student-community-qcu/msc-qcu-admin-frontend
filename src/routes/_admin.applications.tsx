@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_admin/applications")({
   component: ApplicationsRoute,
 });
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "FOR_COMPLIANCE" | "CANCELLED";
 
 function ApplicationsRoute() {
   const [applicants, setApplicants] = React.useState<Applicant[]>(mockApplicants);
@@ -42,6 +42,8 @@ function ApplicationsRoute() {
       PENDING_REVIEW: applicants.filter((app) => app.status === "PENDING_REVIEW").length,
       APPROVED: applicants.filter((app) => app.status === "APPROVED").length,
       REJECTED: applicants.filter((app) => app.status === "REJECTED").length,
+      FOR_COMPLIANCE: applicants.filter((app) => app.status === "FOR_COMPLIANCE").length,
+      CANCELLED: applicants.filter((app) => app.status === "CANCELLED").length,
     };
   }, [applicants]);
 
@@ -52,6 +54,8 @@ function ApplicationsRoute() {
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
       if (activeTab === "APPROVED" && app.status !== "APPROVED") return false;
       if (activeTab === "REJECTED" && app.status !== "REJECTED") return false;
+      if (activeTab === "FOR_COMPLIANCE" && app.status !== "FOR_COMPLIANCE") return false;
+      if (activeTab === "CANCELLED" && app.status !== "CANCELLED") return false;
 
       // 2. Filter by Search Query
       if (searchQuery.trim() !== "") {
