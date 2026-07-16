@@ -27,7 +27,7 @@ export const MemberFilterBar: React.FC<MemberFilterBarProps> = ({
   onSelectDept,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-size160 shrink-0 bg-background border border-border p-size160 shadow-2 w-full">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-size160 shrink-0 bg-card p-size160 shadow-4 ring-1 ring-foreground/10 w-full">
       {/* Search Bar */}
       <div className="flex items-center gap-3 relative max-w-sm w-full">
         <SearchRegular className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

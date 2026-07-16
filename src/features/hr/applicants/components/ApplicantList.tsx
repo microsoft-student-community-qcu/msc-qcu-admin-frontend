@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import type { Applicant } from "@/mocks/applicants";
+import type { Applicant } from "@/features/hr/shared/types";
 
 type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "FOR_COMPLIANCE" | "CANCELLED";
 
@@ -43,7 +43,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
   error,
 }) => {
   return (
-    <div className="w-[380px] shrink-0 flex flex-col h-full bg-background border border-border shadow-4">
+    <div className="w-[380px] shrink-0 flex flex-col h-full bg-card shadow-4 ring-1 ring-foreground/10">
       {/* Search & Tabs Header */}
       <div className="p-size160 border-b border-border space-y-size120">
         <div className="relative">
@@ -157,10 +157,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                 >
                   <Avatar className="h-9 w-9 rounded-none shrink-0 border border-border/50">
                     <AvatarFallback className="rounded-none bg-primary/5 text-primary text-xs font-semibold">
-                      {applicant.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                      {applicant.name.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
 

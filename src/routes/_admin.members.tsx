@@ -1,8 +1,8 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Applicant } from "@/mocks/applicants";
-import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { Applicant } from "@/features/hr/shared/types";
+import { useMembers } from "@/features/hr/shared/hooks/useMembers";
 import { MemberFilterBar } from "@/features/hr/members/components/MemberFilterBar";
 import { MemberDirectory } from "@/features/hr/members/components/MemberDirectory";
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
@@ -12,13 +12,7 @@ export const Route = createFileRoute("/_admin/members")({
 });
 
 function MembersRoute() {
-  const { data: applicants, isLoading, error } = useApplicants();
-
-  // Only display APPROVED applicants as active members
-  const members = React.useMemo(() => {
-    if (!applicants) return [];
-    return applicants.filter((app) => app.status === "APPROVED");
-  }, [applicants]);
+  const { data: members, isLoading, error } = useMembers();
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedDeptFilter, setSelectedDeptFilter] = React.useState<string>("ALL");
@@ -27,6 +21,7 @@ function MembersRoute() {
 
   // Filtered members list
   const filteredMembers = React.useMemo(() => {
+    if (!members) return [];
     return members.filter((m) => {
       // 1. Filter by Department
       if (selectedDeptFilter !== "ALL" && m.department !== selectedDeptFilter) return false;
@@ -66,7 +61,7 @@ function MembersRoute() {
     );
   }
 
-  if (error || !applicants) {
+  if (error || !members) {
     return (
       <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
         <div className="text-center">
@@ -78,7 +73,7 @@ function MembersRoute() {
   }
 
   return (
-    <div className="flex flex-col gap-size320 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="flex flex-col gap-size320 w-full">
       {/* Top Action Bar (Filters & Search) */}
       <MemberFilterBar
         searchQuery={searchQuery}

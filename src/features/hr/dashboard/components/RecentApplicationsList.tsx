@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ClockRegular } from "@fluentui/react-icons";
-import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 import { formatTimeAgo } from "@/utils/date";
 
 export const RecentApplicationsList: React.FC = () => {
@@ -45,22 +45,22 @@ export const RecentApplicationsList: React.FC = () => {
               key={app.id}
               className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200"
             >
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 min-w-0">
                 <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0">
                   {app.name.charAt(0)}
                 </div>
-                <div>
-                  <p className="text-sm font-medium leading-none">{app.name}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{app.department}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium leading-none truncate" title={app.name}>{app.name}</p>
+                  <p className="text-sm text-muted-foreground mt-1 truncate" title={app.department}>{app.department}</p>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-1">
+              <div className="flex flex-col items-end gap-1 shrink-0 ml-4">
                 {(() => {
                   if (app.status === "APPROVED") {
                     return (
                       <Badge
                         variant="default"
-                        className="font-normal text-xs bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/15"
+                        className="font-normal text-xs bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/15 whitespace-nowrap"
                       >
                         Approved
                       </Badge>
@@ -68,7 +68,7 @@ export const RecentApplicationsList: React.FC = () => {
                   }
                   if (app.status === "REJECTED") {
                     return (
-                      <Badge variant="destructive" className="font-normal text-xs">
+                      <Badge variant="destructive" className="font-normal text-xs whitespace-nowrap">
                         Rejected
                       </Badge>
                     );
@@ -78,14 +78,17 @@ export const RecentApplicationsList: React.FC = () => {
                       return (
                         <Badge
                           variant="outline"
-                          className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-emerald-400 border border-amber-500/30 hover:bg-amber-500/15"
+                          className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-emerald-400 border border-amber-500/30 hover:bg-amber-500/15 whitespace-nowrap"
                         >
                           Quarantined
                         </Badge>
                       );
                     }
                     return (
-                      <Badge variant="secondary" className="font-normal text-xs">
+                      <Badge
+                        variant="outline"
+                        className="font-normal text-xs bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 border border-blue-500/20 hover:bg-blue-500/15 whitespace-nowrap"
+                      >
                         Pending Review
                       </Badge>
                     );
@@ -94,7 +97,7 @@ export const RecentApplicationsList: React.FC = () => {
                     return (
                       <Badge
                         variant="outline"
-                        className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/15"
+                        className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/15 whitespace-nowrap"
                       >
                         For Compliance
                       </Badge>
@@ -104,14 +107,14 @@ export const RecentApplicationsList: React.FC = () => {
                     return (
                       <Badge
                         variant="outline"
-                        className="font-normal text-xs bg-slate-500/10 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400 border border-slate-500/20 hover:bg-slate-500/15"
+                        className="font-normal text-xs bg-slate-500/10 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400 border border-slate-500/20 hover:bg-slate-500/15 whitespace-nowrap"
                       >
                         Cancelled
                       </Badge>
                     );
                   }
                   return (
-                    <Badge variant="outline" className="font-normal text-xs">
+                    <Badge variant="outline" className="font-normal text-xs whitespace-nowrap">
                       {app.status}
                     </Badge>
                   );

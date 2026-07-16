@@ -1,4 +1,5 @@
-import { Applicant } from "@/mocks/applicants";
+import { Applicant, FetchApplicantsFilters } from "../types";
+import { formatApplicantName } from "../utils/formatters";
 import { getApiBaseURL } from "@/utils/env";
 
 const getAuthHeaders = (): Record<string, string> => {
@@ -10,9 +11,21 @@ const getAuthHeaders = (): Record<string, string> => {
   return headers;
 };
 
-export async function fetchApplicants(): Promise<Applicant[]> {
+export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise<Applicant[]> {
   const apiBase = getApiBaseURL();
-  const res = await fetch(`${apiBase}/applicants`, {
+  const queryParams = new URLSearchParams();
+  if (filters?.status) {
+    queryParams.append("status", filters.status);
+  }
+  if (filters?.limit !== undefined) {
+    queryParams.append("limit", filters.limit.toString());
+  }
+  if (filters?.offset !== undefined) {
+    queryParams.append("offset", filters.offset.toString());
+  }
+
+  const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
+  const res = await fetch(`${apiBase}/applicants${queryString}`, {
     headers: getAuthHeaders(),
     credentials: "include",
   });
@@ -24,24 +37,10 @@ export async function fetchApplicants(): Promise<Applicant[]> {
     throw new Error(json.message || "Failed to fetch applicants");
   }
   return json.data.applicants.map((backendApp: any) => {
-    const firstName = (backendApp.firstName || "").trim();
-    const lastName = (backendApp.lastName || "").trim();
-    const middleInitial = (backendApp.middleInitial || "").trim();
-
-    let name = "";
-    if (lastName && firstName) {
-      name = `${lastName}, ${firstName}${middleInitial ? " " + middleInitial : ""}`;
-    } else if (firstName) {
-      name = `${firstName}${middleInitial ? " " + middleInitial : ""}`;
-    } else if (lastName) {
-      name = lastName;
-    }
-    name = name.trim().replace(/\s+/g, ' ');
-
     return {
       id: backendApp.id,
       studentId: backendApp.studentId || "",
-      name: name,
+      name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
       email: backendApp.email,
       department: backendApp.membershipRole,
       corUrl: backendApp.certificateOfRegistration,

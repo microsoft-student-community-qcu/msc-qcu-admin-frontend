@@ -10,7 +10,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import type { Applicant } from "@/mocks/applicants";
+import type { Applicant } from "@/features/hr/shared/types";
 
 interface MemberProfileSheetProps {
   isOpen: boolean;
@@ -43,10 +43,7 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
               <div className="flex items-center gap-size160">
                 <Avatar className="h-14 w-14 rounded-none border border-border/80 shadow-sm">
                   <AvatarFallback className="rounded-none bg-primary/10 text-primary text-lg font-bold">
-                    {activeMember.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
+                    {activeMember.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
                 <div>

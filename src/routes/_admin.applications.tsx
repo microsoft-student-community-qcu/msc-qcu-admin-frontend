@@ -1,9 +1,9 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Applicant } from "@/mocks/applicants";
-import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
-import { useUpdateApplicantStatus } from "@/features/hr/applicants/hooks/useUpdateApplicantStatus";
+import { Applicant } from "@/features/hr/shared/types";
+import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useUpdateApplicantStatus } from "@/features/hr/shared/hooks/useUpdateApplicantStatus";
 
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
@@ -138,7 +138,7 @@ function ApplicationsRoute() {
   };
 
   return (
-    <div className="flex gap-size240 h-[calc(100vh-7.5rem)] animate-in fade-in slide-in-from-bottom-2 duration-300">
+    <div className="flex gap-size240 h-[calc(100vh-7.5rem)]">
       {/* LEFT COLUMN: Master List */}
       <ApplicantList
         applicants={filteredApplicants}

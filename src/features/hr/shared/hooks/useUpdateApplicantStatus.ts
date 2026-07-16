@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateApplicantStatus } from "../services/applicantApi";
-import { Applicant } from "@/mocks/applicants";
+import { Applicant } from "../types";
 
 export function useUpdateApplicantStatus() {
   const queryClient = useQueryClient();

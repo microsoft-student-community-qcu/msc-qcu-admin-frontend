@@ -3,11 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { appChartConfig } from "@/mocks/dashboard";
-import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
-import { mockApplicants } from "@/mocks/applicants";
+import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 
 export const ApplicationGrowthChart: React.FC = () => {
-  const { data: applicants = mockApplicants } = useApplicants();
+  const { data: applicants = [] } = useApplicants();
 
   const applicationsData = React.useMemo(() => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

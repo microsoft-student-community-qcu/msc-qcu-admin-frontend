@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Applicant } from "@/mocks/applicants";
+import type { Applicant } from "@/features/hr/shared/types";
 
 interface ApplicantDetailsProps {
   applicant: Applicant | null;
@@ -39,7 +39,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <div className="flex-1 flex flex-col h-full min-h-0 bg-background border border-border shadow-4 animate-pulse">
+      <div className="flex-1 flex flex-col h-full min-h-0 bg-card shadow-4 ring-1 ring-foreground/10 animate-pulse">
         {/* Detail Header Skeleton */}
         <div className="p-size240 border-b border-border flex items-center gap-size160 bg-muted/10 shrink-0">
           <div className="h-16 w-16 bg-muted shrink-0" />
@@ -69,7 +69,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
 
   if (error) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-background border border-border shadow-4">
+      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-card shadow-4 ring-1 ring-foreground/10">
         <PeopleRegular className="w-12 h-12 mb-3 text-muted-foreground/30" />
         <h3 className="text-base font-bold text-foreground">Database Offline</h3>
         <p className="text-sm max-w-xs mt-1">
@@ -81,7 +81,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
 
   if (!applicant) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-background border border-border shadow-4">
+      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-card shadow-4 ring-1 ring-foreground/10">
         <PeopleRegular className="w-12 h-12 mb-3 text-muted-foreground/30" />
         <h3 className="text-base font-bold text-foreground">No Applicant Selected</h3>
         <p className="text-sm max-w-xs mt-1">
@@ -93,17 +93,14 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full min-h-0 bg-background border border-border shadow-4">
+    <div className="flex-1 flex flex-col h-full min-h-0 bg-card shadow-4 ring-1 ring-foreground/10">
       {/* Detail Header */}
       <div className="p-size240 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-size160 bg-muted/10 shrink-0">
         <div className="flex items-center gap-size160">
           <Avatar className="h-16 w-16 rounded-none border border-border">
             <AvatarImage src="" alt={applicant.name} />
             <AvatarFallback className="rounded-none bg-primary/10 text-primary text-xl font-bold">
-              {applicant.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+              {applicant.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
 

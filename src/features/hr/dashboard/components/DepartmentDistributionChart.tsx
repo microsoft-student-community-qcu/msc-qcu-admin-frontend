@@ -3,8 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Pie, PieChart } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { deptChartConfig } from "@/mocks/dashboard";
-import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
-import { mockApplicants } from "@/mocks/applicants";
+import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 
 const getDeptKey = (deptStr: string): string => {
   const lower = deptStr.toLowerCase();
@@ -17,7 +16,7 @@ const getDeptKey = (deptStr: string): string => {
 };
 
 export const DepartmentDistributionChart: React.FC = () => {
-  const { data: applicants = mockApplicants } = useApplicants();
+  const { data: applicants = [] } = useApplicants();
 
   const departmentData = React.useMemo(() => {
     const counts = {

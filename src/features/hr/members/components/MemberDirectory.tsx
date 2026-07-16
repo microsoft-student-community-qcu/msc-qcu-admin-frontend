@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import type { Applicant } from "@/mocks/applicants";
+import type { Applicant } from "@/features/hr/shared/types";
 
 interface MemberDirectoryProps {
   members: Applicant[];
@@ -19,7 +19,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
 }) => {
   if (members.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-size320 text-muted-foreground text-sm space-y-3 bg-background border border-border shadow-2 h-[300px] w-full">
+      <div className="flex flex-col items-center justify-center p-size320 text-muted-foreground text-sm space-y-3 bg-card shadow-4 ring-1 ring-foreground/10 h-[300px] w-full">
         <PersonRegular className="w-12 h-12 text-muted-foreground/30 animate-pulse" />
         <div className="text-center">
           <p className="font-semibold text-foreground">No active members found</p>
@@ -36,16 +36,13 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
       {members.map((member) => (
         <Card
           key={member.id}
-          className="rounded-none border-border bg-card shadow-2 hover:bg-muted/50 transition-colors duration-200 flex flex-col justify-between"
+          className="rounded-none border-transparent bg-card shadow-4 hover:bg-muted/50 transition-colors duration-200 flex flex-col justify-between"
         >
           <CardContent className="p-size160 flex flex-row items-start gap-size160">
             {/* Left Side: Avatar */}
             <Avatar className="h-20 w-20 rounded-none border-2 border-primary/20 shrink-0">
               <AvatarFallback className="rounded-none bg-primary/5 text-primary text-xl font-bold">
-                {member.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
+                {member.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
 
