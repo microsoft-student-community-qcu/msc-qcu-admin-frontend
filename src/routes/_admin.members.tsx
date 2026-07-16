@@ -1,7 +1,8 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { mockApplicants, Applicant } from "@/mocks/applicants";
+import { Applicant } from "@/mocks/applicants";
+import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
 import { MemberFilterBar } from "@/features/hr/members/components/MemberFilterBar";
 import { MemberDirectory } from "@/features/hr/members/components/MemberDirectory";
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
@@ -11,10 +12,13 @@ export const Route = createFileRoute("/_admin/members")({
 });
 
 function MembersRoute() {
+  const { data: applicants, isLoading, error } = useApplicants();
+
   // Only display APPROVED applicants as active members
-  const [members] = React.useState<Applicant[]>(() =>
-    mockApplicants.filter((app) => app.status === "APPROVED"),
-  );
+  const members = React.useMemo(() => {
+    if (!applicants) return [];
+    return applicants.filter((app) => app.status === "APPROVED");
+  }, [applicants]);
 
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedDeptFilter, setSelectedDeptFilter] = React.useState<string>("ALL");
@@ -53,6 +57,25 @@ function MembersRoute() {
     });
     window.location.href = `mailto:${member.email}?subject=QCU%20MSC%20Community%20Update`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
+        <span className="text-sm text-muted-foreground animate-pulse">Loading members...</span>
+      </div>
+    );
+  }
+
+  if (error || !applicants) {
+    return (
+      <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
+        <div className="text-center">
+          <p className="text-sm text-destructive font-medium">Failed to load members</p>
+          <p className="text-xs text-muted-foreground mt-1">Please check your backend connection or refresh.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-size320 w-full animate-in fade-in slide-in-from-bottom-2 duration-300">

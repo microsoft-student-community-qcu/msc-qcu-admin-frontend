@@ -2,12 +2,52 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pie, PieChart } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { departmentData, deptChartConfig } from "@/mocks/dashboard";
+import { deptChartConfig } from "@/mocks/dashboard";
+import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { mockApplicants } from "@/mocks/applicants";
+
+const getDeptKey = (deptStr: string): string => {
+  const lower = deptStr.toLowerCase();
+  if (lower.includes("engineering") || lower.includes("dev")) return "Engineering";
+  if (lower.includes("design") || lower.includes("creative")) return "Design";
+  if (lower.includes("marketing") || lower.includes("comm")) return "Marketing";
+  if (lower.includes("operation") || lower.includes("logistics")) return "Operations";
+  if (lower.includes("research") || lower.includes("curriculum")) return "Research";
+  return "General";
+};
 
 export const DepartmentDistributionChart: React.FC = () => {
+  const { data: applicants = mockApplicants } = useApplicants();
+
+  const departmentData = React.useMemo(() => {
+    const counts = {
+      Engineering: 0,
+      Design: 0,
+      Marketing: 0,
+      Operations: 0,
+      Research: 0,
+      General: 0,
+    };
+
+    const activeMembers = applicants.filter(app => app.status === "APPROVED");
+    activeMembers.forEach(app => {
+      const key = getDeptKey(app.department);
+      counts[key as keyof typeof counts] += 1;
+    });
+
+    return [
+      { department: "Engineering", students: counts.Engineering, fill: "var(--color-Engineering)" },
+      { department: "Design", students: counts.Design, fill: "var(--color-Design)" },
+      { department: "Marketing", students: counts.Marketing, fill: "var(--color-Marketing)" },
+      { department: "Operations", students: counts.Operations, fill: "var(--color-Operations)" },
+      { department: "Research", students: counts.Research, fill: "var(--color-Research)" },
+      { department: "General", students: counts.General, fill: "var(--color-General)" },
+    ];
+  }, [applicants]);
+
   const totalStudents = React.useMemo(() => {
     return departmentData.reduce((acc, curr) => acc + curr.students, 0);
-  }, []);
+  }, [departmentData]);
 
   return (
     <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-2">

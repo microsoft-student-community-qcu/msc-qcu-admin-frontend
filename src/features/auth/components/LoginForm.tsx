@@ -1,55 +1,25 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftRegular } from "@fluentui/react-icons";
 import logo from "@/assets/qcu-msc-logo.png";
 import { cn } from "@/lib/utils";
-import { mockAccounts } from "@/mocks/accounts";
+import { useLoginForm } from "../hooks/useLoginForm";
 
 export const LoginForm: React.FC = () => {
-  const navigate = useNavigate();
-  const [step, setStep] = useState<1 | 2>(1);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleNext = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    if (email) {
-      setStep(2);
-    }
-  };
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    if (password) {
-      const account = mockAccounts[email.trim().toLowerCase()];
-      if (account && password === "password123") {
-        // 1. Trigger the content fade out
-        setIsTransitioning(true);
-
-        // Save exact height to match in dashboard seamlessly
-        if (cardRef.current) {
-          sessionStorage.setItem("loginCardHeight", cardRef.current.offsetHeight.toString());
-        }
-
-        // 2. Save session details
-        sessionStorage.setItem("currentUser", JSON.stringify(account));
-        sessionStorage.setItem("justLoggedIn", "true");
-
-        // 3. Wait for fade out, then redirect to dashboard to continue the sequence
-        setTimeout(() => {
-          navigate({ to: "/dashboard" });
-        }, 300);
-      } else {
-        setError("Invalid email or password.");
-      }
-    }
-  };
+  const {
+    step,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    error,
+    isTransitioning,
+    isSubmitting,
+    handleNext,
+    handleLogin,
+    handleBack,
+  } = useLoginForm(cardRef);
 
   return (
     <div
@@ -95,7 +65,11 @@ export const LoginForm: React.FC = () => {
             </div>
 
             <div className="h-5 text-sm mb-size160 text-left shrink-0">
-              <span className="opacity-0 select-none">&nbsp;</span>
+              {error ? (
+                <span className="text-[#e81123] animate-in fade-in duration-200">{error}</span>
+              ) : (
+                <span className="opacity-0 select-none">&nbsp;</span>
+              )}
             </div>
 
             <div className="flex justify-end">
@@ -139,10 +113,7 @@ export const LoginForm: React.FC = () => {
               <div className="flex items-center gap-2 -ml-2">
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep(1);
-                    setError(null);
-                  }}
+                  onClick={handleBack}
                   className="flex items-center justify-center rounded-full p-2 hover:bg-muted transition-colors cursor-pointer"
                   aria-label="Back"
                 >
@@ -152,9 +123,10 @@ export const LoginForm: React.FC = () => {
               </div>
               <Button
                 type="submit"
+                disabled={isSubmitting}
                 className="rounded-none px-8 min-w-[108px] min-h-9 text-md cursor-pointer"
               >
-                Sign in
+                {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
             </div>
           </form>

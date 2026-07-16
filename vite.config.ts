@@ -11,4 +11,7 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
+  server: {
+    port: 8081,
+  },
 });

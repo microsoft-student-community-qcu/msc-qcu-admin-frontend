@@ -1,7 +1,9 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { mockApplicants, Applicant } from "@/mocks/applicants";
+import { Applicant } from "@/mocks/applicants";
+import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { useUpdateApplicantStatus } from "@/features/hr/applicants/hooks/useUpdateApplicantStatus";
 
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
@@ -16,11 +18,14 @@ export const Route = createFileRoute("/_admin/applications")({
 type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "FOR_COMPLIANCE" | "CANCELLED";
 
 function ApplicationsRoute() {
-  const [applicants, setApplicants] = React.useState<Applicant[]>(mockApplicants);
-  const [selectedId, setSelectedId] = React.useState<string | null>(mockApplicants[0]?.id || null);
+  const { data: applicants, isLoading, error } = useApplicants();
+  const updateStatusMutation = useUpdateApplicantStatus();
+
+  const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
-  const [isPendingSmtp, setIsPendingSmtp] = React.useState(false);
+
+  const isPendingSmtp = updateStatusMutation.isPending;
 
   // Status Mutation Confirmation Dialog State
   const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
@@ -31,12 +36,29 @@ function ApplicationsRoute() {
   const [zoomImageSrc, setZoomImageSrc] = React.useState<string>("");
   const [zoomTitle, setZoomTitle] = React.useState<string>("");
 
+  React.useEffect(() => {
+    if (applicants && applicants.length > 0 && !selectedId) {
+      setSelectedId(applicants[0].id);
+    }
+  }, [applicants, selectedId]);
+
   const selectedApplicant = React.useMemo(() => {
+    if (!applicants) return null;
     return applicants.find((app) => app.id === selectedId) || null;
   }, [applicants, selectedId]);
 
   // Count metrics for tabs
   const tabCounts = React.useMemo(() => {
+    if (!applicants) {
+      return {
+        ALL: 0,
+        PENDING_REVIEW: 0,
+        APPROVED: 0,
+        REJECTED: 0,
+        FOR_COMPLIANCE: 0,
+        CANCELLED: 0,
+      };
+    }
     return {
       ALL: applicants.length,
       PENDING_REVIEW: applicants.filter((app) => app.status === "PENDING_REVIEW").length,
@@ -49,6 +71,7 @@ function ApplicationsRoute() {
 
   // Filtered applicants
   const filteredApplicants = React.useMemo(() => {
+    if (!applicants) return [];
     return applicants.filter((app) => {
       // 1. Filter by Tab
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
@@ -90,23 +113,22 @@ function ApplicationsRoute() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirmStatusChange = () => {
+  const handleConfirmStatusChange = async () => {
     if (!selectedId || !pendingStatus) return;
 
-    setIsPendingSmtp(true);
     setIsConfirmOpen(false);
 
-    // Simulate network delay for DB update & email dispatch
-    setTimeout(() => {
-      setIsPendingSmtp(false);
-      setApplicants((prev) =>
-        prev.map((app) => (app.id === selectedId ? { ...app, status: pendingStatus } : app)),
-      );
+    try {
+      await updateStatusMutation.mutateAsync({ applicantId: selectedId, status: pendingStatus });
       toast.success(`Applicant status updated to ${pendingStatus}.`, {
-        description: `Branded email dispatched successfully.`,
+        description: `Backend status updated and email dispatched successfully.`,
       });
+    } catch (err) {
+      console.warn("Failed to update status on backend.", err);
+      toast.error(`Failed to update status on backend.`);
+    } finally {
       setPendingStatus(null);
-    }, 1000);
+    }
   };
 
   const handleZoomImage = (src: string, title: string) => {
@@ -127,6 +149,8 @@ function ApplicationsRoute() {
         activeTab={activeTab}
         onActiveTabChange={setActiveTab}
         tabCounts={tabCounts}
+        isLoading={isLoading}
+        error={!!error}
       />
 
       {/* RIGHT COLUMN: Detail View */}
@@ -135,6 +159,8 @@ function ApplicationsRoute() {
         isPendingSmtp={isPendingSmtp}
         onStatusChange={triggerStatusChange}
         onZoomImage={handleZoomImage}
+        isLoading={isLoading}
+        error={!!error}
       />
 
       {/* MODAL: Zoomed Image Overlay */}

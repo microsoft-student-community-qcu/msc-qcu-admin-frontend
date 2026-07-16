@@ -25,6 +25,8 @@ interface ApplicantDetailsProps {
   isPendingSmtp: boolean;
   onStatusChange: (status: Applicant["status"]) => void;
   onZoomImage: (imageSrc: string, title: string) => void;
+  isLoading?: boolean;
+  error?: boolean;
 }
 
 export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
@@ -32,7 +34,51 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   isPendingSmtp,
   onStatusChange,
   onZoomImage,
+  isLoading,
+  error,
 }) => {
+  if (isLoading) {
+    return (
+      <div className="flex-1 flex flex-col h-full min-h-0 bg-background border border-border shadow-4 animate-pulse">
+        {/* Detail Header Skeleton */}
+        <div className="p-size240 border-b border-border flex items-center gap-size160 bg-muted/10 shrink-0">
+          <div className="h-16 w-16 bg-muted shrink-0" />
+          <div className="space-y-2 flex-1">
+            <div className="h-5 bg-muted w-40" />
+            <div className="h-4 bg-muted w-48" />
+            <div className="h-3 bg-muted w-32" />
+          </div>
+        </div>
+        {/* Detail Body Skeleton */}
+        <div className="flex-1 p-size240 space-y-6">
+          <div className="space-y-2">
+            <div className="h-4 bg-muted w-28" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="h-12 bg-muted" />
+              <div className="h-12 bg-muted" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 bg-muted w-36" />
+            <div className="h-24 bg-muted" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-background border border-border shadow-4">
+        <PeopleRegular className="w-12 h-12 mb-3 text-muted-foreground/30" />
+        <h3 className="text-base font-bold text-foreground">Database Offline</h3>
+        <p className="text-sm max-w-xs mt-1">
+          Could not fetch applicant details. Please check the backend service.
+        </p>
+      </div>
+    );
+  }
+
   if (!applicant) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-size320 text-muted-foreground text-center bg-background border border-border shadow-4">

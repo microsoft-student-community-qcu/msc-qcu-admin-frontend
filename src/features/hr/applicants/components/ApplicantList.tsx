@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { SearchRegular, PeopleRegular } from "@fluentui/react-icons";
+import { SearchRegular, PeopleRegular, WarningRegular } from "@fluentui/react-icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -26,6 +26,8 @@ interface ApplicantListProps {
     FOR_COMPLIANCE: number;
     CANCELLED: number;
   };
+  isLoading?: boolean;
+  error?: boolean;
 }
 
 export const ApplicantList: React.FC<ApplicantListProps> = ({
@@ -37,6 +39,8 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
   activeTab,
   onActiveTabChange,
   tabCounts,
+  isLoading,
+  error,
 }) => {
   return (
     <div className="w-[380px] shrink-0 flex flex-col h-full bg-background border border-border shadow-4">
@@ -109,7 +113,34 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
       {/* Scrollable List */}
       <ScrollArea className="flex-1 min-h-0">
         <div className="divide-y divide-border/60">
-          {applicants.length > 0 ? (
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, idx) => (
+              <div key={idx} className="p-size160 flex items-start gap-size120 animate-pulse">
+                <div className="w-9 h-9 bg-muted shrink-0" />
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="h-4 bg-muted w-24" />
+                    <div className="h-3 bg-muted w-10" />
+                  </div>
+                  <div className="h-3 bg-muted w-32" />
+                  <div className="flex justify-between pt-1">
+                    <div className="h-5 bg-muted w-16" />
+                    <div className="h-3 bg-muted w-12" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : error ? (
+            <div className="p-size320 flex flex-col items-center justify-center text-center py-20">
+              <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center mb-3">
+                <WarningRegular className="w-5 h-5 text-destructive" />
+              </div>
+              <h4 className="text-sm font-semibold text-foreground">Failed to Load</h4>
+              <p className="text-xs text-muted-foreground mt-1 max-w-[240px]">
+                Could not connect to the backend server. Please verify your connection.
+              </p>
+            </div>
+          ) : applicants.length > 0 ? (
             applicants.map((applicant) => {
               const isSelected = applicant.id === selectedId;
 
@@ -200,9 +231,16 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
               );
             })
           ) : (
-            <div className="p-size320 text-center text-muted-foreground text-sm space-y-2">
-              <PeopleRegular className="w-8 h-8 mx-auto text-muted-foreground/50" />
-              <p>No applicants found matching filters.</p>
+            <div className="p-size320 flex flex-col items-center justify-center text-center py-20">
+              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center mb-3">
+                <PeopleRegular className="w-5 h-5 text-muted-foreground/60" />
+              </div>
+              <h4 className="text-sm font-semibold text-foreground">No Applicants</h4>
+              <p className="text-xs text-muted-foreground mt-1 max-w-[240px]">
+                {searchQuery
+                  ? `No search results for "${searchQuery}"`
+                  : `There are currently no applicants in the ${activeTab.toLowerCase().replace("_", " ")} pipeline.`}
+              </p>
             </div>
           )}
         </div>

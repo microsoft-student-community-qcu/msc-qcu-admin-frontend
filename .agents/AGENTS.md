@@ -65,6 +65,11 @@ msc-qcu-admin-frontend/
 ### Code Structure Rules
 
 - Never allow a single file/component to become too large or hard to navigate.
+- **Separation of Concerns (No Component Clumping)**: Avoid mixing UI layout, form validation, business logic, and types in a single file. Keep components focused solely on rendering the view.
+- **Folder and File Separation**:
+  - **Form Validation & Schemas**: Put form validation rules in a dedicated Zod schema file inside `<feature>/schemas/`.
+  - **Business Logic & Hooks**: Encapsulate component state, input handlers, API fetches, and navigation in a custom hook inside `<feature>/hooks/`.
+  - **Type Definitions**: Place all typescript interfaces and models inside `<feature>/types/`. Do not declare them locally or inline within the component.
 - Split large components into smaller sub-components (placed in the same folder or in `src/components/shared/`).
 - Feature-specific logic, components, or hooks must be kept inside their respective subfolder in `src/features/` and NOT in global shared folders.
 - Route files go in `src/routes/` and follow TanStack Router conventions.

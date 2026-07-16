@@ -2,9 +2,19 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ClockRegular } from "@fluentui/react-icons";
-import { recentApplications } from "@/mocks/dashboard";
+import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { formatTimeAgo } from "@/utils/date";
 
 export const RecentApplicationsList: React.FC = () => {
+  const { data: applicants, isLoading, error } = useApplicants();
+
+  const sortedApplicants = React.useMemo(() => {
+    if (!applicants) return [];
+    return [...applicants]
+      .sort((a, b) => new Date(b.submissionDate).getTime() - new Date(a.submissionDate).getTime())
+      .slice(0, 5);
+  }, [applicants]);
+
   return (
     <Card className="shadow-4 border-transparent bg-background flex flex-col lg:col-span-1 lg:row-span-2 h-full min-h-0">
       <CardHeader className="shrink-0">
@@ -16,8 +26,21 @@ export const RecentApplicationsList: React.FC = () => {
         </div>
       </CardHeader>
       <CardContent className="flex-1 min-h-0 overflow-y-auto pb-4">
-        <div className="space-y-4">
-          {recentApplications.map((app) => (
+        {isLoading ? (
+          <div className="flex h-32 items-center justify-center">
+            <span className="text-xs text-muted-foreground animate-pulse">Loading...</span>
+          </div>
+        ) : error || !applicants ? (
+          <div className="flex h-32 items-center justify-center text-center">
+            <p className="text-xs text-destructive">Failed to load applications</p>
+          </div>
+        ) : sortedApplicants.length === 0 ? (
+          <div className="flex h-32 items-center justify-center text-center">
+            <p className="text-xs text-muted-foreground">No recent applications</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {sortedApplicants.map((app) => (
             <div
               key={app.id}
               className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200"
@@ -28,7 +51,7 @@ export const RecentApplicationsList: React.FC = () => {
                 </div>
                 <div>
                   <p className="text-sm font-medium leading-none">{app.name}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{app.role}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{app.department}</p>
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1">
@@ -51,7 +74,7 @@ export const RecentApplicationsList: React.FC = () => {
                     );
                   }
                   if (app.status === "PENDING_REVIEW") {
-                    if (app.manual_application) {
+                    if (app.manualApplication) {
                       return (
                         <Badge
                           variant="outline"
@@ -95,12 +118,13 @@ export const RecentApplicationsList: React.FC = () => {
                 })()}
                 <span className="text-xs flex items-center text-muted-foreground mt-1 gap-1">
                   <ClockRegular className="w-3.5 h-3.5" />
-                  {app.time}
+                  {formatTimeAgo(app.submissionDate)}
                 </span>
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

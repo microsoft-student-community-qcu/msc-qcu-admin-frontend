@@ -8,13 +8,12 @@ import {
   ArrowUpRightRegular,
   ArrowDownRightRegular,
 } from "@fluentui/react-icons";
-
-interface UserProfile {
-  role: "ADMIN_HR" | "ADMIN_LOGISTICS";
-}
+import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { UserProfile } from "@/features/auth/types";
 
 export const MetricSummaryCards: React.FC = () => {
   const [role, setRole] = useState<UserProfile["role"] | null>(null);
+  const { data: applicants, isLoading } = useApplicants();
 
   useEffect(() => {
     const rawUser = sessionStorage.getItem("currentUser");
@@ -30,6 +29,10 @@ export const MetricSummaryCards: React.FC = () => {
 
   const isLogistics = role === "ADMIN_LOGISTICS";
 
+  const totalApplicants = applicants ? applicants.length : 0;
+  const pendingApprovals = applicants ? applicants.filter((app) => app.status === "PENDING_REVIEW").length : 0;
+  const activeMembers = applicants ? applicants.filter((app) => app.status === "APPROVED").length : 0;
+
   return (
     <div
       className={`grid grid-cols-1 md:grid-cols-2 ${
@@ -44,7 +47,7 @@ export const MetricSummaryCards: React.FC = () => {
             <PeopleRegular className="w-5 h-5 text-muted-foreground" />
           </CardHeader>
           <CardContent className="z-10 relative">
-            <div className="text-2xl font-bold">1,245</div>
+            <div className="text-2xl font-bold">{isLoading ? "..." : totalApplicants}</div>
             <p className="text-xs text-muted-foreground flex items-center mt-1">
               <ArrowUpRightRegular className="w-4 h-4 text-emerald-500 mr-1 shrink-0" />
               <span className="text-emerald-500 font-medium">+12%</span>&nbsp;from last month
@@ -75,7 +78,7 @@ export const MetricSummaryCards: React.FC = () => {
             <ClipboardTaskRegular className="w-5 h-5 text-muted-foreground" />
           </CardHeader>
           <CardContent className="z-10 relative">
-            <div className="text-2xl font-bold text-amber-600 dark:text-amber-500">14</div>
+            <div className="text-2xl font-bold text-amber-600 dark:text-amber-500">{isLoading ? "..." : pendingApprovals}</div>
             <p className="text-xs text-muted-foreground flex items-center mt-1">
               Requires your attention
             </p>
@@ -90,7 +93,7 @@ export const MetricSummaryCards: React.FC = () => {
           <PulseRegular className="w-5 h-5 text-muted-foreground" />
         </CardHeader>
         <CardContent className="z-10 relative">
-          <div className="text-2xl font-bold">892</div>
+          <div className="text-2xl font-bold">{isLoading ? "..." : activeMembers}</div>
           <p className="text-xs text-muted-foreground flex items-center mt-1">
             <ArrowDownRightRegular className="w-4 h-4 text-red-500 mr-1 shrink-0" />
             <span className="text-red-500 font-medium">-2%</span>&nbsp;from last month

@@ -9,6 +9,7 @@ export interface Applicant {
   submissionDate: string;
   status: "APPROVED" | "PENDING_REVIEW" | "REJECTED" | "CANCELLED" | "FOR_COMPLIANCE";
   idCardUrl: string;
+  manualApplication?: boolean;
   // New fields from the application form
   college: string;
   program: string;

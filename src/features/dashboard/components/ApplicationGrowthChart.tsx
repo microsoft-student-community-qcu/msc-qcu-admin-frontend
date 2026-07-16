@@ -2,9 +2,37 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { applicationsData, appChartConfig } from "@/mocks/dashboard";
+import { appChartConfig } from "@/mocks/dashboard";
+import { useApplicants } from "@/features/hr/applicants/hooks/useApplicants";
+import { mockApplicants } from "@/mocks/applicants";
 
 export const ApplicationGrowthChart: React.FC = () => {
+  const { data: applicants = mockApplicants } = useApplicants();
+
+  const applicationsData = React.useMemo(() => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const result = [];
+    const now = new Date();
+    
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthLabel = months[d.getMonth()];
+      const year = d.getFullYear();
+      const monthIdx = d.getMonth();
+      
+      const count = applicants.filter(app => {
+        const appDate = new Date(app.submissionDate);
+        return appDate.getFullYear() === year && appDate.getMonth() === monthIdx;
+      }).length;
+      
+      result.push({
+        month: monthLabel,
+        apps: count
+      });
+    }
+    
+    return result;
+  }, [applicants]);
   return (
     <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-3">
       <CardHeader className="shrink-0">
