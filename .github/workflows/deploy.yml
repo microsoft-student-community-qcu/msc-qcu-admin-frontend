@@ -1,0 +1,22 @@
+name: Deploy Admin Frontend
+
+on:
+  push:
+    branches: [main, develop, release]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    uses: microsoft-student-community-qcu/qcu-msc-cicd/.github/workflows/deploy-azure-blob-static.yml@main
+    with:
+      build-command: 'npm run build'
+      source-path: 'dist'
+      storage-account-name: ${{ github.ref_name == 'develop' && 'stsamscqcuadmindev' || github.ref_name == 'release' && 'stsamscqcuadminrel' || 'stsamscqcuadmin' }}
+    secrets:
+      azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
