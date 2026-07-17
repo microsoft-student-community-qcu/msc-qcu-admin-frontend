@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Applicant } from "@/features/hr/shared/types";
+import { openDocument } from "@/features/hr/shared/services/applicantApi";
 
 interface ApplicantDetailsProps {
   applicant: Applicant | null;
@@ -183,6 +184,10 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       </span>
                       <a
                         href={applicant.corUrl}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          void openDocument(applicant.corUrl);
+                        }}
                         target="_blank"
                         rel="noreferrer"
                         className="flex items-center justify-between p-1.5 border border-border hover:bg-muted/30 transition-colors text-primary font-medium text-xs rounded-none"
@@ -200,6 +205,10 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       </span>
                       <a
                         href={applicant.cvUrl}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          void openDocument(applicant.cvUrl);
+                        }}
                         target="_blank"
                         rel="noreferrer"
                         className="flex items-center justify-between p-1.5 border border-border hover:bg-muted/30 transition-colors text-primary font-medium text-xs rounded-none"

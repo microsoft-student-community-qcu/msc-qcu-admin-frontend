@@ -11,6 +11,37 @@ const getAuthHeaders = (): Record<string, string> => {
   return headers;
 };
 
+/**
+ * Documents (CoR/CV) live in a private blob container and are served through
+ * the authenticated backend endpoint. The backend stores the raw blob URL, so
+ * extract the filename and build the API URL from it.
+ */
+const toDocumentApiUrl = (storedPath: string): string => {
+  if (!storedPath) return storedPath;
+  const filename = storedPath.split("/").pop() ?? storedPath;
+  return `${getApiBaseURL()}/applicants/documents/${encodeURIComponent(filename)}`;
+};
+
+/**
+ * Opens a CoR/CV document in a new tab. A plain <a href> cannot attach the
+ * Authorization header, so fetch the blob with credentials first and open an
+ * object URL instead.
+ */
+export async function openDocument(documentUrl: string): Promise<void> {
+  const res = await fetch(documentUrl, {
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("Failed to load document");
+  }
+  const blob = await res.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  window.open(objectUrl, "_blank", "noopener,noreferrer");
+  // Revoke after the new tab has had a chance to load the blob
+  setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+}
+
 export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise<Applicant[]> {
   const apiBase = getApiBaseURL();
   const queryParams = new URLSearchParams();
@@ -43,8 +74,8 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
       name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
       email: backendApp.email,
       department: backendApp.membershipRole,
-      corUrl: backendApp.certificateOfRegistration,
-      cvUrl: backendApp.curriculumVitae,
+      corUrl: toDocumentApiUrl(backendApp.certificateOfRegistration),
+      cvUrl: toDocumentApiUrl(backendApp.curriculumVitae),
       submissionDate: backendApp.createdAt,
       status: backendApp.status,
       idCardUrl: backendApp.idImagePath || undefined,
