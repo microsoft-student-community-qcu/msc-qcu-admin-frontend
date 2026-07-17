@@ -23,6 +23,34 @@ const toDocumentApiUrl = (storedPath: string): string => {
 };
 
 /**
+ * OCR ID images live in a private blob container and are served through
+ * the authenticated backend endpoint. The backend stores the raw blob URL,
+ * so extract the filename and build the API URL from it.
+ */
+const toImageApiUrl = (storedPath: string): string => {
+  if (!storedPath) return storedPath;
+  const filename = storedPath.split("/").pop() ?? storedPath;
+  return `${getApiBaseURL()}/applicants/images/${encodeURIComponent(filename)}`;
+};
+
+/**
+ * Fetches a protected image with the session Authorization header and
+ * returns an object URL usable as an <img src>. Caller must revoke the
+ * object URL when done (URL.revokeObjectURL).
+ */
+export async function fetchAuthorizedImage(imageUrl: string): Promise<string> {
+  const res = await fetch(imageUrl, {
+    headers: getAuthHeaders(),
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("Failed to load image");
+  }
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}
+
+/**
  * Opens a CoR/CV document in a new tab. A plain <a href> cannot attach the
  * Authorization header, so fetch the blob with credentials first and open an
  * object URL instead.
@@ -78,7 +106,7 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
       cvUrl: toDocumentApiUrl(backendApp.curriculumVitae),
       submissionDate: backendApp.createdAt,
       status: backendApp.status,
-      idCardUrl: backendApp.idImagePath || undefined,
+      idCardUrl: backendApp.idImagePath ? toImageApiUrl(backendApp.idImagePath) : undefined,
       manualApplication: backendApp.manual_application,
       college: backendApp.college,
       program: backendApp.program,

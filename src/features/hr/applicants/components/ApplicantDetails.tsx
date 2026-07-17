@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import type { Applicant } from "@/features/hr/shared/types";
 import { openDocument } from "@/features/hr/shared/services/applicantApi";
+import { useAuthorizedImage } from "@/features/hr/shared/hooks/useAuthorizedImage";
 
 interface ApplicantDetailsProps {
   applicant: Applicant | null;
@@ -38,6 +39,11 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   isLoading,
   error,
 }) => {
+  // ID image lives in a private blob container served through the
+  // authenticated backend endpoint; <img> cannot attach auth headers,
+  // so load it as an object URL. Must run before any early return.
+  const idImage = useAuthorizedImage(applicant?.idCardUrl);
+
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col h-full min-h-0 bg-card shadow-4 ring-1 ring-foreground/10 animate-pulse">
@@ -303,23 +309,37 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <>
                         <div
                           onClick={() => {
-                            onZoomImage(applicant.idCardUrl!, `${applicant.name} - Student ID`);
+                            if (idImage.objectUrl) {
+                              onZoomImage(idImage.objectUrl, `${applicant.name} - Student ID`);
+                            }
                           }}
                           className="w-48 aspect-54/86 bg-muted/30 border border-border overflow-hidden relative cursor-pointer group flex items-center justify-center"
                         >
-                          <img
-                            src={applicant.idCardUrl}
-                            alt="Student ID card"
-                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200"
-                          />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
-                            <span className="text-white text-xs font-semibold flex items-center gap-1">
-                              <EyeRegular className="w-4 h-4" /> Click to Zoom
+                          {idImage.objectUrl ? (
+                            <img
+                              src={idImage.objectUrl}
+                              alt="Student ID card"
+                              className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-200"
+                            />
+                          ) : (
+                            <span className="text-xs text-muted-foreground/60 italic">
+                              {idImage.error ? "Failed to load ID photo" : "Loading ID photo…"}
                             </span>
-                          </div>
+                          )}
+                          {idImage.objectUrl && (
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-200">
+                              <span className="text-white text-xs font-semibold flex items-center gap-1">
+                                <EyeRegular className="w-4 h-4" /> Click to Zoom
+                              </span>
+                            </div>
+                          )}
                         </div>
                         <a
                           href={applicant.idCardUrl}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            void openDocument(applicant.idCardUrl!);
+                          }}
                           target="_blank"
                           rel="noreferrer"
                           className="w-full flex items-center justify-center gap-1.5 p-1.5 border border-border hover:bg-muted/30 transition-colors text-center font-medium text-xs rounded-none cursor-pointer text-foreground"
