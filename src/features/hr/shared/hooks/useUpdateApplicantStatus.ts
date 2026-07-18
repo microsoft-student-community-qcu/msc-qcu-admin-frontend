@@ -6,8 +6,17 @@ export function useUpdateApplicantStatus() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ applicantId, status, message }: { applicantId: string; status: Applicant["status"]; message?: string }) =>
-      updateApplicantStatus(applicantId, status, message),
+    mutationFn: ({
+      applicantId,
+      status,
+      message,
+      resubmitFields,
+    }: {
+      applicantId: string;
+      status: Applicant["status"];
+      message?: string;
+      resubmitFields?: string[];
+    }) => updateApplicantStatus(applicantId, status, message, resubmitFields),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applicants"] });
     },

@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface StatusConfirmDialogProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ interface StatusConfirmDialogProps {
   applicantName: string;
   applicantEmail: string;
   pendingStatus: string | null;
-  onConfirm: (message?: string) => void;
+  onConfirm: (message?: string, resubmitFields?: string[]) => void;
   onCancel: () => void;
 }
 
@@ -40,17 +41,22 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
   onCancel,
 }) => {
   const [message, setMessage] = useState("");
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const statusLabel = pendingStatus ? (STATUS_LABELS[pendingStatus] ?? pendingStatus) : "";
   
   // Need to provide instructions for student if status is RESUBMIT or optionally if REJECTED
   const requiresMessage = pendingStatus === "RESUBMIT";
   const allowsMessage = pendingStatus === "RESUBMIT" || pendingStatus === "REJECTED" || pendingStatus === "CANCELLED";
   
-  const isConfirmDisabled = requiresMessage && message.trim().length === 0;
+  // Disable confirm if message is empty OR (if status is RESUBMIT and no fields are selected)
+  const isConfirmDisabled = 
+    (requiresMessage && message.trim().length === 0) || 
+    (requiresMessage && selectedFields.length === 0);
 
   useEffect(() => {
     if (isOpen) {
       setMessage(""); // Reset on open
+      setSelectedFields([]); // Reset on open
     }
   }, [isOpen]);
 
@@ -59,7 +65,16 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
       e.preventDefault();
       return;
     }
-    onConfirm(message.trim() || undefined);
+    onConfirm(
+      message.trim() || undefined,
+      pendingStatus === "RESUBMIT" ? selectedFields : undefined
+    );
+  };
+
+  const handleToggleField = (field: string) => {
+    setSelectedFields((prev) =>
+      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field]
+    );
   };
 
   return (
@@ -92,8 +107,47 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
               onChange={(e) => setMessage(e.target.value)}
             />
             {requiresMessage && (
-              <p className="text-xs text-muted-foreground">
-                This message will be included in the email sent to the applicant.
+              <div className="pt-2 space-y-3">
+                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Fields to Unlock for Resubmission *
+                </Label>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="field-personalInfo"
+                      checked={selectedFields.includes("personalInfo")}
+                      onCheckedChange={() => handleToggleField("personalInfo")}
+                    />
+                    <label htmlFor="field-personalInfo" className="text-sm font-medium leading-none select-none cursor-pointer">
+                      Personal Information
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="field-certificateOfRegistration"
+                      checked={selectedFields.includes("certificateOfRegistration")}
+                      onCheckedChange={() => handleToggleField("certificateOfRegistration")}
+                    />
+                    <label htmlFor="field-certificateOfRegistration" className="text-sm font-medium leading-none select-none cursor-pointer">
+                      Certificate of Registration (File)
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="field-curriculumVitae"
+                      checked={selectedFields.includes("curriculumVitae")}
+                      onCheckedChange={() => handleToggleField("curriculumVitae")}
+                    />
+                    <label htmlFor="field-curriculumVitae" className="text-sm font-medium leading-none select-none cursor-pointer">
+                      Curriculum Vitae (File)
+                    </label>
+                  </div>
+                </div>
+              </div>
+            )}
+            {requiresMessage && (
+              <p className="text-xs text-muted-foreground pt-1">
+                The applicant will only be able to edit the unlocked items.
               </p>
             )}
           </div>

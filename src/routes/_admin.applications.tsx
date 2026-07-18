@@ -113,13 +113,18 @@ function ApplicationsRoute() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirmStatusChange = async (message?: string) => {
+  const handleConfirmStatusChange = async (message?: string, resubmitFields?: string[]) => {
     if (!selectedId || !pendingStatus) return;
 
     setIsConfirmOpen(false);
 
     try {
-      await updateStatusMutation.mutateAsync({ applicantId: selectedId, status: pendingStatus, message });
+      await updateStatusMutation.mutateAsync({
+        applicantId: selectedId,
+        status: pendingStatus,
+        message,
+        resubmitFields,
+      });
       toast.success(`Applicant status updated to ${pendingStatus}.`, {
         description: `Backend status updated and email dispatched successfully.`,
       });
