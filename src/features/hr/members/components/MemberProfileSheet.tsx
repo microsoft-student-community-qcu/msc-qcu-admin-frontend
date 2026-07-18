@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import type { Applicant } from "@/features/hr/shared/types";
+import { formatCampus } from "@/features/hr/shared/utils/formatters";
 
 interface MemberProfileSheetProps {
   isOpen: boolean;
@@ -99,7 +99,7 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                     <div>
                       <span className="text-muted-foreground block">Campus</span>
                       <span className="font-medium text-foreground text-xs">
-                        {activeMember.campus} Campus
+                        {formatCampus(activeMember.campus)}
                       </span>
                     </div>
                   </div>

@@ -21,6 +21,7 @@ import {
 import type { Applicant } from "@/features/hr/shared/types";
 import { openDocument } from "@/features/hr/shared/services/applicantApi";
 import { useAuthorizedImage } from "@/features/hr/shared/hooks/useAuthorizedImage";
+import { formatCampus, formatGender } from "@/features/hr/shared/utils/formatters";
 
 interface ApplicantDetailsProps {
   applicant: Applicant | null;
@@ -478,7 +479,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <div className="grid grid-cols-3 py-1.5 border-b border-border/30 gap-2 items-center">
                         <span className="text-muted-foreground font-medium col-span-1">Campus</span>
                         <span className="col-span-2 text-left font-medium text-foreground">
-                          {applicant.campus}
+                          {formatCampus(applicant.campus)}
                         </span>
                       </div>
                       <div className="grid grid-cols-3 py-1.5 border-b border-border/30 gap-2 items-center">
@@ -500,7 +501,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <div className="grid grid-cols-3 py-1.5 border-b border-border/30 gap-2 items-center">
                         <span className="text-muted-foreground font-medium col-span-1">Gender</span>
                         <span className="col-span-2 text-left font-medium text-foreground">
-                          {applicant.gender}
+                          {formatGender(applicant.gender)}
                         </span>
                       </div>
                       <div className="grid grid-cols-3 py-1.5 gap-2 items-center">

@@ -18,7 +18,8 @@ const getAuthHeaders = (): Record<string, string> => {
  */
 const toDocumentApiUrl = (storedPath: string): string => {
   if (!storedPath) return storedPath;
-  const filename = storedPath.split("/").pop() ?? storedPath;
+  const decodedPath = decodeURIComponent(storedPath);
+  const filename = decodedPath.split("/").pop() ?? decodedPath;
   return `${getApiBaseURL()}/applicants/documents/${encodeURIComponent(filename)}`;
 };
 
@@ -29,7 +30,8 @@ const toDocumentApiUrl = (storedPath: string): string => {
  */
 const toImageApiUrl = (storedPath: string): string => {
   if (!storedPath) return storedPath;
-  const filename = storedPath.split("/").pop() ?? storedPath;
+  const decodedPath = decodeURIComponent(storedPath);
+  const filename = decodedPath.split("/").pop() ?? decodedPath;
   return `${getApiBaseURL()}/applicants/images/${encodeURIComponent(filename)}`;
 };
 

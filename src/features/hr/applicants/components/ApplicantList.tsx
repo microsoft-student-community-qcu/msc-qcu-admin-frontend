@@ -166,8 +166,11 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                       <span className="font-semibold text-sm truncate text-foreground">
                         {applicant.name}
                       </span>
-                      <span className="text-[10px] text-muted-foreground shrink-0">
-                        {applicant.id}
+                      <span
+                        className="text-[10px] text-muted-foreground shrink-0 font-mono"
+                        title={applicant.id}
+                      >
+                        {applicant.id.slice(0, 8)}
                       </span>
                     </div>
 
