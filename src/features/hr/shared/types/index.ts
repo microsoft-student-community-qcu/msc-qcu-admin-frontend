@@ -7,7 +7,7 @@ export interface Applicant {
   corUrl: string;
   cvUrl: string;
   submissionDate: string;
-  status: "APPROVED" | "PENDING_REVIEW" | "REJECTED" | "CANCELLED" | "FOR_COMPLIANCE";
+  status: "APPROVED" | "PENDING_REVIEW" | "REJECTED" | "CANCELLED" | "RESUBMIT";
   idCardUrl: string;
   manualApplication?: boolean;
   college: string;

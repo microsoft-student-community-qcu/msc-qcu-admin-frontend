@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_admin/applications")({
   component: ApplicationsRoute,
 });
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "FOR_COMPLIANCE" | "CANCELLED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED";
 
 function ApplicationsRoute() {
   const { data: applicants, isLoading, error } = useApplicants();
@@ -55,7 +55,7 @@ function ApplicationsRoute() {
         PENDING_REVIEW: 0,
         APPROVED: 0,
         REJECTED: 0,
-        FOR_COMPLIANCE: 0,
+        RESUBMIT: 0,
         CANCELLED: 0,
       };
     }
@@ -64,7 +64,7 @@ function ApplicationsRoute() {
       PENDING_REVIEW: applicants.filter((app) => app.status === "PENDING_REVIEW").length,
       APPROVED: applicants.filter((app) => app.status === "APPROVED").length,
       REJECTED: applicants.filter((app) => app.status === "REJECTED").length,
-      FOR_COMPLIANCE: applicants.filter((app) => app.status === "FOR_COMPLIANCE").length,
+      RESUBMIT: applicants.filter((app) => app.status === "RESUBMIT").length,
       CANCELLED: applicants.filter((app) => app.status === "CANCELLED").length,
     };
   }, [applicants]);
@@ -77,7 +77,7 @@ function ApplicationsRoute() {
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
       if (activeTab === "APPROVED" && app.status !== "APPROVED") return false;
       if (activeTab === "REJECTED" && app.status !== "REJECTED") return false;
-      if (activeTab === "FOR_COMPLIANCE" && app.status !== "FOR_COMPLIANCE") return false;
+      if (activeTab === "RESUBMIT" && app.status !== "RESUBMIT") return false;
       if (activeTab === "CANCELLED" && app.status !== "CANCELLED") return false;
 
       // 2. Filter by Search Query
@@ -113,13 +113,13 @@ function ApplicationsRoute() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirmStatusChange = async () => {
+  const handleConfirmStatusChange = async (message?: string) => {
     if (!selectedId || !pendingStatus) return;
 
     setIsConfirmOpen(false);
 
     try {
-      await updateStatusMutation.mutateAsync({ applicantId: selectedId, status: pendingStatus });
+      await updateStatusMutation.mutateAsync({ applicantId: selectedId, status: pendingStatus, message });
       toast.success(`Applicant status updated to ${pendingStatus}.`, {
         description: `Backend status updated and email dispatched successfully.`,
       });

@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Applicant } from "@/features/hr/shared/types";
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "FOR_COMPLIANCE" | "CANCELLED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED";
 
 interface ApplicantListProps {
   applicants: Applicant[];
@@ -23,7 +23,7 @@ interface ApplicantListProps {
     PENDING_REVIEW: number;
     APPROVED: number;
     REJECTED: number;
-    FOR_COMPLIANCE: number;
+    RESUBMIT: number;
     CANCELLED: number;
   };
   isLoading?: boolean;
@@ -92,12 +92,12 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
             Rejected ({tabCounts.REJECTED})
           </Button>
           <Button
-            variant={activeTab === "FOR_COMPLIANCE" ? "default" : "ghost"}
+            variant={activeTab === "RESUBMIT" ? "default" : "ghost"}
             size="sm"
-            onClick={() => onActiveTabChange("FOR_COMPLIANCE")}
+            onClick={() => onActiveTabChange("RESUBMIT")}
             className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
           >
-            Compliance ({tabCounts.FOR_COMPLIANCE})
+            Resubmit ({tabCounts.RESUBMIT})
           </Button>
           <Button
             variant={activeTab === "CANCELLED" ? "default" : "ghost"}
@@ -209,12 +209,12 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                             Cancelled
                           </Badge>
                         )}
-                        {applicant.status === "FOR_COMPLIANCE" && (
+                        {applicant.status === "RESUBMIT" && (
                           <Badge
                             variant="outline"
                             className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
                           >
-                            For Compliance
+                            Resubmit
                           </Badge>
                         )}
                       </div>

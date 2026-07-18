@@ -150,13 +150,13 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                     APPROVED: "Approved",
                     REJECTED: "Rejected",
                     CANCELLED: "Cancelled",
-                    FOR_COMPLIANCE: "For Compliance",
+                    RESUBMIT: "Resubmit",
                   }[applicant.status] ?? applicant.status}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent className="rounded-none shadow-8">
                 <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
-                <SelectItem value="FOR_COMPLIANCE">For Compliance</SelectItem>
+                <SelectItem value="RESUBMIT">Resubmit</SelectItem>
                 <SelectItem value="APPROVED">Approve / Member</SelectItem>
                 <SelectItem value="REJECTED">Reject Application</SelectItem>
               </SelectContent>

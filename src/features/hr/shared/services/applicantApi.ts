@@ -129,7 +129,8 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
 
 export async function updateApplicantStatus(
   applicantId: string,
-  status: Applicant["status"]
+  status: Applicant["status"],
+  message?: string
 ): Promise<any> {
   const apiBase = getApiBaseURL();
   const res = await fetch(`${apiBase}/applicants/${applicantId}/status`, {
@@ -138,7 +139,7 @@ export async function updateApplicantStatus(
       "Content-Type": "application/json",
       ...getAuthHeaders(),
     },
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, message }),
     credentials: "include",
   });
   if (!res.ok) {
