@@ -73,7 +73,9 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Member UUID:</span>
-                    <span className="font-mono text-foreground">{activeMember.id}</span>
+                    <span className="font-mono text-foreground" title={activeMember.id}>
+                      {activeMember.id.slice(0, 8)}...{activeMember.id.slice(-4)}
+                    </span>
                   </div>
                 </div>
               </div>
