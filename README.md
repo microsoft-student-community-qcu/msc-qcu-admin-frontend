@@ -41,7 +41,31 @@ _See [`design.md`](./design.md) for the complete rules and tokens._
    ```bash
    npm install
    ```
-3. Start the development server:
+3. Configure environment variables:
+   Create a `.env` or `.env.local` file by copying `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   Ensure `VITE_API_URL` points to your backend instance:
+   ```env
+   VITE_API_URL=http://localhost:5000/api/v1
+   VITE_AZURE_STORAGE_ACCOUNT_NAME=your_azure_storage_account_name
+   ```
+
+4. Connect to Backend & Database Setup:
+   - Clone and set up the backend repository: `qcu-msc-central-portal-backend`.
+   - Ensure MySQL database (e.g. via XAMPP) is running and created (e.g. `qcu_msc_central_portal`).
+   - In the backend repo, run Prisma migrations to apply the SQL database schema:
+     ```bash
+     npx prisma migrate dev
+     ```
+   - Seed the initial admin credentials into the database:
+     ```bash
+     npx prisma db seed
+     ```
+     *(This seeds system HR Admin and Logistics Admin credentials to log into this panel).*
+
+5. Start the development server:
    ```bash
    npm run dev
    ```
