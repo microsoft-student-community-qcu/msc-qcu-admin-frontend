@@ -1,8 +1,8 @@
-import { getAuthBaseURL } from "@/utils/env";
+import { getApiBaseURL } from "@/utils/env";
 
 export async function login(email: string, password: string): Promise<any> {
-  const authBase = getAuthBaseURL();
-  const res = await fetch(`${authBase}/sign-in/email`, {
+  const apiBase = getApiBaseURL();
+  const res = await fetch(`${apiBase}/auth/admin/sign-in`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
