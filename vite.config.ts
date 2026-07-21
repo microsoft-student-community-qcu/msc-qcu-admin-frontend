@@ -13,5 +13,11 @@ export default defineConfig({
   ],
   server: {
     port: 8081,
+    proxy: {
+      "/api": {
+        target: process.env.VITE_API_URL || "https://func-msc-qcu-backend-dev.azurewebsites.net",
+        changeOrigin: true,
+      },
+    },
   },
 });
