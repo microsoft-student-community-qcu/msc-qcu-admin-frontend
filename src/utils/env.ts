@@ -1,5 +1,17 @@
-export const getApiBaseURL = () => {
-  return import.meta.env.VITE_API_URL || "";
+export const getApiBaseURL = (): string => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host.includes("stsamscqcuadminrel")) {
+      return "https://func-msc-qcu-backend-rel.azurewebsites.net/api/v1";
+    }
+    if (host.includes("stsamscqcuadmindev")) {
+      return "https://func-msc-qcu-backend-dev.azurewebsites.net/api/v1";
+    }
+  }
+  return "";
 };
 
 export const getAuthBaseURL = () => {
@@ -13,3 +25,4 @@ export const getAuthBaseURL = () => {
     return "/api/auth";
   }
 };
+
