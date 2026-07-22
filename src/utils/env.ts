@@ -10,11 +10,11 @@ export const getApiBaseURL = (): string => {
     if (host.includes("stsamscqcuadmindev")) {
       return "https://func-msc-qcu-backend-dev.azurewebsites.net/api/v1";
     }
-    if (host.includes("stsamscqcuadmin")) {
-      return "https://func-msc-qcu-backend.azurewebsites.net/api/v1";
+    if (host.includes("admin.msc-qcu.tech") || host.includes("stsamscqcuadmin")) {
+      return "https://admin.msc-qcu.tech/api/v1";
     }
   }
-  return "";
+  return "https://admin.msc-qcu.tech/api/v1";
 };
 
 export const getAuthBaseURL = () => {
