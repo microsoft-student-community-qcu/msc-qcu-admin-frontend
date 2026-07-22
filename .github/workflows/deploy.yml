@@ -10,13 +10,28 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  deploy-static-blob:
+    if: github.ref_name != 'main'
     uses: microsoft-student-community-qcu/qcu-msc-cicd/.github/workflows/deploy-azure-blob-static.yml@main
     with:
       build-command: 'npm run build'
       source-path: 'dist'
-      storage-account-name: ${{ github.ref_name == 'develop' && 'stsamscqcuadmindev' || github.ref_name == 'release' && 'stsamscqcuadminrel' || 'stsamscqcuadmin' }}
+      storage-account-name: ${{ github.ref_name == 'develop' && 'stsamscqcuadmindev' || 'stsamscqcuadminrel' }}
     secrets:
       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
       azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
       azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  deploy-app-service:
+    if: github.ref_name == 'main'
+    uses: microsoft-student-community-qcu/qcu-msc-cicd/.github/workflows/deploy-azure-webapp-node.yml@main
+    with:
+      build-command: 'npm run build'
+      app-name: 'msc-qcu-admin'
+      package-path: '.output'
+      startup-command: 'node server/index.mjs'
+    secrets:
+      azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+      azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+      azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+

@@ -1,4 +1,4 @@
-export const getApiBaseURL = () => {
+export const getApiBaseURL = (): string => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
@@ -28,3 +28,4 @@ export const getAuthBaseURL = () => {
     return "/api/auth";
   }
 };
+
