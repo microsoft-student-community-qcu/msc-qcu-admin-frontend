@@ -14,7 +14,7 @@ jobs:
     uses: microsoft-student-community-qcu/qcu-msc-cicd/.github/workflows/deploy-azure-blob-static.yml@main
     with:
       build-command: 'npm run build'
-      source-path: 'dist'
+      source-path: ${{ github.ref_name == 'develop' && '.output/public' || 'dist' }}
       storage-account-name: ${{ github.ref_name == 'develop' && 'stsamscqcuadmindev' || github.ref_name == 'release' && 'stsamscqcuadminrel' || 'stsamscqcuadmin' }}
     secrets:
       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
