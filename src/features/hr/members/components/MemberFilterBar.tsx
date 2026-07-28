@@ -12,12 +12,13 @@ interface MemberFilterBarProps {
 
 const DEPARTMENTS = [
   "ALL",
-  "Engineering / Development",
-  "Design & Creatives",
-  "Marketing & Communications",
-  "Operations & Logistics",
-  "Research & Curriculum",
-  "General Member",
+  "Secretariat Office",
+  "Relations Office",
+  "Finance Office",
+  "Logistics Office",
+  "Creatives Office",
+  "Management & Dev. Office",
+  "Startup Developers Office",
 ];
 
 export const MemberFilterBar: React.FC<MemberFilterBarProps> = ({

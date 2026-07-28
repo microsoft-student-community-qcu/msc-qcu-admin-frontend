@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_admin/applications")({
   component: ApplicationsRoute,
 });
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 function ApplicationsRoute() {
   const { data: applicants, isLoading, error } = useApplicants();
@@ -57,6 +57,7 @@ function ApplicationsRoute() {
         REJECTED: 0,
         RESUBMIT: 0,
         CANCELLED: 0,
+        FOR_INTERVIEW: 0,
       };
     }
     return {
@@ -66,6 +67,7 @@ function ApplicationsRoute() {
       REJECTED: applicants.filter((app) => app.status === "REJECTED").length,
       RESUBMIT: applicants.filter((app) => app.status === "RESUBMIT").length,
       CANCELLED: applicants.filter((app) => app.status === "CANCELLED").length,
+      FOR_INTERVIEW: applicants.filter((app) => app.status === "FOR_INTERVIEW").length,
     };
   }, [applicants]);
 
@@ -79,6 +81,7 @@ function ApplicationsRoute() {
       if (activeTab === "REJECTED" && app.status !== "REJECTED") return false;
       if (activeTab === "RESUBMIT" && app.status !== "RESUBMIT") return false;
       if (activeTab === "CANCELLED" && app.status !== "CANCELLED") return false;
+      if (activeTab === "FOR_INTERVIEW" && app.status !== "FOR_INTERVIEW") return false;
 
       // 2. Filter by Search Query
       if (searchQuery.trim() !== "") {

@@ -93,13 +93,23 @@ export const RecentApplicationsList: React.FC = () => {
                       </Badge>
                     );
                   }
-                  if (app.status === "FOR_COMPLIANCE") {
+                  if (app.status === "RESUBMIT") {
                     return (
                       <Badge
                         variant="outline"
                         className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/15 whitespace-nowrap"
                       >
-                        For Compliance
+                        Resubmit
+                      </Badge>
+                    );
+                  }
+                  if (app.status === "FOR_INTERVIEW") {
+                    return (
+                      <Badge
+                        variant="outline"
+                        className="font-normal text-xs bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 hover:bg-purple-500/15 whitespace-nowrap"
+                      >
+                        For Interview
                       </Badge>
                     );
                   }

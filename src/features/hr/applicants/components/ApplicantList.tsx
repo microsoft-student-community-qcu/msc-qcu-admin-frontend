@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Applicant } from "@/features/hr/shared/types";
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 interface ApplicantListProps {
   applicants: Applicant[];
@@ -25,6 +25,7 @@ interface ApplicantListProps {
     REJECTED: number;
     RESUBMIT: number;
     CANCELLED: number;
+    FOR_INTERVIEW: number;
   };
   isLoading?: boolean;
   error?: boolean;
@@ -98,6 +99,14 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
             className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
           >
             Resubmit ({tabCounts.RESUBMIT})
+          </Button>
+          <Button
+            variant={activeTab === "FOR_INTERVIEW" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => onActiveTabChange("FOR_INTERVIEW")}
+            className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
+          >
+            For Interview ({tabCounts.FOR_INTERVIEW})
           </Button>
           <Button
             variant={activeTab === "CANCELLED" ? "default" : "ghost"}
@@ -218,6 +227,14 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                             className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
                           >
                             Resubmit
+                          </Badge>
+                        )}
+                        {applicant.status === "FOR_INTERVIEW" && (
+                          <Badge
+                            variant="outline"
+                            className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
+                          >
+                            For Interview
                           </Badge>
                         )}
                       </div>
