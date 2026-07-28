@@ -3,8 +3,8 @@ import { HrMetricSummaryCards } from "./HrMetricSummaryCards";
 import { ApplicationGrowthChart } from "./ApplicationGrowthChart";
 import { DepartmentDistributionChart } from "./DepartmentDistributionChart";
 import { RecentApplicationsList } from "./RecentApplicationsList";
-import { EventGrid } from "@/features/logistics/dashboard/components/EventGrid";
-import { InboxPanel } from "@/components/shared/InboxPanel";
+import { PendingReviewQueue } from "./PendingReviewQueue";
+import { CampusDistributionChart } from "./CampusDistributionChart";
 
 export const HrDashboard: React.FC = () => {
   return (
@@ -23,11 +23,11 @@ export const HrDashboard: React.FC = () => {
         {/* Right Sidebar: Recent Applications */}
         <RecentApplicationsList />
 
-        {/* Row 2: Upcoming & Recent Events */}
-        <EventGrid />
-
-        {/* Inbox / Notifications */}
-        <InboxPanel />
+        {/* Row 2: Pending queue & campus distribution */}
+        <div className="lg:col-span-3 lg:row-span-1 grid grid-cols-1 md:grid-cols-2 gap-size240 min-h-0">
+          <PendingReviewQueue />
+          <CampusDistributionChart />
+        </div>
       </div>
     </div>
   );

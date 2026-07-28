@@ -29,6 +29,7 @@ const STATUS_LABELS: Record<string, string> = {
   REJECTED: "Rejected",
   CANCELLED: "Cancelled",
   RESUBMIT: "Resubmit",
+  FOR_INTERVIEW: "For Interview",
 };
 
 export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
@@ -46,7 +47,7 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
   
   // Need to provide instructions for student if status is RESUBMIT or optionally if REJECTED
   const requiresMessage = pendingStatus === "RESUBMIT";
-  const allowsMessage = pendingStatus === "RESUBMIT" || pendingStatus === "REJECTED" || pendingStatus === "CANCELLED";
+  const allowsMessage = pendingStatus === "RESUBMIT" || pendingStatus === "REJECTED" || pendingStatus === "CANCELLED" || pendingStatus === "FOR_INTERVIEW";
   
   // Disable confirm if message is empty OR (if status is RESUBMIT and no fields are selected)
   const isConfirmDisabled = 

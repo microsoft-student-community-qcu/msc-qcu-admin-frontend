@@ -17,41 +17,46 @@ export const appChartConfig = {
 } satisfies ChartConfig;
 
 export const departmentData = [
-  { department: "Engineering", students: 275, fill: "var(--color-Engineering)" },
-  { department: "Design", students: 200, fill: "var(--color-Design)" },
-  { department: "Marketing", students: 150, fill: "var(--color-Marketing)" },
-  { department: "Operations", students: 100, fill: "var(--color-Operations)" },
-  { department: "Research", students: 80, fill: "var(--color-Research)" },
-  { department: "General", students: 87, fill: "var(--color-General)" },
+  { department: "Secretariat", students: 45, fill: "var(--color-chart-1)" },
+  { department: "Relations", students: 60, fill: "var(--color-chart-2)" },
+  { department: "Finance", students: 30, fill: "var(--color-chart-3)" },
+  { department: "Logistics", students: 80, fill: "var(--color-chart-4)" },
+  { department: "Creatives", students: 120, fill: "var(--color-chart-5)" },
+  { department: "ManagementDev", students: 150, fill: "var(--color-chart-6)" },
+  { department: "StartupDevelopers", students: 95, fill: "var(--color-chart-7)" },
 ];
 
 export const deptChartConfig = {
   students: {
     label: "Students",
   },
-  Engineering: {
-    label: "Engineering / Development",
+  Secretariat: {
+    label: "Secretariat Office",
     color: "var(--color-chart-1)",
   },
-  Design: {
-    label: "Design & Creatives",
+  Relations: {
+    label: "Relations Office",
     color: "var(--color-chart-2)",
   },
-  Marketing: {
-    label: "Marketing & Communications",
+  Finance: {
+    label: "Finance Office",
     color: "var(--color-chart-3)",
   },
-  Operations: {
-    label: "Operations & Logistics",
+  Logistics: {
+    label: "Logistics Office",
     color: "var(--color-chart-4)",
   },
-  Research: {
-    label: "Research & Curriculum",
+  Creatives: {
+    label: "Creatives Office",
     color: "var(--color-chart-5)",
   },
-  General: {
-    label: "General Member",
-    color: "var(--color-muted-foreground)",
+  ManagementDev: {
+    label: "Management & Dev. Office",
+    color: "var(--color-chart-6)",
+  },
+  StartupDevelopers: {
+    label: "Startup Developers Office",
+    color: "var(--color-chart-7)",
   },
 } satisfies ChartConfig;
 
@@ -59,7 +64,7 @@ export const recentApplications = [
   {
     id: "APP-001",
     name: "Juan Dela Cruz",
-    role: "Engineering / Development",
+    role: "Management & Dev. Office",
     status: "PENDING_REVIEW",
     manual_application: true,
     time: "2 hours ago",
@@ -67,7 +72,7 @@ export const recentApplications = [
   {
     id: "APP-002",
     name: "Maria Santos",
-    role: "Design & Creatives",
+    role: "Creatives Office",
     status: "APPROVED",
     manual_application: false,
     time: "5 hours ago",
@@ -75,7 +80,7 @@ export const recentApplications = [
   {
     id: "APP-003",
     name: "Pedro Penduko",
-    role: "Engineering / Development",
+    role: "Startup Developers Office",
     status: "REJECTED",
     manual_application: false,
     time: "1 day ago",
@@ -83,7 +88,7 @@ export const recentApplications = [
   {
     id: "APP-004",
     name: "Ana Reyes",
-    role: "Marketing & Communications",
+    role: "Relations Office",
     status: "PENDING_REVIEW",
     manual_application: false,
     time: "1 day ago",
