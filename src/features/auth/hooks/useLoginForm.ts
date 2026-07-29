@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { login } from "../services/authApi";
-import { mockAccounts } from "@/mocks/accounts";
+
 import { loginSchema } from "../schemas/loginSchema";
 import { SignInResponse, UserProfile, UserRole } from "../types";
 
@@ -60,10 +60,7 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
         }
 
         sessionStorage.setItem("currentUser", JSON.stringify(account));
-        const token = json.session?.token || json.token;
-        if (token) {
-          sessionStorage.setItem("accessToken", token);
-        }
+        // Access token is deliberately NOT stored in sessionStorage to prevent XSS exfiltration (VUL-A03)
         sessionStorage.setItem("justLoggedIn", "true");
 
         setTimeout(() => {
@@ -71,24 +68,7 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
         }, 300);
       }
     } catch (err: any) {
-      console.warn("Backend auth connection failed. Falling back to mock accounts.", err);
-      const account = mockAccounts[email.trim().toLowerCase()];
-      if (account && password === "password123") {
-        setIsTransitioning(true);
-
-        if (cardRef.current) {
-          sessionStorage.setItem("loginCardHeight", cardRef.current.offsetHeight.toString());
-        }
-
-        sessionStorage.setItem("currentUser", JSON.stringify(account));
-        sessionStorage.setItem("justLoggedIn", "true");
-
-        setTimeout(() => {
-          navigate({ to: "/dashboard" });
-        }, 300);
-      } else {
-        setError(err.message || "Invalid email or password.");
-      }
+      setError(err.message || "Invalid email or password.");
     } finally {
       setIsSubmitting(false);
     }

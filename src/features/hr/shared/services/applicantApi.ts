@@ -2,14 +2,7 @@ import { Applicant, FetchApplicantsFilters } from "../types";
 import { formatApplicantName } from "../utils/formatters";
 import { getApiBaseURL } from "@/utils/env";
 
-const getAuthHeaders = (): Record<string, string> => {
-  const headers: Record<string, string> = {};
-  const token = sessionStorage.getItem("accessToken");
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-  return headers;
-};
+// Removed getAuthHeaders to prevent XSS exfiltration of token (VUL-A03). Using HttpOnly cookies instead.
 
 /**
  * Documents (CoR/CV) live in a private blob container and are served through
@@ -42,7 +35,6 @@ const toImageApiUrl = (storedPath: string): string => {
  */
 export async function fetchAuthorizedImage(imageUrl: string): Promise<string> {
   const res = await fetch(imageUrl, {
-    headers: getAuthHeaders(),
     credentials: "include",
   });
   if (!res.ok) {
@@ -59,7 +51,6 @@ export async function fetchAuthorizedImage(imageUrl: string): Promise<string> {
  */
 export async function openDocument(documentUrl: string): Promise<void> {
   const res = await fetch(documentUrl, {
-    headers: getAuthHeaders(),
     credentials: "include",
   });
   if (!res.ok) {
@@ -87,7 +78,6 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
 
   const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
   const res = await fetch(`${apiBase}/applicants${queryString}`, {
-    headers: getAuthHeaders(),
     credentials: "include",
   });
   if (!res.ok) {
@@ -140,7 +130,6 @@ export async function updateApplicantStatus(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      ...getAuthHeaders(),
     },
     body: JSON.stringify({ status, message, resubmitFields }),
     credentials: "include",

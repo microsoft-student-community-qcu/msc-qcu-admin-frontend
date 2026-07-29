@@ -23,6 +23,11 @@ import { openDocument } from "@/features/hr/shared/services/applicantApi";
 import { useAuthorizedImage } from "@/features/hr/shared/hooks/useAuthorizedImage";
 import { formatCampus, formatGender } from "@/features/hr/shared/utils/formatters";
 
+const isSafeUrl = (url?: string) => {
+  if (!url) return false;
+  return /^https:\/\//i.test(url);
+};
+
 interface ApplicantDetailsProps {
   applicant: Applicant | null;
   isPendingSmtp: boolean;
@@ -233,7 +238,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <span className="text-[9px] font-semibold text-muted-foreground uppercase">
                         Project Portfolio
                       </span>
-                      {applicant.portfolioUrl ? (
+                      {isSafeUrl(applicant.portfolioUrl) ? (
                         <a
                           href={applicant.portfolioUrl}
                           target="_blank"
@@ -246,7 +251,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">Not provided</span>
+                          <span className="italic">{applicant.portfolioUrl ? "Invalid URL format" : "Not provided"}</span>
                         </div>
                       )}
                     </div>
@@ -256,7 +261,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <span className="text-[9px] font-semibold text-muted-foreground uppercase">
                         GitHub / Projects
                       </span>
-                      {applicant.githubUrl ? (
+                      {isSafeUrl(applicant.githubUrl) ? (
                         <a
                           href={applicant.githubUrl}
                           target="_blank"
@@ -269,7 +274,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">Not provided</span>
+                          <span className="italic">{applicant.githubUrl ? "Invalid URL format" : "Not provided"}</span>
                         </div>
                       )}
                     </div>
@@ -279,7 +284,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <span className="text-[9px] font-semibold text-muted-foreground uppercase">
                         Facebook Profile
                       </span>
-                      {applicant.facebookUrl ? (
+                      {isSafeUrl(applicant.facebookUrl) ? (
                         <a
                           href={applicant.facebookUrl}
                           target="_blank"
@@ -292,7 +297,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">Not provided</span>
+                          <span className="italic">{applicant.facebookUrl ? "Invalid URL format" : "Not provided"}</span>
                         </div>
                       )}
                     </div>

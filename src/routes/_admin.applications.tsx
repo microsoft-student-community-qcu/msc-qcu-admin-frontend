@@ -1,5 +1,6 @@
 import * as React from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getApiBaseURL } from "@/utils/env";
 import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
@@ -12,6 +13,12 @@ import { StatusConfirmDialog } from "@/features/hr/applicants/components/StatusC
 import { ImageZoomDialog } from "@/features/hr/applicants/components/ImageZoomDialog";
 
 export const Route = createFileRoute("/_admin/applications")({
+  beforeLoad: async () => {
+    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
+    const data = await res.json();
+    const role = data.role || data.user?.role;
+    if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
+  },
   component: ApplicationsRoute,
 });
 

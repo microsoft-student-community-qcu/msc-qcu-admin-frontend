@@ -1,5 +1,6 @@
 import * as React from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getApiBaseURL } from "@/utils/env";
 import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
 import { useMembers } from "@/features/hr/shared/hooks/useMembers";
@@ -8,6 +9,12 @@ import { MemberDirectory } from "@/features/hr/members/components/MemberDirector
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
 
 export const Route = createFileRoute("/_admin/members")({
+  beforeLoad: async () => {
+    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
+    const data = await res.json();
+    const role = data.role || data.user?.role;
+    if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
+  },
   component: MembersRoute,
 });
 
