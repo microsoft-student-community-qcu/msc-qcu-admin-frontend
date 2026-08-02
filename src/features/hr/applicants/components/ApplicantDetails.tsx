@@ -7,6 +7,7 @@ import {
   EyeRegular,
   PeopleRegular,
   WarningRegular,
+  EditRegular,
 } from "@fluentui/react-icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -23,7 +24,8 @@ import {
 import type { Applicant } from "@/features/hr/shared/types";
 import { openDocument } from "@/features/hr/shared/services/applicantApi";
 import { useAuthorizedImage } from "@/features/hr/shared/hooks/useAuthorizedImage";
-import { formatCampus, formatGender } from "@/features/hr/shared/utils/formatters";
+import { formatCampus, formatGender, formatOffice } from "@/features/hr/shared/utils/formatters";
+import { EditApplicantDialog } from "./EditApplicantDialog";
 
 const isSafeUrl = (url?: string) => {
   if (!url) return false;
@@ -53,6 +55,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   // authenticated backend endpoint; <img> cannot attach auth headers,
   // so load it as an object URL. Must run before any early return.
   const idImage = useAuthorizedImage(applicant?.idCardUrl);
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
 
   if (isLoading) {
     return (
@@ -451,11 +454,15 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
             {/* Right Column: Applicant Information rendered first visually */}
             <div className="lg:col-span-4 lg:order-1 flex flex-col h-full min-h-0">
               <Card className="border border-border shadow-2 rounded-none h-full flex flex-col min-h-0 py-0 gap-0">
-                <CardHeader className="py-size80 pb-size80! px-size160 border-b border-border bg-muted/10 shrink-0">
+                <CardHeader className="py-size80 pb-size80! px-size160 border-b border-border bg-muted/10 shrink-0 flex flex-row items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <PersonRegular className="w-4 h-4 text-primary" />
                     Applicant Information
                   </CardTitle>
+                  <Button variant="outline" size="sm" onClick={() => setIsEditOpen(true)} className="h-7 text-xs px-2 gap-1 rounded-none shadow-1">
+                    <EditRegular className="w-3.5 h-3.5" />
+                    Edit
+                  </Button>
                 </CardHeader>
                 <CardContent className="flex-1 min-h-0 p-0">
                   <ScrollArea className="h-full">
@@ -473,7 +480,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                           Applied Dept.
                         </span>
                         <span className="col-span-2 text-left font-semibold text-foreground">
-                          {applicant.department}
+                          {formatOffice(applicant.department)}
                         </span>
                       </div>
                       <div className="grid grid-cols-3 py-1.5 border-b border-border/30 gap-2 items-start">
@@ -560,6 +567,11 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
           </div>
         </div>
       </div>
+      <EditApplicantDialog
+        isOpen={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        applicant={applicant}
+      />
     </div>
   );
 };

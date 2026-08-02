@@ -2,6 +2,9 @@ export interface Applicant {
   id: string;
   studentId: string;
   name: string;
+  rawFirstName: string;
+  rawLastName: string;
+  rawMiddleInitial: string | null;
   email: string;
   department: string;
   corUrl: string;
