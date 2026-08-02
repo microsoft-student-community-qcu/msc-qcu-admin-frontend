@@ -6,11 +6,13 @@ import {
   PersonRegular,
   EyeRegular,
   PeopleRegular,
+  WarningRegular,
 } from "@fluentui/react-icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -33,6 +35,7 @@ interface ApplicantDetailsProps {
   isPendingSmtp: boolean;
   onStatusChange: (status: Applicant["status"]) => void;
   onZoomImage: (imageSrc: string, title: string) => void;
+  onManualIdAction?: (action: "approve" | "reject") => void;
   isLoading?: boolean;
   error?: boolean;
 }
@@ -42,6 +45,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   isPendingSmtp,
   onStatusChange,
   onZoomImage,
+  onManualIdAction,
   isLoading,
   error,
 }) => {
@@ -135,41 +139,70 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
           </div>
         </div>
 
-        {/* Status Mutator Selector */}
+        {/* Status Mutator Selector / Manual ID Verification */}
         <div className="flex flex-col gap-2 md:items-end">
-          <div className="flex items-center gap-2">
-            <Label
-              htmlFor="status-select"
-              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
-            >
-              Status:
-            </Label>
-            <Select
-              value={applicant.status}
-              disabled={isPendingSmtp}
-              onValueChange={(val) => onStatusChange(val as Applicant["status"])}
-            >
-              <SelectTrigger id="status-select" className="w-[160px] h-9 rounded-none font-medium">
-                <SelectValue>
-                  {{
-                    PENDING_REVIEW: "Pending Review",
-                    APPROVED: "Approved",
-                    REJECTED: "Rejected",
-                    CANCELLED: "Cancelled",
-                    RESUBMIT: "Resubmit",
-                    FOR_INTERVIEW: "For Interview",
-                  }[applicant.status] ?? applicant.status}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="rounded-none shadow-8">
-                <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
-                <SelectItem value="RESUBMIT">Resubmit</SelectItem>
-                <SelectItem value="FOR_INTERVIEW">For Interview</SelectItem>
-                <SelectItem value="APPROVED">Approve / Member</SelectItem>
-                <SelectItem value="REJECTED">Reject Application</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {applicant.manualApplication && applicant.status === "PENDING_REVIEW" ? (
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-500 bg-amber-500/10 px-3 py-1.5 rounded-none text-xs font-semibold border border-amber-500/30 shadow-2">
+                <WarningRegular className="w-4 h-4" />
+                <span>Manual ID Verification Required</span>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 text-xs rounded-none font-semibold"
+                  onClick={() => onManualIdAction?.("reject")}
+                  disabled={isPendingSmtp}
+                >
+                  Reject ID
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-8 text-xs rounded-none font-semibold"
+                  onClick={() => onManualIdAction?.("approve")}
+                  disabled={isPendingSmtp}
+                >
+                  Approve ID
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Label
+                htmlFor="status-select"
+                className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+              >
+                Status:
+              </Label>
+              <Select
+                value={applicant.status}
+                disabled={isPendingSmtp}
+                onValueChange={(val) => onStatusChange(val as Applicant["status"])}
+              >
+                <SelectTrigger id="status-select" className="w-[160px] h-9 rounded-none font-medium">
+                  <SelectValue>
+                    {{
+                      PENDING_REVIEW: "Pending Review",
+                      APPROVED: "Approved",
+                      REJECTED: "Rejected",
+                      CANCELLED: "Cancelled",
+                      RESUBMIT: "Resubmit",
+                      FOR_INTERVIEW: "For Interview",
+                    }[applicant.status] ?? applicant.status}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="rounded-none shadow-8">
+                  <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
+                  <SelectItem value="RESUBMIT">Resubmit</SelectItem>
+                  <SelectItem value="FOR_INTERVIEW">For Interview</SelectItem>
+                  <SelectItem value="APPROVED">Approve / Member</SelectItem>
+                  <SelectItem value="REJECTED">Reject Application</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
       </div>
 

@@ -143,3 +143,33 @@ export async function updateApplicantStatus(
   }
   return json.data;
 }
+
+export async function approveManualId(
+  applicantId: string,
+  action: "approve" | "reject",
+  studentId?: string
+): Promise<any> {
+  const apiBase = getApiBaseURL();
+  const body: Record<string, string> = { action };
+  if (action === "approve" && studentId) {
+    body.studentId = studentId;
+  }
+  
+  const res = await fetch(`${apiBase}/applicants/${applicantId}/approve-id`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    credentials: "include",
+  });
+  
+  if (!res.ok) {
+    throw new Error("Failed to process manual ID verification");
+  }
+  const json = await res.json();
+  if (!json.success) {
+    throw new Error(json.message || "Failed to process manual ID verification");
+  }
+  return json.data;
+}
