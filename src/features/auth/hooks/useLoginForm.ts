@@ -68,7 +68,23 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
         }, 300);
       }
     } catch (err: any) {
-      setError(err.message || "Invalid email or password.");
+      const msg = err.message || "";
+      if (
+        msg.toLowerCase().includes("failed to fetch") ||
+        msg.toLowerCase().includes("load failed") ||
+        msg.toLowerCase().includes("networkerror")
+      ) {
+        setError("Something went wrong.");
+      } else if (
+        msg.includes("Invalid credentials") ||
+        msg.includes("Invalid email or password") ||
+        msg.includes("Access denied") ||
+        msg.includes("Too many sign-in attempts")
+      ) {
+        setError(msg);
+      } else {
+        setError("Something went wrong.");
+      }
     } finally {
       setIsSubmitting(false);
     }

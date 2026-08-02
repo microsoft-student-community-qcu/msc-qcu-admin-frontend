@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_admin/applications")({
   beforeLoad: async () => {
     const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
     const data = await res.json();
-    const role = data.role || data.user?.role;
+    const role = data.data?.role || data.role || data.user?.role;
     if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
   },
   component: ApplicationsRoute,
