@@ -1,9 +1,42 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pie, PieChart } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { deptChartConfig } from "@/mocks/dashboard";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+
+const deptChartConfig = {
+  students: {
+    label: "Students",
+  },
+  Secretariat: {
+    label: "Secretariat Office",
+    color: "var(--color-chart-1)",
+  },
+  Relations: {
+    label: "Relations Office",
+    color: "var(--color-chart-2)",
+  },
+  Finance: {
+    label: "Finance Office",
+    color: "var(--color-chart-3)",
+  },
+  Logistics: {
+    label: "Logistics Office",
+    color: "var(--color-chart-4)",
+  },
+  Creatives: {
+    label: "Creatives Office",
+    color: "var(--color-chart-5)",
+  },
+  ManagementDev: {
+    label: "Management & Dev. Office",
+    color: "var(--color-chart-6)",
+  },
+  StartupDevelopers: {
+    label: "Startup Developers Office",
+    color: "var(--color-chart-7)",
+  },
+} satisfies ChartConfig;
 
 const getDeptKey = (deptStr: string): string => {
   if (!deptStr) return "Secretariat";
