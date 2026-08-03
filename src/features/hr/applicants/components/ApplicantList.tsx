@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Applicant } from "@/features/hr/shared/types";
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED";
+type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 interface ApplicantListProps {
   applicants: Applicant[];
@@ -25,6 +25,7 @@ interface ApplicantListProps {
     REJECTED: number;
     RESUBMIT: number;
     CANCELLED: number;
+    FOR_INTERVIEW: number;
   };
   isLoading?: boolean;
   error?: boolean;
@@ -100,6 +101,14 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
             Resubmit ({tabCounts.RESUBMIT})
           </Button>
           <Button
+            variant={activeTab === "FOR_INTERVIEW" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => onActiveTabChange("FOR_INTERVIEW")}
+            className="h-7 text-xs px-2.5 rounded-none font-medium cursor-pointer"
+          >
+            For Interview ({tabCounts.FOR_INTERVIEW})
+          </Button>
+          <Button
             variant={activeTab === "CANCELLED" ? "default" : "ghost"}
             size="sm"
             onClick={() => onActiveTabChange("CANCELLED")}
@@ -163,9 +172,11 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
 
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center justify-between gap-size40">
-                      <span className="font-semibold text-sm truncate text-foreground">
-                        {applicant.name}
-                      </span>
+                      <div className="flex items-center gap-2 truncate">
+                        <span className="font-semibold text-sm truncate text-foreground">
+                          {applicant.name}
+                        </span>
+                      </div>
                       <span
                         className="text-[10px] text-muted-foreground shrink-0 font-mono"
                         title={applicant.id}
@@ -186,6 +197,16 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                             className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
                           >
                             Pending Review
+                          </Badge>
+                        )}
+                        {applicant.manualApplication && applicant.status === "PENDING_REVIEW" && (
+                          <Badge
+                            variant="outline"
+                            className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none flex items-center gap-1"
+                            title="Manual ID Verification Required"
+                          >
+                            <WarningRegular className="w-3 h-3" />
+                            Manual ID
                           </Badge>
                         )}
                         {applicant.status === "APPROVED" && (
@@ -220,9 +241,17 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                             Resubmit
                           </Badge>
                         )}
+                        {applicant.status === "FOR_INTERVIEW" && (
+                          <Badge
+                            variant="outline"
+                            className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30 text-[10px] font-medium py-0 h-5 px-1.5 rounded-none"
+                          >
+                            For Interview
+                          </Badge>
+                        )}
                       </div>
 
-                      <span className="text-[10px] text-muted-foreground font-mono">
+                      <span className="text-xs font-semibold text-muted-foreground font-mono">
                         {applicant.studentId}
                       </span>
                     </div>

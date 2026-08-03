@@ -57,7 +57,8 @@ const items = [
   },
 ];
 
-interface UserProfile {
+export interface UserProfile {
+  id: string;
   name: string;
   email: string;
   role: "ADMIN_HR" | "ADMIN_LOGISTICS";
@@ -90,7 +91,11 @@ export function Sidebar() {
       // Logistics can only see Dashboard and Events
       return items.filter((item) => item.url === "/dashboard" || item.url.startsWith("/events"));
     }
-    // HR/Super Admin can see everything
+    if (currentUser?.role === "ADMIN_HR") {
+      // HR should not see Events
+      return items.filter((item) => !item.url.startsWith("/events"));
+    }
+    // Super Admin can see everything
     return items;
   }, [currentUser]);
 

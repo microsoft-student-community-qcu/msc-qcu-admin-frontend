@@ -6,10 +6,36 @@ import {
   ArrowDownRightRegular,
 } from "@fluentui/react-icons";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useEvents } from "../../hooks/useEvents";
 
 export const LogisticsMetricSummaryCards: React.FC = () => {
-  const { data: applicants, isLoading } = useApplicants();
+  const { data: applicants, isLoading: isApplicantsLoading } = useApplicants();
+  const { data: events, isLoading: isEventsLoading } = useEvents();
+
   const activeMembers = applicants ? applicants.filter((app) => app.status === "APPROVED").length : 0;
+  const upcomingCount = events ? events.length : 0;
+
+  const nextEventText = React.useMemo(() => {
+    if (!events || events.length === 0) return "No upcoming events scheduled";
+    const now = new Date();
+    
+    // Find the next upcoming event (events are sorted asc by backend)
+    const nextEvent = events[0];
+    const eventDate = new Date(nextEvent.date);
+    
+    const diffTime = eventDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays <= 0) {
+      return "Next event is today";
+    } else if (diffDays === 1) {
+      return "Next event tomorrow";
+    } else {
+      return `Next event in ${diffDays} days`;
+    }
+  }, [events]);
+
+  const isLoading = isApplicantsLoading || isEventsLoading;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-size240 shrink-0">
@@ -20,9 +46,9 @@ export const LogisticsMetricSummaryCards: React.FC = () => {
           <CalendarRegular className="w-5 h-5 text-muted-foreground" />
         </CardHeader>
         <CardContent className="z-10 relative">
-          <div className="text-2xl font-bold">3</div>
+          <div className="text-2xl font-bold">{isEventsLoading ? "..." : upcomingCount}</div>
           <p className="text-xs text-muted-foreground flex items-center mt-1">
-            Next event in 7 days
+            {nextEventText}
           </p>
         </CardContent>
       </Card>

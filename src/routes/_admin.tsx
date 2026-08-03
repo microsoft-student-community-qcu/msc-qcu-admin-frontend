@@ -1,10 +1,15 @@
 import * as React from "react";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { getApiBaseURL } from "@/utils/env";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AdminLayout } from "@/components/shared/admin-layout";
 
 export const Route = createFileRoute("/_admin")({
+  beforeLoad: async ({ location }) => {
+    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
+    if (!res.ok) throw redirect({ to: "/login", search: { redirect: location.href } });
+  },
   component: AdminRoute,
 });
 

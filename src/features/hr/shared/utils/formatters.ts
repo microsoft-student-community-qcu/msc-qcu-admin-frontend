@@ -32,6 +32,24 @@ export function formatCampus(campus?: string | null): string {
   }
 }
 
+export function formatOffice(office?: string | null): string {
+  if (!office) return "";
+  const mappings: Record<string, string> = {
+    "EXECUTIVE_COMMITTEE": "Executive Committee",
+    "MANAGEMENT_AND_DEVELOPMENT_OFFICE": "Management and Development Office",
+    "MARKETING_AND_COMMUNICATIONS_OFFICE": "Marketing and Communications Office",
+    "SECRETARIAT_OFFICE": "Secretariat Office",
+    "FINANCE_OFFICE": "Finance Office",
+    "AUDIT_OFFICE": "Audit Office",
+    "LOGISTICS_OFFICE": "Logistics Office",
+    "TECHNICAL_AND_INNOVATIONS_OFFICE": "Technical and Innovations Office",
+    "CREATIVES_AND_DESIGN_OFFICE": "Creatives and Design Office",
+    "MULTIMEDIA_ARTS_AND_PRODUCTIONS_OFFICE": "Multimedia Arts and Productions Office",
+    "HUMAN_RESOURCES_OFFICE": "Human Resources Office",
+  };
+  return mappings[office] || office.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 export function formatGender(gender?: string | null): string {
   if (!gender) return "";
   switch (gender) {

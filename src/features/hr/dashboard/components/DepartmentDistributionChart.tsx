@@ -1,18 +1,54 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pie, PieChart } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { deptChartConfig } from "@/mocks/dashboard";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 
+const deptChartConfig = {
+  students: {
+    label: "Students",
+  },
+  Secretariat: {
+    label: "Secretariat Office",
+    color: "var(--color-chart-1)",
+  },
+  Relations: {
+    label: "Relations Office",
+    color: "var(--color-chart-2)",
+  },
+  Finance: {
+    label: "Finance Office",
+    color: "var(--color-chart-3)",
+  },
+  Logistics: {
+    label: "Logistics Office",
+    color: "var(--color-chart-4)",
+  },
+  Creatives: {
+    label: "Creatives Office",
+    color: "var(--color-chart-5)",
+  },
+  ManagementDev: {
+    label: "Management & Dev. Office",
+    color: "var(--color-chart-6)",
+  },
+  StartupDevelopers: {
+    label: "Startup Developers Office",
+    color: "var(--color-chart-7)",
+  },
+} satisfies ChartConfig;
+
 const getDeptKey = (deptStr: string): string => {
+  if (!deptStr) return "Secretariat";
   const lower = deptStr.toLowerCase();
-  if (lower.includes("engineering") || lower.includes("dev")) return "Engineering";
-  if (lower.includes("design") || lower.includes("creative")) return "Design";
-  if (lower.includes("marketing") || lower.includes("comm")) return "Marketing";
-  if (lower.includes("operation") || lower.includes("logistics")) return "Operations";
-  if (lower.includes("research") || lower.includes("curriculum")) return "Research";
-  return "General";
+  if (lower.includes("secretariat")) return "Secretariat";
+  if (lower.includes("relations")) return "Relations";
+  if (lower.includes("finance")) return "Finance";
+  if (lower.includes("logistics")) return "Logistics";
+  if (lower.includes("creative") || lower.includes("design")) return "Creatives";
+  if (lower.includes("management") || lower.includes("dev. office") || lower.includes("dev")) return "ManagementDev";
+  if (lower.includes("startup") || lower.includes("developer")) return "StartupDevelopers";
+  return "Secretariat";
 };
 
 export const DepartmentDistributionChart: React.FC = () => {
@@ -20,12 +56,13 @@ export const DepartmentDistributionChart: React.FC = () => {
 
   const departmentData = React.useMemo(() => {
     const counts = {
-      Engineering: 0,
-      Design: 0,
-      Marketing: 0,
-      Operations: 0,
-      Research: 0,
-      General: 0,
+      Secretariat: 0,
+      Relations: 0,
+      Finance: 0,
+      Logistics: 0,
+      Creatives: 0,
+      ManagementDev: 0,
+      StartupDevelopers: 0,
     };
 
     const activeMembers = applicants.filter(app => app.status === "APPROVED");
@@ -35,12 +72,13 @@ export const DepartmentDistributionChart: React.FC = () => {
     });
 
     return [
-      { department: "Engineering", students: counts.Engineering, fill: "var(--color-Engineering)" },
-      { department: "Design", students: counts.Design, fill: "var(--color-Design)" },
-      { department: "Marketing", students: counts.Marketing, fill: "var(--color-Marketing)" },
-      { department: "Operations", students: counts.Operations, fill: "var(--color-Operations)" },
-      { department: "Research", students: counts.Research, fill: "var(--color-Research)" },
-      { department: "General", students: counts.General, fill: "var(--color-General)" },
+      { department: "Secretariat", students: counts.Secretariat, fill: "var(--color-chart-1)" },
+      { department: "Relations", students: counts.Relations, fill: "var(--color-chart-2)" },
+      { department: "Finance", students: counts.Finance, fill: "var(--color-chart-3)" },
+      { department: "Logistics", students: counts.Logistics, fill: "var(--color-chart-4)" },
+      { department: "Creatives", students: counts.Creatives, fill: "var(--color-chart-5)" },
+      { department: "ManagementDev", students: counts.ManagementDev, fill: "var(--color-chart-6)" },
+      { department: "StartupDevelopers", students: counts.StartupDevelopers, fill: "var(--color-chart-7)" },
     ];
   }, [applicants]);
 
@@ -51,8 +89,8 @@ export const DepartmentDistributionChart: React.FC = () => {
   return (
     <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-2">
       <CardHeader className="shrink-0">
-        <CardTitle>Department Distribution</CardTitle>
-        <CardDescription>Breakdown of active members by department</CardDescription>
+        <CardTitle>Office Distribution</CardTitle>
+        <CardDescription>Breakdown of active members by office</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-4 flex flex-row items-center justify-between gap-size240 min-h-0">
         <div className="w-[58%] h-full flex items-center justify-center relative">

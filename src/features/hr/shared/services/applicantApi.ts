@@ -2,14 +2,7 @@ import { Applicant, FetchApplicantsFilters } from "../types";
 import { formatApplicantName } from "../utils/formatters";
 import { getApiBaseURL } from "@/utils/env";
 
-const getAuthHeaders = (): Record<string, string> => {
-  const headers: Record<string, string> = {};
-  const token = sessionStorage.getItem("accessToken");
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-  return headers;
-};
+// Removed getAuthHeaders to prevent XSS exfiltration of token (VUL-A03). Using HttpOnly cookies instead.
 
 /**
  * Documents (CoR/CV) live in a private blob container and are served through
@@ -42,7 +35,6 @@ const toImageApiUrl = (storedPath: string): string => {
  */
 export async function fetchAuthorizedImage(imageUrl: string): Promise<string> {
   const res = await fetch(imageUrl, {
-    headers: getAuthHeaders(),
     credentials: "include",
   });
   if (!res.ok) {
@@ -59,7 +51,6 @@ export async function fetchAuthorizedImage(imageUrl: string): Promise<string> {
  */
 export async function openDocument(documentUrl: string): Promise<void> {
   const res = await fetch(documentUrl, {
-    headers: getAuthHeaders(),
     credentials: "include",
   });
   if (!res.ok) {
@@ -87,7 +78,6 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
 
   const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
   const res = await fetch(`${apiBase}/applicants${queryString}`, {
-    headers: getAuthHeaders(),
     credentials: "include",
   });
   if (!res.ok) {
@@ -102,8 +92,11 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
       id: backendApp.id,
       studentId: backendApp.studentId || "",
       name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
+      rawFirstName: backendApp.firstName,
+      rawLastName: backendApp.lastName,
+      rawMiddleInitial: backendApp.middleInitial || null,
       email: backendApp.email,
-      department: backendApp.membershipRole,
+      department: backendApp.office,
       corUrl: toDocumentApiUrl(backendApp.certificateOfRegistration),
       cvUrl: toDocumentApiUrl(backendApp.curriculumVitae),
       submissionDate: backendApp.createdAt,
@@ -140,7 +133,6 @@ export async function updateApplicantStatus(
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      ...getAuthHeaders(),
     },
     body: JSON.stringify({ status, message, resubmitFields }),
     credentials: "include",
@@ -151,6 +143,86 @@ export async function updateApplicantStatus(
   const json = await res.json();
   if (!json.success) {
     throw new Error(json.message || "Failed to update status");
+  }
+  return json.data;
+}
+
+export async function approveManualId(
+  applicantId: string,
+  action: "approve" | "reject",
+  studentId?: string
+): Promise<any> {
+  const apiBase = getApiBaseURL();
+  const body: Record<string, string> = { action };
+  if (action === "approve" && studentId) {
+    body.studentId = studentId;
+  }
+  
+  const res = await fetch(`${apiBase}/applicants/${applicantId}/approve-id`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+    credentials: "include",
+  });
+  
+  if (!res.ok) {
+    throw new Error("Failed to process manual ID verification");
+  }
+  const json = await res.json();
+  if (!json.success) {
+    throw new Error(json.message || "Failed to process manual ID verification");
+  }
+  return json.data;
+}
+
+export async function updateApplicantDetails(
+  applicantId: string,
+  data: Partial<Applicant>
+): Promise<Applicant> {
+  const apiBase = getApiBaseURL();
+  
+  // Map frontend field names to backend field names if necessary.
+  // The backend expects flat fields matching the original creation request.
+  const backendPayload: Record<string, any> = { ...data };
+  
+  // Re-map fields that differ
+  if (data.department) backendPayload.office = data.department;
+  if (data.cellphone) backendPayload.cellphoneNumber = data.cellphone;
+  if (data.interests) backendPayload.interestsSkillsHobbies = data.interests;
+  if (data.pastOrganizations) backendPayload.organizationHistory = data.pastOrganizations;
+  
+  // Clean up empty fields that fail backend regex constraints if sent as empty strings
+  if (backendPayload.middleInitial === "") {
+    delete backendPayload.middleInitial;
+  } else if (backendPayload.middleInitial) {
+    backendPayload.middleInitial = backendPayload.middleInitial.replace(/\./g, "");
+  }
+  
+  if (backendPayload.studentId === "") delete backendPayload.studentId;
+  
+  const res = await fetch(`${apiBase}/applicants/${applicantId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(backendPayload),
+    credentials: "include",
+  });
+  
+  if (!res.ok) {
+    throw new Error("Failed to update applicant details");
+  }
+  const json = await res.json();
+  if (!json.success) {
+    if (json.errors) {
+      const errorDetails = Object.entries(json.errors)
+        .map(([field, msgs]) => `${field}: ${(msgs as string[]).join(", ")}`)
+        .join(" | ");
+      throw new Error(`Validation Error: ${errorDetails}`);
+    }
+    throw new Error(json.message || "Failed to update applicant details");
   }
   return json.data;
 }

@@ -6,11 +6,14 @@ import {
   PersonRegular,
   EyeRegular,
   PeopleRegular,
+  WarningRegular,
+  EditRegular,
 } from "@fluentui/react-icons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -21,13 +24,20 @@ import {
 import type { Applicant } from "@/features/hr/shared/types";
 import { openDocument } from "@/features/hr/shared/services/applicantApi";
 import { useAuthorizedImage } from "@/features/hr/shared/hooks/useAuthorizedImage";
-import { formatCampus, formatGender } from "@/features/hr/shared/utils/formatters";
+import { formatCampus, formatGender, formatOffice } from "@/features/hr/shared/utils/formatters";
+import { EditApplicantDialog } from "./EditApplicantDialog";
+
+const isSafeUrl = (url?: string) => {
+  if (!url) return false;
+  return /^https:\/\//i.test(url);
+};
 
 interface ApplicantDetailsProps {
   applicant: Applicant | null;
   isPendingSmtp: boolean;
   onStatusChange: (status: Applicant["status"]) => void;
   onZoomImage: (imageSrc: string, title: string) => void;
+  onManualIdAction?: (action: "approve" | "reject") => void;
   isLoading?: boolean;
   error?: boolean;
 }
@@ -37,6 +47,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   isPendingSmtp,
   onStatusChange,
   onZoomImage,
+  onManualIdAction,
   isLoading,
   error,
 }) => {
@@ -44,6 +55,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
   // authenticated backend endpoint; <img> cannot attach auth headers,
   // so load it as an object URL. Must run before any early return.
   const idImage = useAuthorizedImage(applicant?.idCardUrl);
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
 
   if (isLoading) {
     return (
@@ -130,39 +142,70 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
           </div>
         </div>
 
-        {/* Status Mutator Selector */}
+        {/* Status Mutator Selector / Manual ID Verification */}
         <div className="flex flex-col gap-2 md:items-end">
-          <div className="flex items-center gap-2">
-            <Label
-              htmlFor="status-select"
-              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
-            >
-              Status:
-            </Label>
-            <Select
-              value={applicant.status}
-              disabled={isPendingSmtp}
-              onValueChange={(val) => onStatusChange(val as Applicant["status"])}
-            >
-              <SelectTrigger id="status-select" className="w-[160px] h-9 rounded-none font-medium">
-                <SelectValue>
-                  {{
-                    PENDING_REVIEW: "Pending Review",
-                    APPROVED: "Approved",
-                    REJECTED: "Rejected",
-                    CANCELLED: "Cancelled",
-                    RESUBMIT: "Resubmit",
-                  }[applicant.status] ?? applicant.status}
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent className="rounded-none shadow-8">
-                <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
-                <SelectItem value="RESUBMIT">Resubmit</SelectItem>
-                <SelectItem value="APPROVED">Approve / Member</SelectItem>
-                <SelectItem value="REJECTED">Reject Application</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {applicant.manualApplication && applicant.status === "PENDING_REVIEW" ? (
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-500 bg-amber-500/10 px-3 py-1.5 rounded-none text-xs font-semibold border border-amber-500/30 shadow-2">
+                <WarningRegular className="w-4 h-4" />
+                <span>Manual ID Verification Required</span>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 text-xs rounded-none font-semibold"
+                  onClick={() => onManualIdAction?.("reject")}
+                  disabled={isPendingSmtp}
+                >
+                  Reject ID
+                </Button>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-8 text-xs rounded-none font-semibold"
+                  onClick={() => onManualIdAction?.("approve")}
+                  disabled={isPendingSmtp}
+                >
+                  Approve ID
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Label
+                htmlFor="status-select"
+                className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
+              >
+                Status:
+              </Label>
+              <Select
+                value={applicant.status}
+                disabled={isPendingSmtp}
+                onValueChange={(val) => onStatusChange(val as Applicant["status"])}
+              >
+                <SelectTrigger id="status-select" className="w-[160px] h-9 rounded-none font-medium">
+                  <SelectValue>
+                    {{
+                      PENDING_REVIEW: "Pending Review",
+                      APPROVED: "Approved",
+                      REJECTED: "Rejected",
+                      CANCELLED: "Cancelled",
+                      RESUBMIT: "Resubmit",
+                      FOR_INTERVIEW: "For Interview",
+                    }[applicant.status] ?? applicant.status}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent className="rounded-none shadow-8">
+                  <SelectItem value="PENDING_REVIEW">Pending Review</SelectItem>
+                  <SelectItem value="RESUBMIT">Resubmit</SelectItem>
+                  <SelectItem value="FOR_INTERVIEW">For Interview</SelectItem>
+                  <SelectItem value="APPROVED">Approve / Member</SelectItem>
+                  <SelectItem value="REJECTED">Reject Application</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
         </div>
       </div>
 
@@ -231,7 +274,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <span className="text-[9px] font-semibold text-muted-foreground uppercase">
                         Project Portfolio
                       </span>
-                      {applicant.portfolioUrl ? (
+                      {isSafeUrl(applicant.portfolioUrl) ? (
                         <a
                           href={applicant.portfolioUrl}
                           target="_blank"
@@ -244,7 +287,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">Not provided</span>
+                          <span className="italic">{applicant.portfolioUrl ? "Invalid URL format" : "Not provided"}</span>
                         </div>
                       )}
                     </div>
@@ -254,7 +297,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <span className="text-[9px] font-semibold text-muted-foreground uppercase">
                         GitHub / Projects
                       </span>
-                      {applicant.githubUrl ? (
+                      {isSafeUrl(applicant.githubUrl) ? (
                         <a
                           href={applicant.githubUrl}
                           target="_blank"
@@ -267,7 +310,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">Not provided</span>
+                          <span className="italic">{applicant.githubUrl ? "Invalid URL format" : "Not provided"}</span>
                         </div>
                       )}
                     </div>
@@ -277,7 +320,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                       <span className="text-[9px] font-semibold text-muted-foreground uppercase">
                         Facebook Profile
                       </span>
-                      {applicant.facebookUrl ? (
+                      {isSafeUrl(applicant.facebookUrl) ? (
                         <a
                           href={applicant.facebookUrl}
                           target="_blank"
@@ -290,7 +333,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">Not provided</span>
+                          <span className="italic">{applicant.facebookUrl ? "Invalid URL format" : "Not provided"}</span>
                         </div>
                       )}
                     </div>
@@ -411,11 +454,15 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
             {/* Right Column: Applicant Information rendered first visually */}
             <div className="lg:col-span-4 lg:order-1 flex flex-col h-full min-h-0">
               <Card className="border border-border shadow-2 rounded-none h-full flex flex-col min-h-0 py-0 gap-0">
-                <CardHeader className="py-size80 pb-size80! px-size160 border-b border-border bg-muted/10 shrink-0">
+                <CardHeader className="py-size80 pb-size80! px-size160 border-b border-border bg-muted/10 shrink-0 flex flex-row items-center justify-between">
                   <CardTitle className="text-sm font-bold flex items-center gap-2">
                     <PersonRegular className="w-4 h-4 text-primary" />
                     Applicant Information
                   </CardTitle>
+                  <Button variant="outline" size="sm" onClick={() => setIsEditOpen(true)} className="h-7 text-xs px-2 gap-1 rounded-none shadow-1">
+                    <EditRegular className="w-3.5 h-3.5" />
+                    Edit
+                  </Button>
                 </CardHeader>
                 <CardContent className="flex-1 min-h-0 p-0">
                   <ScrollArea className="h-full">
@@ -433,7 +480,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                           Applied Dept.
                         </span>
                         <span className="col-span-2 text-left font-semibold text-foreground">
-                          {applicant.department}
+                          {formatOffice(applicant.department)}
                         </span>
                       </div>
                       <div className="grid grid-cols-3 py-1.5 border-b border-border/30 gap-2 items-start">
@@ -520,6 +567,11 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
           </div>
         </div>
       </div>
+      <EditApplicantDialog
+        isOpen={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        applicant={applicant}
+      />
     </div>
   );
 };
