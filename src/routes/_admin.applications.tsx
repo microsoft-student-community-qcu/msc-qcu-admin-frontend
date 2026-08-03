@@ -1,9 +1,11 @@
 import * as React from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getApiBaseURL } from "@/utils/env";
 import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 import { useUpdateApplicantStatus } from "@/features/hr/shared/hooks/useUpdateApplicantStatus";
+import { useApproveManualId } from "@/features/hr/shared/hooks/useApproveManualId";
 
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
@@ -12,6 +14,12 @@ import { StatusConfirmDialog } from "@/features/hr/applicants/components/StatusC
 import { ImageZoomDialog } from "@/features/hr/applicants/components/ImageZoomDialog";
 
 export const Route = createFileRoute("/_admin/applications")({
+  beforeLoad: async () => {
+    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
+    const data = await res.json();
+    const role = data.data?.role || data.role || data.user?.role;
+    if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
+  },
   component: ApplicationsRoute,
 });
 
@@ -20,12 +28,13 @@ type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT"
 function ApplicationsRoute() {
   const { data: applicants, isLoading, error } = useApplicants();
   const updateStatusMutation = useUpdateApplicantStatus();
+  const approveManualIdMutation = useApproveManualId();
 
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
 
-  const isPendingSmtp = updateStatusMutation.isPending;
+  const isPendingSmtp = updateStatusMutation.isPending || approveManualIdMutation.isPending;
 
   // Status Mutation Confirmation Dialog State
   const [isConfirmOpen, setIsConfirmOpen] = React.useState(false);
@@ -133,9 +142,28 @@ function ApplicationsRoute() {
       });
     } catch (err) {
       console.warn("Failed to update status on backend.", err);
-      toast.error(`Failed to update status on backend.`);
+      // Toast is already handled in the hook if error occurs, but we can keep this for safety
     } finally {
       setPendingStatus(null);
+    }
+  };
+
+  const handleManualIdAction = async (action: "approve" | "reject") => {
+    if (!selectedId || !selectedApplicant) return;
+
+    if (action === "approve" && !selectedApplicant.studentId) {
+      toast.error("Cannot approve without a student ID.");
+      return;
+    }
+
+    try {
+      await approveManualIdMutation.mutateAsync({
+        applicantId: selectedId,
+        action,
+        studentId: action === "approve" ? selectedApplicant.studentId : undefined,
+      });
+    } catch (err) {
+      console.warn("Failed to process manual ID action.", err);
     }
   };
 
@@ -167,6 +195,7 @@ function ApplicationsRoute() {
         isPendingSmtp={isPendingSmtp}
         onStatusChange={triggerStatusChange}
         onZoomImage={handleZoomImage}
+        onManualIdAction={handleManualIdAction}
         isLoading={isLoading}
         error={!!error}
       />

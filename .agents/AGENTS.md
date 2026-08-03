@@ -84,6 +84,11 @@ Strictly adhere to the design guidelines in [design.md](file:///e:/Github/msc-qc
 - **Animations**: Prefer snappy and solid interactions over bouncy scale/translate effects.
 - **Base UI / Shadcn**: Wrap grouped dropdown menu items in `DropdownMenuGroup` to prevent Base UI context crashes.
 
+## Issue Resolution Rules
+
+- **Frontend Only**: Fixes made in this repository must only target frontend code.
+- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Instead, create a Markdown (.md) file documenting the required backend changes. This file will be pasted into the backend repository's issue tracker.
+
 ## Git Rules
 
 - Use meaningful and descriptive commit messages (conventional commits).

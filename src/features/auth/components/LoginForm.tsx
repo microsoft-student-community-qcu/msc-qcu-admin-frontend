@@ -48,8 +48,9 @@ export const LoginForm: React.FC = () => {
           </div>
         </div>
 
-        {step === 1 && (
-          <form onSubmit={handleNext} className="animate-in fade-in duration-300">
+        <form onSubmit={step === 1 ? handleNext : handleLogin} className="w-full">
+          {/* STEP 1: EMAIL */}
+          <div className={cn("animate-in fade-in duration-300", step !== 1 && "hidden")}>
             <h1 className="text-2xl font-semibold text-foreground mb-size160 tracking-tight text-left">
               Sign in
             </h1>
@@ -57,17 +58,19 @@ export const LoginForm: React.FC = () => {
             <div className="mb-size80">
               <input
                 type="email"
-                placeholder="Email, phone, or Skype"
+                name="email"
+                autoComplete="username"
+                placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                autoFocus
-                required
+                autoFocus={step === 1}
+                required={step === 1}
                 className="w-full border-b border-muted-foreground bg-transparent py-1 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_1px_0_0_var(--primary)] placeholder:text-muted-foreground/70"
               />
             </div>
 
             <div className="h-5 text-sm mb-size160 text-left shrink-0">
-              {error ? (
+              {error && step === 1 ? (
                 <span className="text-[#e81123] animate-in fade-in duration-200">{error}</span>
               ) : (
                 <span className="opacity-0 select-none">&nbsp;</span>
@@ -76,17 +79,22 @@ export const LoginForm: React.FC = () => {
 
             <div className="flex justify-end">
               <Button
-                type="submit"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Trigger form submission manually if we click the next button so native validation runs
+                  if (!email) return; 
+                  handleNext(e as any);
+                }}
                 className="rounded-none px-8 min-w-[108px] min-h-9 text-md cursor-pointer"
               >
                 Next
               </Button>
             </div>
-          </form>
-        )}
+          </div>
 
-        {step === 2 && (
-          <form onSubmit={handleLogin} className="animate-in fade-in duration-300">
+          {/* STEP 2: PASSWORD */}
+          <div className={cn("animate-in fade-in duration-300", step !== 2 && "hidden")}>
             <h1 className="text-2xl font-semibold text-foreground mb-size160 tracking-tight text-left">
               Enter password
             </h1>
@@ -94,11 +102,13 @@ export const LoginForm: React.FC = () => {
             <div className="mb-size80 relative flex items-center">
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
+                autoComplete="current-password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                autoFocus
-                required
+                autoFocus={step === 2}
+                required={step === 2}
                 className="w-full border-b border-muted-foreground bg-transparent py-1 pr-7 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_1px_0_0_var(--primary)] placeholder:text-muted-foreground/70"
               />
               <button
@@ -116,7 +126,7 @@ export const LoginForm: React.FC = () => {
             </div>
 
             <div className="h-5 text-sm mb-size160 text-left shrink-0">
-              {error ? (
+              {error && step === 2 ? (
                 <span className="text-[#e81123] animate-in fade-in duration-200">{error}</span>
               ) : (
                 <span className="opacity-0 select-none">&nbsp;</span>
@@ -143,8 +153,8 @@ export const LoginForm: React.FC = () => {
                 {isSubmitting ? "Signing in..." : "Sign in"}
               </Button>
             </div>
-          </form>
-        )}
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { LogisticsMetricSummaryCards } from "./LogisticsMetricSummaryCards";
 import { EventAttendanceChart } from "./EventAttendanceChart";
-import { EventRatingsChart } from "./EventRatingsChart";
 
 export const LogisticsDashboard: React.FC = () => {
   return (
@@ -10,12 +9,8 @@ export const LogisticsDashboard: React.FC = () => {
       <LogisticsMetricSummaryCards />
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-size240 flex-1 min-h-0">
-        {/* Graphs */}
-        <div className="lg:col-span-2">
-          <EventAttendanceChart />
-        </div>
-        <EventRatingsChart />
+      <div className="flex-1 min-h-0">
+        <EventAttendanceChart />
       </div>
     </div>
   );

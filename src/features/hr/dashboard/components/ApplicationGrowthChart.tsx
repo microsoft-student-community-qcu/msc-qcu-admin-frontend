@@ -1,9 +1,15 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { appChartConfig } from "@/mocks/dashboard";
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+
+const appChartConfig = {
+  apps: {
+    label: "Applications",
+    color: "var(--color-primary)",
+  },
+} satisfies ChartConfig;
 
 export const ApplicationGrowthChart: React.FC = () => {
   const { data: applicants = [] } = useApplicants();
