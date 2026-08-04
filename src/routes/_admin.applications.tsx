@@ -96,6 +96,7 @@ function ApplicationsRoute() {
   // Filtered applicants
   const filteredApplicants = React.useMemo(() => {
     if (!applicants) return [];
+    
     return applicants.filter((app) => {
       // 1. Filter by Tab
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
@@ -109,10 +110,10 @@ function ApplicationsRoute() {
       if (searchQuery.trim() !== "") {
         const query = searchQuery.toLowerCase();
         return (
-          app.name.toLowerCase().includes(query) ||
-          app.studentId.toLowerCase().includes(query) ||
-          app.id.toLowerCase().includes(query) ||
-          app.department.toLowerCase().includes(query)
+          (app.name?.toLowerCase() || "").includes(query) ||
+          (app.studentId?.toLowerCase() || "").includes(query) ||
+          (app.id?.toLowerCase() || "").includes(query) ||
+          (app.department?.toLowerCase() || "").includes(query)
         );
       }
 

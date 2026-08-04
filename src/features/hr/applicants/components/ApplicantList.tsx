@@ -167,7 +167,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                 >
                   <Avatar className="h-9 w-9 rounded-none shrink-0 border border-border/50">
                     <AvatarFallback className="rounded-none bg-primary/5 text-primary text-xs font-semibold">
-                      {applicant.name.charAt(0)}
+                      {applicant.name?.charAt(0).toUpperCase() ?? "?"}
                     </AvatarFallback>
                   </Avatar>
 
@@ -175,14 +175,14 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                     <div className="flex items-center justify-between gap-size40">
                       <div className="flex items-center gap-2 truncate">
                         <span className="font-semibold text-sm truncate text-foreground">
-                          {applicant.name}
+                          {applicant.name || "Unknown Applicant"}
                         </span>
                       </div>
                       <span
                         className="text-[10px] text-muted-foreground shrink-0 font-mono"
-                        title={applicant.id}
+                        title={applicant.id || "no-id"}
                       >
-                        {applicant.id.slice(0, 8)}
+                        {applicant.id ? applicant.id.slice(0, 8) : "N/A"}
                       </span>
                     </div>
 

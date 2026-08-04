@@ -38,10 +38,10 @@ function MembersRoute() {
       if (searchQuery.trim() !== "") {
         const query = searchQuery.toLowerCase();
         return (
-          m.name.toLowerCase().includes(query) ||
-          m.studentId.toLowerCase().includes(query) ||
-          m.id.toLowerCase().includes(query) ||
-          m.department.toLowerCase().includes(query) ||
+          (m.name?.toLowerCase() || "").includes(query) ||
+          (m.studentId?.toLowerCase() || "").includes(query) ||
+          (m.id?.toLowerCase() || "").includes(query) ||
+          (m.department?.toLowerCase() || "").includes(query) ||
           formatOffice(m.department).toLowerCase().includes(query)
         );
       }
