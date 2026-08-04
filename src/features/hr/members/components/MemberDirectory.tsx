@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { Applicant } from "@/features/hr/shared/types";
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 interface MemberDirectoryProps {
   members: Applicant[];
@@ -66,7 +67,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
                     variant="secondary"
                     className="rounded-none text-xs py-0 h-6 px-2.5 font-normal tracking-wide bg-primary/10 text-primary border-transparent inline-flex items-center"
                   >
-                    {member.department}
+                    {formatOffice(member.department)}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground truncate" title={member.program}>

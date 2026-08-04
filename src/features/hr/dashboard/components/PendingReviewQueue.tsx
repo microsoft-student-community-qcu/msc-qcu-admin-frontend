@@ -7,6 +7,7 @@ import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 import { ClockRegular, ArrowRightRegular } from "@fluentui/react-icons";
 import { formatTimeAgo } from "@/utils/date";
 import { useNavigate } from "@tanstack/react-router";
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 export const PendingReviewQueue: React.FC = () => {
   const { data: applicants, isLoading, error } = useApplicants();
@@ -59,7 +60,7 @@ export const PendingReviewQueue: React.FC = () => {
             {pendingList.map((app) => (
               <div
                 key={app.id}
-                onClick={() => navigate({ to: "/applications" })}
+                onClick={() => navigate({ to: "/applications", search: { id: app.id } })}
                 className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
               >
                 <div className="flex items-center gap-4 min-w-0">
@@ -72,8 +73,8 @@ export const PendingReviewQueue: React.FC = () => {
                     <p className="text-sm font-medium leading-none truncate text-foreground" title={app.name}>
                       {app.name}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1 truncate" title={app.department}>
-                      {app.department}
+                    <p className="text-xs text-muted-foreground mt-1 truncate" title={formatOffice(app.department)}>
+                      {formatOffice(app.department)}
                     </p>
                   </div>
                 </div>

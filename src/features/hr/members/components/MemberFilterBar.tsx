@@ -2,6 +2,7 @@ import React from "react";
 import { SearchRegular, FilterRegular } from "@fluentui/react-icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 interface MemberFilterBarProps {
   searchQuery: string;
@@ -12,13 +13,13 @@ interface MemberFilterBarProps {
 
 const DEPARTMENTS = [
   "ALL",
-  "Secretariat Office",
-  "Relations Office",
-  "Finance Office",
-  "Logistics Office",
-  "Creatives Office",
-  "Management & Dev. Office",
-  "Startup Developers Office",
+  "SECRETARIAT_OFFICE",
+  "RELATIONS_OFFICE",
+  "FINANCE_OFFICE",
+  "LOGISTICS_OFFICE",
+  "CREATIVES_OFFICE",
+  "MANAGEMENT_AND_DEVELOPMENT_OFFICE",
+  "STARTUP_DEVELOPERS_OFFICE",
 ];
 
 export const MemberFilterBar: React.FC<MemberFilterBarProps> = ({
@@ -53,7 +54,7 @@ export const MemberFilterBar: React.FC<MemberFilterBarProps> = ({
               onClick={() => onSelectDept(dept)}
               className="h-8 text-xs px-3 rounded-none font-medium whitespace-nowrap cursor-pointer"
             >
-              {dept === "ALL" ? "All Departments" : dept}
+              {dept === "ALL" ? "All Departments" : formatOffice(dept)}
             </Button>
           ))}
         </div>
