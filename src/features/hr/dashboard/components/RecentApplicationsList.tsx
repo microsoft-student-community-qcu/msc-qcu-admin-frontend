@@ -82,7 +82,7 @@ export const RecentApplicationsList: React.FC = () => {
                       return (
                         <Badge
                           variant="outline"
-                          className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-emerald-400 border border-amber-500/30 hover:bg-amber-500/15 whitespace-nowrap"
+                          className="font-normal text-xs bg-blue-500/10 text-yellow-600 dark:bg-blue-500/20 dark:text-yellow-400 border border-blue-500/20 hover:bg-blue-500/15 whitespace-nowrap"
                         >
                           Quarantined
                         </Badge>
