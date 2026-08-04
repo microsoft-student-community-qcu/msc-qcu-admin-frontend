@@ -109,7 +109,7 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
       campus: backendApp.campus,
       dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
       placeOfBirth: backendApp.placeOfBirth,
-      gender: backendApp.gender.charAt(0) + backendApp.gender.slice(1).toLowerCase(),
+      gender: backendApp.gender ? backendApp.gender.charAt(0) + backendApp.gender.slice(1).toLowerCase() : "",
       houseAddress: backendApp.houseAddress,
       cellphone: backendApp.cellphoneNumber,
       interests: backendApp.interestsSkillsHobbies,
