@@ -10,6 +10,10 @@ export function initSentry(): void {
       dsn,
       environment: import.meta.env.MODE,
       tracesSampleRate: import.meta.env.PROD ? 0.2 : 1.0,
+      integrations: [
+        Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
+      ],
+      enableLogs: true,
     });
     console.log("[Sentry] Admin frontend monitoring initialized.");
   }
