@@ -7,6 +7,7 @@ import { useMembers } from "@/features/hr/shared/hooks/useMembers";
 import { MemberFilterBar } from "@/features/hr/members/components/MemberFilterBar";
 import { MemberDirectory } from "@/features/hr/members/components/MemberDirectory";
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 export const Route = createFileRoute("/_admin/members")({
   beforeLoad: async () => {
@@ -40,7 +41,8 @@ function MembersRoute() {
           m.name.toLowerCase().includes(query) ||
           m.studentId.toLowerCase().includes(query) ||
           m.id.toLowerCase().includes(query) ||
-          m.department.toLowerCase().includes(query)
+          m.department.toLowerCase().includes(query) ||
+          formatOffice(m.department).toLowerCase().includes(query)
         );
       }
 

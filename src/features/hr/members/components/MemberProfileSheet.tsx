@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Applicant } from "@/features/hr/shared/types";
-import { formatCampus } from "@/features/hr/shared/utils/formatters";
+import { formatCampus, formatOffice } from "@/features/hr/shared/utils/formatters";
 
 interface MemberProfileSheetProps {
   isOpen: boolean;
@@ -69,7 +69,7 @@ export const MemberProfileSheet: React.FC<MemberProfileSheetProps> = ({
                 <div className="p-size120 bg-muted/20 border border-border space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Department:</span>
-                    <span className="font-bold text-foreground">{activeMember.department}</span>
+                    <span className="font-bold text-foreground">{formatOffice(activeMember.department)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Member UUID:</span>

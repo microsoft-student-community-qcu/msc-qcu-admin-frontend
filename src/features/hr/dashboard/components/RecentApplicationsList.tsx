@@ -4,9 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { ClockRegular } from "@fluentui/react-icons";
 import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
 import { formatTimeAgo } from "@/utils/date";
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
+import { useNavigate } from "@tanstack/react-router";
 
 export const RecentApplicationsList: React.FC = () => {
   const { data: applicants, isLoading, error } = useApplicants();
+  const navigate = useNavigate();
 
   const sortedApplicants = React.useMemo(() => {
     if (!applicants) return [];
@@ -43,7 +46,8 @@ export const RecentApplicationsList: React.FC = () => {
             {sortedApplicants.map((app) => (
             <div
               key={app.id}
-              className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200"
+              onClick={() => navigate({ to: "/applications", search: { id: app.id } })}
+              className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
             >
               <div className="flex items-center gap-4 min-w-0">
                 <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0">
@@ -51,7 +55,7 @@ export const RecentApplicationsList: React.FC = () => {
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-medium leading-none truncate" title={app.name}>{app.name}</p>
-                  <p className="text-sm text-muted-foreground mt-1 truncate" title={app.department}>{app.department}</p>
+                  <p className="text-sm text-muted-foreground mt-1 truncate" title={formatOffice(app.department)}>{formatOffice(app.department)}</p>
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 shrink-0 ml-4">

@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import type { Applicant } from "@/features/hr/shared/types";
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
@@ -186,7 +187,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                     </div>
 
                     <div className="text-xs text-muted-foreground truncate">
-                      {applicant.department}
+                      {formatOffice(applicant.department)}
                     </div>
 
                     <div className="flex items-center justify-between pt-1">
