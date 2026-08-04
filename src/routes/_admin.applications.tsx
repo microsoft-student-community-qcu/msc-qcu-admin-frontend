@@ -20,12 +20,18 @@ export const Route = createFileRoute("/_admin/applications")({
     const role = data.data?.role || data.role || data.user?.role;
     if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
   },
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      id: (search.id as string) || undefined,
+    };
+  },
   component: ApplicationsRoute,
 });
 
 type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 function ApplicationsRoute() {
+  const { id } = Route.useSearch();
   const { data: applicants, isLoading, error } = useApplicants();
   const updateStatusMutation = useUpdateApplicantStatus();
   const approveManualIdMutation = useApproveManualId();
@@ -33,6 +39,13 @@ function ApplicationsRoute() {
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
+
+  // Sync selectedId with URL search param `id` if present
+  React.useEffect(() => {
+    if (id) {
+      setSelectedId(id);
+    }
+  }, [id]);
 
   const isPendingSmtp = updateStatusMutation.isPending || approveManualIdMutation.isPending;
 
@@ -83,6 +96,7 @@ function ApplicationsRoute() {
   // Filtered applicants
   const filteredApplicants = React.useMemo(() => {
     if (!applicants) return [];
+    
     return applicants.filter((app) => {
       // 1. Filter by Tab
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
@@ -96,10 +110,10 @@ function ApplicationsRoute() {
       if (searchQuery.trim() !== "") {
         const query = searchQuery.toLowerCase();
         return (
-          app.name.toLowerCase().includes(query) ||
-          app.studentId.toLowerCase().includes(query) ||
-          app.id.toLowerCase().includes(query) ||
-          app.department.toLowerCase().includes(query)
+          (app.name?.toLowerCase() || "").includes(query) ||
+          (app.studentId?.toLowerCase() || "").includes(query) ||
+          (app.id?.toLowerCase() || "").includes(query) ||
+          (app.department?.toLowerCase() || "").includes(query)
         );
       }
 
