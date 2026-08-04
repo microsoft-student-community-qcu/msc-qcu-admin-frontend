@@ -40,14 +40,27 @@ const deptChartConfig = {
 
 const getDeptKey = (deptStr: string): string => {
   if (!deptStr) return "Secretariat";
+  const upper = deptStr.toUpperCase().trim();
+  const map: Record<string, string> = {
+    SECRETARIAT_OFFICE: "Secretariat",
+    RELATIONS_OFFICE: "Relations",
+    FINANCE_OFFICE: "Finance",
+    LOGISTICS_OFFICE: "Logistics",
+    CREATIVES_OFFICE: "Creatives",
+    MANAGEMENT_AND_DEVELOPMENT_OFFICE: "ManagementDev",
+    STARTUP_DEVELOPERS_OFFICE: "StartupDevelopers",
+  };
+  
+  if (map[upper]) return map[upper];
+
   const lower = deptStr.toLowerCase();
   if (lower.includes("secretariat")) return "Secretariat";
   if (lower.includes("relations")) return "Relations";
   if (lower.includes("finance")) return "Finance";
   if (lower.includes("logistics")) return "Logistics";
   if (lower.includes("creative") || lower.includes("design")) return "Creatives";
-  if (lower.includes("management") || lower.includes("dev. office") || lower.includes("dev")) return "ManagementDev";
-  if (lower.includes("startup") || lower.includes("developer")) return "StartupDevelopers";
+  if (lower.includes("startup")) return "StartupDevelopers";
+  if (lower.includes("management") || lower.includes("dev")) return "ManagementDev";
   return "Secretariat";
 };
 
@@ -96,7 +109,7 @@ export const DepartmentDistributionChart: React.FC = () => {
         <div className="w-[58%] h-full flex items-center justify-center relative">
           <ChartContainer
             config={deptChartConfig}
-            className="aspect-square w-full h-full max-h-[280px]"
+            className="aspect-square w-full h-full max-h-70"
           >
             <PieChart>
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
@@ -121,12 +134,12 @@ export const DepartmentDistributionChart: React.FC = () => {
         </div>
         <div className="w-[42%] flex flex-col gap-size80 pr-size160 justify-center min-w-0">
           {departmentData.map((item) => {
-            const config = deptChartConfig[item.department as keyof typeof deptChartConfig];
+            const config = deptChartConfig[item.department as keyof typeof deptChartConfig] as { label: string; color?: string };
             return (
               <div key={item.department} className="flex items-center gap-size80 text-xs min-w-0">
                 <div
-                  className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-                  style={{ backgroundColor: `var(--color-${item.department})` }}
+                  className="h-2.5 w-2.5 shrink-0 rounded-xs"
+                  style={{ backgroundColor: config?.color || "var(--color-chart-1)" }}
                 />
                 <span
                   className="text-muted-foreground truncate flex-1 min-w-0"

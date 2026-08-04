@@ -82,14 +82,16 @@ function MembersRoute() {
   }
 
   return (
-    <div className="flex flex-col gap-size320 w-full">
-      {/* Top Action Bar (Filters & Search) */}
-      <MemberFilterBar
-        searchQuery={searchQuery}
-        onSearchQueryChange={setSearchQuery}
-        selectedDept={selectedDeptFilter}
-        onSelectDept={setSelectedDeptFilter}
-      />
+    <div className="flex flex-col gap-size320 w-full relative">
+      {/* Top Action Bar (Filters & Search) - Sticky / Stationary */}
+      <div className="sticky top-[-32px] -mt-size320 pt-size320 pb-size160 z-10 bg-background/95 backdrop-blur-md -mx-size320 px-size320">
+        <MemberFilterBar
+          searchQuery={searchQuery}
+          onSearchQueryChange={setSearchQuery}
+          selectedDept={selectedDeptFilter}
+          onSelectDept={setSelectedDeptFilter}
+        />
+      </div>
 
       {/* Main Grid View */}
       <MemberDirectory
