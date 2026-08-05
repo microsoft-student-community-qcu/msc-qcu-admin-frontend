@@ -14,14 +14,12 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import * as Sentry from "@sentry/react";
 import {
   BoardRegular,
   PeopleRegular,
   CalendarLtrRegular,
   SignOutRegular,
   PersonRegular,
-  BugRegular,
 } from "@fluentui/react-icons";
 import logo from "@/assets/qcu-msc-logo.png";
 import {
@@ -155,16 +153,6 @@ export function Sidebar() {
                   </SidebarMenuItem>
                 );
               })}
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  tooltip="Report Bug"
-                  onClick={() => Sentry.getFeedback()?.openWidget()}
-                  className="text-sm h-11 p-1 gap-3 [&>svg]:size-6 group-data-[collapsible=icon]:p-1! text-muted-foreground hover:text-foreground cursor-pointer"
-                >
-                  <BugRegular />
-                  <span className="truncate">Report Bug</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
