@@ -80,25 +80,6 @@ function MembersRoute() {
     window.location.href = `mailto:${member.email}?subject=QCU%20MSC%20Community%20Update`;
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
-        <span className="text-sm text-muted-foreground animate-pulse">Loading members...</span>
-      </div>
-    );
-  }
-
-  if (error || !members) {
-    return (
-      <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
-        <div className="text-center">
-          <p className="text-sm text-destructive font-medium">Failed to load members</p>
-          <p className="text-xs text-muted-foreground mt-1">Please check your backend connection or refresh.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-size320 w-full relative">
       {/* Top Action Bar (Filters & Search) - Sticky / Stationary */}
@@ -112,12 +93,25 @@ function MembersRoute() {
         />
       </div>
 
-      {/* Main Grid View */}
-      <MemberDirectory
-        members={filteredMembers}
-        onOpenProfile={handleOpenProfile}
-        onContactMember={handleContactMember}
-      />
+      {/* Content Area */}
+      {isLoading ? (
+        <div className="flex h-[calc(100vh-15rem)] items-center justify-center">
+          <span className="text-sm text-muted-foreground animate-pulse">Loading members...</span>
+        </div>
+      ) : error || !members ? (
+        <div className="flex h-[calc(100vh-15rem)] items-center justify-center">
+          <div className="text-center">
+            <p className="text-sm text-destructive font-medium">Failed to load members</p>
+            <p className="text-xs text-muted-foreground mt-1">Please check your backend connection or refresh.</p>
+          </div>
+        </div>
+      ) : (
+        <MemberDirectory
+          members={filteredMembers}
+          onOpenProfile={handleOpenProfile}
+          onContactMember={handleContactMember}
+        />
+      )}
 
       {/* Infinite Scroll Sentinel */}
       {hasNextPage && (
