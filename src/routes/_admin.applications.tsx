@@ -7,7 +7,6 @@ import { usePaginatedApplicants } from "@/features/hr/shared/hooks/usePaginatedA
 import { useUpdateApplicantStatus } from "@/features/hr/shared/hooks/useUpdateApplicantStatus";
 import { useApproveManualId } from "@/features/hr/shared/hooks/useApproveManualId";
 import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
-import { useDebounce } from "@/hooks/useDebounce";
 
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
@@ -37,13 +36,12 @@ function ApplicationsRoute() {
   
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
-
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedApplicants({ 
     status: activeTab === "ALL" ? undefined : activeTab as Applicant["status"],
-    search: debouncedSearchQuery,
+    search: submittedSearchQuery,
   });
   const { data: countsData } = useApplicantCounts();
   const updateStatusMutation = useUpdateApplicantStatus();
@@ -114,8 +112,8 @@ function ApplicationsRoute() {
       if (activeTab === "FOR_INTERVIEW" && app.status !== "FOR_INTERVIEW") return false;
 
       // 2. Filter by Search Query
-      if (searchQuery.trim() !== "") {
-        const query = searchQuery.toLowerCase();
+      if (submittedSearchQuery.trim() !== "") {
+        const query = submittedSearchQuery.toLowerCase();
         return (
           (app.name?.toLowerCase() || "").includes(query) ||
           (app.studentId?.toLowerCase() || "").includes(query) ||
@@ -126,7 +124,7 @@ function ApplicationsRoute() {
 
       return true;
     });
-  }, [applicants, activeTab, searchQuery]);
+  }, [applicants, activeTab, submittedSearchQuery]);
 
   // Auto-select first item in filtered list if current selected is not in the filtered list
   React.useEffect(() => {
@@ -203,6 +201,7 @@ function ApplicationsRoute() {
         onSelectId={setSelectedId}
         searchQuery={searchQuery}
         onSearchQueryChange={setSearchQuery}
+        onSearchSubmit={setSubmittedSearchQuery}
         activeTab={activeTab}
         onActiveTabChange={setActiveTab}
         tabCounts={tabCounts}

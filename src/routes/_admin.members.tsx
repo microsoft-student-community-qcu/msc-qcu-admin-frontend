@@ -10,7 +10,6 @@ import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfi
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 import { Button } from "@/components/ui/button";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { useDebounce } from "@/hooks/useDebounce";
 
 export const Route = createFileRoute("/_admin/members")({
   beforeLoad: async () => {
@@ -24,10 +23,10 @@ export const Route = createFileRoute("/_admin/members")({
 
 function MembersRoute() {
   const [searchQuery, setSearchQuery] = React.useState("");
-  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
 
   const { data: membersData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useMembers({
-    search: debouncedSearchQuery,
+    search: submittedSearchQuery,
   });
 
   const members = React.useMemo(() => {
@@ -54,8 +53,8 @@ function MembersRoute() {
       if (selectedDeptFilter !== "ALL" && m.department !== selectedDeptFilter) return false;
 
       // 2. Filter by Search Query
-      if (searchQuery.trim() !== "") {
-        const query = searchQuery.toLowerCase();
+      if (submittedSearchQuery.trim() !== "") {
+        const query = submittedSearchQuery.toLowerCase();
         return (
           (m.name?.toLowerCase() || "").includes(query) ||
           (m.studentId?.toLowerCase() || "").includes(query) ||
@@ -67,7 +66,7 @@ function MembersRoute() {
 
       return true;
     });
-  }, [members, selectedDeptFilter, searchQuery]);
+  }, [members, selectedDeptFilter, submittedSearchQuery]);
 
   const handleOpenProfile = (member: Applicant) => {
     setSelectedMember(member);
@@ -107,6 +106,7 @@ function MembersRoute() {
         <MemberFilterBar
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
+          onSearchSubmit={setSubmittedSearchQuery}
           selectedDept={selectedDeptFilter}
           onSelectDept={setSelectedDeptFilter}
         />

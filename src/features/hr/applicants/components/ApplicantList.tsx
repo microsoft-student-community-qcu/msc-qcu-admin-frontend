@@ -19,6 +19,7 @@ interface ApplicantListProps {
   onSelectId: (id: string) => void;
   searchQuery: string;
   onSearchQueryChange: (query: string) => void;
+  onSearchSubmit?: (query: string) => void;
   activeTab: FilterTab;
   onActiveTabChange: (tab: FilterTab) => void;
   tabCounts: {
@@ -43,6 +44,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
   onSelectId,
   searchQuery,
   onSearchQueryChange,
+  onSearchSubmit,
   activeTab,
   onActiveTabChange,
   tabCounts,
@@ -70,7 +72,18 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
             type="text"
             placeholder="Search applicants..."
             value={searchQuery}
-            onChange={(e) => onSearchQueryChange(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              onSearchQueryChange(val);
+              if (val.trim() === "" && onSearchSubmit) {
+                onSearchSubmit("");
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && onSearchSubmit) {
+                onSearchSubmit(searchQuery);
+              }
+            }}
             className="pl-9 h-9"
           />
         </div>

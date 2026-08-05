@@ -7,6 +7,7 @@ import { formatOffice } from "@/features/hr/shared/utils/formatters";
 interface MemberFilterBarProps {
   searchQuery: string;
   onSearchQueryChange: (query: string) => void;
+  onSearchSubmit?: (query: string) => void;
   selectedDept: string;
   onSelectDept: (dept: string) => void;
 }
@@ -25,6 +26,7 @@ const DEPARTMENTS = [
 export const MemberFilterBar: React.FC<MemberFilterBarProps> = ({
   searchQuery,
   onSearchQueryChange,
+  onSearchSubmit,
   selectedDept,
   onSelectDept,
 }) => {
@@ -37,7 +39,18 @@ export const MemberFilterBar: React.FC<MemberFilterBarProps> = ({
           type="text"
           placeholder="Search team directory..."
           value={searchQuery}
-          onChange={(e) => onSearchQueryChange(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value;
+            onSearchQueryChange(val);
+            if (val.trim() === "" && onSearchSubmit) {
+              onSearchSubmit("");
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && onSearchSubmit) {
+              onSearchSubmit(searchQuery);
+            }
+          }}
           className="pl-9 h-9"
         />
       </div>
