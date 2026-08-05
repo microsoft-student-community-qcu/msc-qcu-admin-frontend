@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Applicant } from "@/features/hr/shared/types";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
@@ -140,17 +141,17 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
         <div className="divide-y divide-border/60">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="p-size160 flex items-start gap-size120 animate-pulse">
-                <div className="w-9 h-9 bg-muted shrink-0" />
+              <div key={idx} className="p-size160 flex items-start gap-size120">
+                <Skeleton className="w-9 h-9 shrink-0" />
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="h-4 bg-muted w-24" />
-                    <div className="h-3 bg-muted w-10" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-10" />
                   </div>
-                  <div className="h-3 bg-muted w-32" />
+                  <Skeleton className="h-3 w-32" />
                   <div className="flex justify-between pt-1">
-                    <div className="h-5 bg-muted w-16" />
-                    <div className="h-3 bg-muted w-12" />
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-3 w-12" />
                   </div>
                 </div>
               </div>
