@@ -1,7 +1,7 @@
-import { useApplicants } from "./useApplicants";
+import { usePaginatedApplicants } from "./usePaginatedApplicants";
+import { FetchApplicantsFilters } from "../types";
 
-export function useMembers() {
-  // Fetch only APPROVED applicants to populate the members list.
-  // We request up to 100 members initially (avoiding client-side pagination bugs).
-  return useApplicants({ status: "APPROVED", limit: 100 });
+export function useMembers(filters?: Omit<FetchApplicantsFilters, "status">) {
+  // Fetch only APPROVED applicants to populate the members list using infinite query pagination.
+  return usePaginatedApplicants({ status: "APPROVED", ...filters });
 }

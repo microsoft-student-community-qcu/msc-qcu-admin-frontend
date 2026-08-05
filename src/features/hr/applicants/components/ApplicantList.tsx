@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { SearchRegular, PeopleRegular, WarningRegular } from "@fluentui/react-icons";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -30,6 +31,9 @@ interface ApplicantListProps {
   };
   isLoading?: boolean;
   error?: boolean;
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 }
 
 export const ApplicantList: React.FC<ApplicantListProps> = ({
@@ -43,7 +47,18 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
   tabCounts,
   isLoading,
   error,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }) => {
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+
+  useIntersectionObserver({
+    target: sentinelRef,
+    onIntersect: () => fetchNextPage?.(),
+    enabled: !!hasNextPage && !isFetchingNextPage,
+  });
+
   return (
     <div className="w-[380px] shrink-0 flex flex-col h-full bg-card shadow-4 ring-1 ring-foreground/10">
       {/* Search & Tabs Header */}
@@ -271,6 +286,17 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                   ? `No search results for "${searchQuery}"`
                   : `There are currently no applicants in the ${activeTab.toLowerCase().replace("_", " ")} pipeline.`}
               </p>
+            </div>
+          )}
+          
+          {/* Infinite Scroll Sentinel */}
+          {hasNextPage && (
+            <div ref={sentinelRef} className="h-4 w-full" />
+          )}
+
+          {isFetchingNextPage && (
+            <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse">
+              Loading more...
             </div>
           )}
         </div>

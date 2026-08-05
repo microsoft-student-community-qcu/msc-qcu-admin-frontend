@@ -8,6 +8,9 @@ import { MemberFilterBar } from "@/features/hr/members/components/MemberFilterBa
 import { MemberDirectory } from "@/features/hr/members/components/MemberDirectory";
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
+import { Button } from "@/components/ui/button";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export const Route = createFileRoute("/_admin/members")({
   beforeLoad: async () => {
@@ -20,9 +23,25 @@ export const Route = createFileRoute("/_admin/members")({
 });
 
 function MembersRoute() {
-  const { data: members, isLoading, error } = useMembers();
-
   const [searchQuery, setSearchQuery] = React.useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  const { data: membersData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useMembers({
+    search: debouncedSearchQuery,
+  });
+
+  const members = React.useMemo(() => {
+    if (!membersData) return [];
+    return membersData.pages.flatMap((page) => page.applicants);
+  }, [membersData]);
+
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+
+  useIntersectionObserver({
+    target: sentinelRef,
+    onIntersect: () => fetchNextPage?.(),
+    enabled: !!hasNextPage && !isFetchingNextPage,
+  });
   const [selectedDeptFilter, setSelectedDeptFilter] = React.useState<string>("ALL");
   const [selectedMember, setSelectedMember] = React.useState<Applicant | null>(null);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
@@ -99,6 +118,17 @@ function MembersRoute() {
         onOpenProfile={handleOpenProfile}
         onContactMember={handleContactMember}
       />
+
+      {/* Infinite Scroll Sentinel */}
+      {hasNextPage && (
+        <div ref={sentinelRef} className="h-4 w-full" />
+      )}
+
+      {isFetchingNextPage && (
+        <div className="flex justify-center mt-size120 pb-size240 text-xs text-muted-foreground animate-pulse">
+          Loading more...
+        </div>
+      )}
 
       {/* Slide-out Sheet Profile Drawer */}
       <MemberProfileSheet

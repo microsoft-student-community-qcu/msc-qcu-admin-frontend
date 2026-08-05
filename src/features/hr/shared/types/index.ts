@@ -34,4 +34,5 @@ export interface FetchApplicantsFilters {
   status?: Applicant["status"];
   limit?: number;
   offset?: number;
+  search?: string;
 }

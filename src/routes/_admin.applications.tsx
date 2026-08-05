@@ -3,9 +3,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getApiBaseURL } from "@/utils/env";
 import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
-import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { usePaginatedApplicants } from "@/features/hr/shared/hooks/usePaginatedApplicants";
 import { useUpdateApplicantStatus } from "@/features/hr/shared/hooks/useUpdateApplicantStatus";
 import { useApproveManualId } from "@/features/hr/shared/hooks/useApproveManualId";
+import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
+import { useDebounce } from "@/hooks/useDebounce";
 
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
@@ -32,13 +34,25 @@ type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT"
 
 function ApplicationsRoute() {
   const { id } = Route.useSearch();
-  const { data: applicants, isLoading, error } = useApplicants();
-  const updateStatusMutation = useUpdateApplicantStatus();
-  const approveManualIdMutation = useApproveManualId();
-
+  
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
+
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedApplicants({ 
+    status: activeTab === "ALL" ? undefined : activeTab as Applicant["status"],
+    search: debouncedSearchQuery,
+  });
+  const { data: countsData } = useApplicantCounts();
+  const updateStatusMutation = useUpdateApplicantStatus();
+  const approveManualIdMutation = useApproveManualId();
+
+  const applicants = React.useMemo(() => {
+    if (!applicantsData) return [];
+    return applicantsData.pages.flatMap(page => page.applicants);
+  }, [applicantsData]);
 
   // Sync selectedId with URL search param `id` if present
   React.useEffect(() => {
@@ -71,27 +85,20 @@ function ApplicationsRoute() {
 
   // Count metrics for tabs
   const tabCounts = React.useMemo(() => {
-    if (!applicants) {
-      return {
-        ALL: 0,
-        PENDING_REVIEW: 0,
-        APPROVED: 0,
-        REJECTED: 0,
-        RESUBMIT: 0,
-        CANCELLED: 0,
-        FOR_INTERVIEW: 0,
-      };
+    if (countsData) {
+      return countsData;
     }
+    // Fallback if not loaded
     return {
-      ALL: applicants.length,
-      PENDING_REVIEW: applicants.filter((app) => app.status === "PENDING_REVIEW").length,
-      APPROVED: applicants.filter((app) => app.status === "APPROVED").length,
-      REJECTED: applicants.filter((app) => app.status === "REJECTED").length,
-      RESUBMIT: applicants.filter((app) => app.status === "RESUBMIT").length,
-      CANCELLED: applicants.filter((app) => app.status === "CANCELLED").length,
-      FOR_INTERVIEW: applicants.filter((app) => app.status === "FOR_INTERVIEW").length,
+      ALL: 0,
+      PENDING_REVIEW: 0,
+      APPROVED: 0,
+      REJECTED: 0,
+      RESUBMIT: 0,
+      CANCELLED: 0,
+      FOR_INTERVIEW: 0,
     };
-  }, [applicants]);
+  }, [countsData]);
 
   // Filtered applicants
   const filteredApplicants = React.useMemo(() => {
@@ -201,6 +208,9 @@ function ApplicationsRoute() {
         tabCounts={tabCounts}
         isLoading={isLoading}
         error={!!error}
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
       />
 
       {/* RIGHT COLUMN: Detail View */}
