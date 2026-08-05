@@ -48,7 +48,8 @@ export function formatOffice(office?: string | null): string {
 
 export function formatGender(gender?: string | null): string {
   if (!gender) return "";
-  switch (gender) {
+  const normalized = gender.toUpperCase().replace(/\s+/g, "_");
+  switch (normalized) {
     case "MALE":
       return "Male";
     case "FEMALE":
@@ -58,6 +59,6 @@ export function formatGender(gender?: string | null): string {
     case "PREFER_NOT_TO_SAY":
       return "Prefer not to say";
     default:
-      return gender;
+      return gender.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
   }
 }
