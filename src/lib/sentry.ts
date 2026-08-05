@@ -19,8 +19,27 @@ export function initSentry(): void {
         Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
         Sentry.feedbackIntegration({
           colorScheme: "system",
+          autoInject: false,
           isNameRequired: true,
           isEmailRequired: true,
+          buttonLabel: "Report Bug",
+          formTitle: "Report an Issue",
+          themeDark: {
+            fontFamily: "'Segoe UI', system-ui, sans-serif",
+            submitBackground: "#0078d4",
+            submitForeground: "#ffffff",
+            background: "#0f172a",
+            border: "#334155",
+            foreground: "#f8fafc",
+          },
+          themeLight: {
+            fontFamily: "'Segoe UI', system-ui, sans-serif",
+            submitBackground: "#0078d4",
+            submitForeground: "#ffffff",
+            background: "#ffffff",
+            border: "#e2e8f0",
+            foreground: "#0f172a",
+          },
         }),
       ],
       tracePropagationTargets: [
