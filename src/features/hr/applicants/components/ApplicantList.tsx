@@ -1,11 +1,13 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { SearchRegular, PeopleRegular, WarningRegular } from "@fluentui/react-icons";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Applicant } from "@/features/hr/shared/types";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
@@ -17,6 +19,7 @@ interface ApplicantListProps {
   onSelectId: (id: string) => void;
   searchQuery: string;
   onSearchQueryChange: (query: string) => void;
+  onSearchSubmit?: (query: string) => void;
   activeTab: FilterTab;
   onActiveTabChange: (tab: FilterTab) => void;
   tabCounts: {
@@ -30,6 +33,9 @@ interface ApplicantListProps {
   };
   isLoading?: boolean;
   error?: boolean;
+  fetchNextPage?: () => void;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
 }
 
 export const ApplicantList: React.FC<ApplicantListProps> = ({
@@ -38,12 +44,24 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
   onSelectId,
   searchQuery,
   onSearchQueryChange,
+  onSearchSubmit,
   activeTab,
   onActiveTabChange,
   tabCounts,
   isLoading,
   error,
+  fetchNextPage,
+  hasNextPage,
+  isFetchingNextPage,
 }) => {
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+
+  useIntersectionObserver({
+    target: sentinelRef,
+    onIntersect: () => fetchNextPage?.(),
+    enabled: !!hasNextPage && !isFetchingNextPage,
+  });
+
   return (
     <div className="w-[380px] shrink-0 flex flex-col h-full bg-card shadow-4 ring-1 ring-foreground/10">
       {/* Search & Tabs Header */}
@@ -54,7 +72,18 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
             type="text"
             placeholder="Search applicants..."
             value={searchQuery}
-            onChange={(e) => onSearchQueryChange(e.target.value)}
+            onChange={(e) => {
+              const val = e.target.value;
+              onSearchQueryChange(val);
+              if (val.trim() === "" && onSearchSubmit) {
+                onSearchSubmit("");
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && onSearchSubmit) {
+                onSearchSubmit(searchQuery);
+              }
+            }}
             className="pl-9 h-9"
           />
         </div>
@@ -125,17 +154,17 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
         <div className="divide-y divide-border/60">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="p-size160 flex items-start gap-size120 animate-pulse">
-                <div className="w-9 h-9 bg-muted shrink-0" />
+              <div key={idx} className="p-size160 flex items-start gap-size120">
+                <Skeleton className="w-9 h-9 shrink-0" />
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="h-4 bg-muted w-24" />
-                    <div className="h-3 bg-muted w-10" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-10" />
                   </div>
-                  <div className="h-3 bg-muted w-32" />
+                  <Skeleton className="h-3 w-32" />
                   <div className="flex justify-between pt-1">
-                    <div className="h-5 bg-muted w-16" />
-                    <div className="h-3 bg-muted w-12" />
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-3 w-12" />
                   </div>
                 </div>
               </div>
@@ -271,6 +300,17 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                   ? `No search results for "${searchQuery}"`
                   : `There are currently no applicants in the ${activeTab.toLowerCase().replace("_", " ")} pipeline.`}
               </p>
+            </div>
+          )}
+          
+          {/* Infinite Scroll Sentinel */}
+          {hasNextPage && (
+            <div ref={sentinelRef} className="h-4 w-full" />
+          )}
+
+          {isFetchingNextPage && (
+            <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse">
+              Loading more...
             </div>
           )}
         </div>
