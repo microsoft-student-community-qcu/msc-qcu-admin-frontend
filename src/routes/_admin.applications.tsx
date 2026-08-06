@@ -7,6 +7,7 @@ import { usePaginatedApplicants } from "@/features/hr/shared/hooks/usePaginatedA
 import { useUpdateApplicantStatus } from "@/features/hr/shared/hooks/useUpdateApplicantStatus";
 import { useApproveManualId } from "@/features/hr/shared/hooks/useApproveManualId";
 import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
+import { useApplicant } from "@/features/hr/shared/hooks/useApplicant";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
@@ -45,14 +46,19 @@ function ApplicationsRoute() {
     search: submittedSearchQuery,
     office: selectedOffices.length > 0 ? selectedOffices.join(",") : undefined,
   });
+  const { data: urlApplicant } = useApplicant(id);
   const { data: countsData } = useApplicantCounts();
   const updateStatusMutation = useUpdateApplicantStatus();
   const approveManualIdMutation = useApproveManualId();
 
   const applicants = React.useMemo(() => {
     if (!applicantsData) return [];
-    return applicantsData.pages.flatMap(page => page.applicants);
-  }, [applicantsData]);
+    const list = applicantsData.pages.flatMap(page => page.applicants);
+    if (urlApplicant && !list.some(app => app.id === urlApplicant.id)) {
+      return [urlApplicant, ...list];
+    }
+    return list;
+  }, [applicantsData, urlApplicant]);
 
   // Sync selectedId with URL search param `id` if present
   React.useEffect(() => {
@@ -73,10 +79,11 @@ function ApplicationsRoute() {
   const [zoomTitle, setZoomTitle] = React.useState<string>("");
 
   React.useEffect(() => {
-    if (applicants && applicants.length > 0 && !selectedId) {
+    if (isLoading) return;
+    if (applicants && applicants.length > 0 && !selectedId && !id) {
       setSelectedId(applicants[0].id);
     }
-  }, [applicants, selectedId]);
+  }, [applicants, selectedId, id, isLoading]);
 
   const selectedApplicant = React.useMemo(() => {
     if (!applicants) return null;
@@ -135,15 +142,17 @@ function ApplicationsRoute() {
 
   // Auto-select first item in filtered list if current selected is not in the filtered list
   React.useEffect(() => {
+    if (isLoading) return;
+    
     if (filteredApplicants.length > 0) {
       const isStillInList = filteredApplicants.some((app) => app.id === selectedId);
-      if (!isStillInList) {
+      if (selectedId && !isStillInList) {
         setSelectedId(filteredApplicants[0].id);
       }
     } else {
       setSelectedId(null);
     }
-  }, [filteredApplicants, selectedId]);
+  }, [filteredApplicants, selectedId, isLoading]);
 
   const triggerStatusChange = (status: Applicant["status"]) => {
     if (selectedApplicant?.status === status) return;

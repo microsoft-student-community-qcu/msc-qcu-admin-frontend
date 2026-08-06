@@ -101,7 +101,7 @@ export const DepartmentDistributionChart: React.FC = () => {
   }, [departmentData]);
 
   return (
-    <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-2">
+    <Card className="shadow-4 border-transparent bg-card flex flex-col h-full min-h-0 md:col-span-2">
       <CardHeader className="shrink-0">
         <CardTitle>Office Distribution</CardTitle>
         <CardDescription>Breakdown of active members by office</CardDescription>

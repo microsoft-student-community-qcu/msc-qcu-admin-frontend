@@ -30,7 +30,7 @@ export const ApplicationGrowthChart: React.FC = () => {
     });
   }, [applicationGrowth]);
   return (
-    <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-3">
+    <Card className="shadow-4 border-transparent bg-card flex flex-col h-full min-h-0 md:col-span-3">
       <CardHeader className="shrink-0">
         <CardTitle>Application Growth</CardTitle>
         <CardDescription>Showing total applications for the last 6 months</CardDescription>

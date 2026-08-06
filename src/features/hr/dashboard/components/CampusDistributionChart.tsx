@@ -36,7 +36,7 @@ export const CampusDistributionChart: React.FC = () => {
   };
 
   return (
-    <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0">
+    <Card className="shadow-4 border-transparent bg-card flex flex-col h-full min-h-0">
       <CardHeader className="shrink-0">
         <CardTitle>Campus Distribution</CardTitle>
         <CardDescription>Breakdown of active members by QCU Campus</CardDescription>

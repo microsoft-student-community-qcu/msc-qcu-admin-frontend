@@ -19,7 +19,7 @@ export const RecentApplicationsList: React.FC = () => {
   }, [applicants]);
 
   return (
-    <Card className="shadow-4 border-transparent bg-background flex flex-col lg:col-span-1 lg:row-span-2 h-full min-h-0">
+    <Card className="shadow-4 border-transparent bg-card flex flex-col lg:col-span-1 lg:row-span-2 h-full min-h-0">
       <CardHeader className="shrink-0">
         <div className="flex items-center justify-between">
           <div>
@@ -47,7 +47,7 @@ export const RecentApplicationsList: React.FC = () => {
             <div
               key={app.id}
               onClick={() => navigate({ to: "/applications", search: { id: app.id } })}
-              className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
+              className="flex items-center justify-between p-3 bg-background border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
             >
               <div className="flex items-center gap-4 min-w-0">
                 <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0">
