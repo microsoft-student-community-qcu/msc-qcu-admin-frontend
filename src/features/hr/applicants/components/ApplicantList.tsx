@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { SearchRegular, PeopleRegular, WarningRegular } from "@fluentui/react-icons";
+import { SearchRegular, PeopleRegular, WarningRegular, FilterRegular } from "@fluentui/react-icons";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,25 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Applicant } from "@/features/hr/shared/types";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
+
+const OFFICES = [
+  "SECRETARIAT_OFFICE",
+  "RELATIONS_OFFICE",
+  "FINANCE_OFFICE",
+  "LOGISTICS_OFFICE",
+  "CREATIVES_OFFICE",
+  "MANAGEMENT_AND_DEVELOPMENT_OFFICE",
+  "STARTUP_DEVELOPERS_OFFICE",
+];
 
 type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
@@ -36,6 +55,8 @@ interface ApplicantListProps {
   fetchNextPage?: () => void;
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
+  selectedOffices: string[];
+  onSelectedOfficesChange: (offices: string[]) => void;
 }
 
 export const ApplicantList: React.FC<ApplicantListProps> = ({
@@ -53,6 +74,8 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
   fetchNextPage,
   hasNextPage,
   isFetchingNextPage,
+  selectedOffices,
+  onSelectedOfficesChange,
 }) => {
   const sentinelRef = React.useRef<HTMLDivElement>(null);
 
@@ -66,26 +89,64 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
     <div className="w-[380px] shrink-0 flex flex-col h-full bg-card shadow-4 ring-1 ring-foreground/10">
       {/* Search & Tabs Header */}
       <div className="p-size160 border-b border-border space-y-size120">
-        <div className="relative">
-          <SearchRegular className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search applicants..."
-            value={searchQuery}
-            onChange={(e) => {
-              const val = e.target.value;
-              onSearchQueryChange(val);
-              if (val.trim() === "" && onSearchSubmit) {
-                onSearchSubmit("");
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && onSearchSubmit) {
-                onSearchSubmit(searchQuery);
-              }
-            }}
-            className="pl-9 h-9"
-          />
+        <div className="flex gap-2 items-center">
+          <div className="relative flex-1">
+            <SearchRegular className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search applicants..."
+              value={searchQuery}
+              onChange={(e) => {
+                const val = e.target.value;
+                onSearchQueryChange(val);
+                if (val.trim() === "" && onSearchSubmit) {
+                  onSearchSubmit("");
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && onSearchSubmit) {
+                  onSearchSubmit(searchQuery);
+                }
+              }}
+              className="pl-9 h-9"
+            />
+          </div>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button
+                variant={selectedOffices.length > 0 ? "default" : "outline"}
+                size="icon"
+                className="h-9 w-9 shrink-0 cursor-pointer"
+              >
+                <FilterRegular className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64" align="end">
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Filter by Office</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {OFFICES.map((office) => {
+                  const isChecked = selectedOffices.includes(office);
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={office}
+                      checked={isChecked}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          onSelectedOfficesChange([...selectedOffices, office]);
+                        } else {
+                          onSelectedOfficesChange(selectedOffices.filter((o) => o !== office));
+                        }
+                      }}
+                    >
+                      {formatOffice(office)}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Inline Tab Filters */}

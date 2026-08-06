@@ -19,7 +19,7 @@ export const HrMetricSummaryCards: React.FC = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-size240 shrink-0">
       {/* Total Applicants */}
-      <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group h-full">
+      <Card className="shadow-4 border-transparent bg-card overflow-hidden relative group h-full">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
           <CardTitle className="text-sm font-medium">Total Applicants</CardTitle>
           <PeopleRegular className="w-5 h-5 text-muted-foreground" />
@@ -34,7 +34,7 @@ export const HrMetricSummaryCards: React.FC = () => {
       </Card>
 
       {/* Pending Approvals */}
-      <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group h-full">
+      <Card className="shadow-4 border-transparent bg-card overflow-hidden relative group h-full">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
           <CardTitle className="text-sm font-medium">Pending Approvals</CardTitle>
           <ClipboardTaskRegular className="w-5 h-5 text-muted-foreground" />
@@ -48,7 +48,7 @@ export const HrMetricSummaryCards: React.FC = () => {
       </Card>
 
       {/* Active Members */}
-      <Card className="shadow-4 border-transparent bg-background overflow-hidden relative group h-full">
+      <Card className="shadow-4 border-transparent bg-card overflow-hidden relative group h-full">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0 z-10 relative">
           <CardTitle className="text-sm font-medium">Active Members</CardTitle>
           <PulseRegular className="w-5 h-5 text-muted-foreground" />
