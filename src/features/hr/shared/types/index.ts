@@ -35,4 +35,5 @@ export interface FetchApplicantsFilters {
   limit?: number;
   offset?: number;
   search?: string;
+  office?: string;
 }

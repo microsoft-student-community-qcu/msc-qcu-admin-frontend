@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pie, PieChart } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useDashboardStats } from "@/features/hr/shared/hooks/useDashboardStats";
 
 const deptChartConfig = {
   students: {
@@ -65,7 +65,8 @@ const getDeptKey = (deptStr: string): string => {
 };
 
 export const DepartmentDistributionChart: React.FC = () => {
-  const { data: applicants = [] } = useApplicants();
+  const { data: stats } = useDashboardStats();
+  const departmentDistribution = stats?.departmentDistribution || [];
 
   const departmentData = React.useMemo(() => {
     const counts = {
@@ -77,11 +78,11 @@ export const DepartmentDistributionChart: React.FC = () => {
       ManagementDev: 0,
       StartupDevelopers: 0,
     };
-
-    const activeMembers = applicants.filter(app => app.status === "APPROVED");
-    activeMembers.forEach(app => {
-      const key = getDeptKey(app.department);
-      counts[key as keyof typeof counts] += 1;
+    departmentDistribution.forEach((item: { department: string; count: number }) => {
+      const key = getDeptKey(item.department);
+      if (key in counts) {
+        counts[key as keyof typeof counts] += item.count;
+      }
     });
 
     return [
@@ -93,7 +94,7 @@ export const DepartmentDistributionChart: React.FC = () => {
       { department: "ManagementDev", students: counts.ManagementDev, fill: "var(--color-chart-6)" },
       { department: "StartupDevelopers", students: counts.StartupDevelopers, fill: "var(--color-chart-7)" },
     ];
-  }, [applicants]);
+  }, [departmentDistribution]);
 
   const totalStudents = React.useMemo(() => {
     return departmentData.reduce((acc, curr) => acc + curr.students, 0);

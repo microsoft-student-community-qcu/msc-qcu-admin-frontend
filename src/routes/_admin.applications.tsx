@@ -7,7 +7,7 @@ import { usePaginatedApplicants } from "@/features/hr/shared/hooks/usePaginatedA
 import { useUpdateApplicantStatus } from "@/features/hr/shared/hooks/useUpdateApplicantStatus";
 import { useApproveManualId } from "@/features/hr/shared/hooks/useApproveManualId";
 import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
-
+import { formatOffice } from "@/features/hr/shared/utils/formatters";
 // Extracted Feature Components
 import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList";
 import { ApplicantDetails } from "@/features/hr/applicants/components/ApplicantDetails";
@@ -38,10 +38,12 @@ function ApplicationsRoute() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
   const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
+  const [selectedOffices, setSelectedOffices] = React.useState<string[]>([]);
 
   const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedApplicants({ 
     status: activeTab === "ALL" ? undefined : activeTab as Applicant["status"],
     search: submittedSearchQuery,
+    office: selectedOffices.length > 0 ? selectedOffices.join(",") : undefined,
   });
   const { data: countsData } = useApplicantCounts();
   const updateStatusMutation = useUpdateApplicantStatus();
@@ -111,20 +113,25 @@ function ApplicationsRoute() {
       if (activeTab === "CANCELLED" && app.status !== "CANCELLED") return false;
       if (activeTab === "FOR_INTERVIEW" && app.status !== "FOR_INTERVIEW") return false;
 
-      // 2. Filter by Search Query
+      // 2. Filter by Selected Offices
+      if (selectedOffices.length > 0 && !selectedOffices.includes(app.department)) return false;
+
+      // 3. Filter by Search Query
       if (submittedSearchQuery.trim() !== "") {
         const query = submittedSearchQuery.toLowerCase();
         return (
           (app.name?.toLowerCase() || "").includes(query) ||
           (app.studentId?.toLowerCase() || "").includes(query) ||
           (app.id?.toLowerCase() || "").includes(query) ||
-          (app.department?.toLowerCase() || "").includes(query)
+          (app.department?.toLowerCase() || "").includes(query) ||
+          (app.department?.toLowerCase() || "").replace(/_/g, " ").includes(query) ||
+          formatOffice(app.department).toLowerCase().includes(query)
         );
       }
 
       return true;
     });
-  }, [applicants, activeTab, submittedSearchQuery]);
+  }, [applicants, activeTab, selectedOffices, submittedSearchQuery]);
 
   // Auto-select first item in filtered list if current selected is not in the filtered list
   React.useEffect(() => {
@@ -210,6 +217,8 @@ function ApplicationsRoute() {
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
+        selectedOffices={selectedOffices}
+        onSelectedOfficesChange={setSelectedOffices}
       />
 
       {/* RIGHT COLUMN: Detail View */}

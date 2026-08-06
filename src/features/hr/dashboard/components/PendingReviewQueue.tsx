@@ -10,13 +10,12 @@ import { useNavigate } from "@tanstack/react-router";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 export const PendingReviewQueue: React.FC = () => {
-  const { data: applicants, isLoading, error } = useApplicants();
+  const { data: applicants, isLoading, error } = useApplicants({ status: "PENDING_REVIEW", limit: 5 });
   const navigate = useNavigate();
 
   const pendingList = React.useMemo(() => {
     if (!applicants) return [];
-    return applicants
-      .filter((app) => app.status === "PENDING_REVIEW")
+    return [...applicants]
       .sort((a, b) => new Date(a.submissionDate).getTime() - new Date(b.submissionDate).getTime()) // oldest first
       .slice(0, 5);
   }, [applicants]);

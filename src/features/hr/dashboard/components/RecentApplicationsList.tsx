@@ -8,14 +8,14 @@ import { formatOffice } from "@/features/hr/shared/utils/formatters";
 import { useNavigate } from "@tanstack/react-router";
 
 export const RecentApplicationsList: React.FC = () => {
-  const { data: applicants, isLoading, error } = useApplicants();
+  const { data: applicants, isLoading, error } = useApplicants({ limit: 10 });
   const navigate = useNavigate();
 
   const sortedApplicants = React.useMemo(() => {
     if (!applicants) return [];
     return [...applicants]
       .sort((a, b) => new Date(b.submissionDate).getTime() - new Date(a.submissionDate).getTime())
-      .slice(0, 5);
+      .slice(0, 10);
   }, [applicants]);
 
   return (

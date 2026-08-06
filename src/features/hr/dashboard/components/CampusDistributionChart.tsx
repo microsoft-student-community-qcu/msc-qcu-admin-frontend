@@ -2,10 +2,11 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useDashboardStats } from "@/features/hr/shared/hooks/useDashboardStats";
 
 export const CampusDistributionChart: React.FC = () => {
-  const { data: applicants = [] } = useApplicants();
+  const { data: stats } = useDashboardStats();
+  const campusDistribution = stats?.campusDistribution || [];
 
   const campusData = React.useMemo(() => {
     const counts = {
@@ -14,10 +15,9 @@ export const CampusDistributionChart: React.FC = () => {
       BATASAN: 0,
     };
 
-    const activeMembers = applicants.filter((app) => app.status === "APPROVED");
-    activeMembers.forEach((app) => {
-      if (app.campus in counts) {
-        counts[app.campus as keyof typeof counts] += 1;
+    campusDistribution.forEach((item: { campus: string; count: number }) => {
+      if (item.campus in counts) {
+        counts[item.campus as keyof typeof counts] += item.count;
       }
     });
 
@@ -26,7 +26,7 @@ export const CampusDistributionChart: React.FC = () => {
       { campus: "San Francisco", count: counts.SAN_FRANCISCO, fill: "var(--color-chart-2)" },
       { campus: "Batasan", count: counts.BATASAN, fill: "var(--color-chart-3)" },
     ];
-  }, [applicants]);
+  }, [campusDistribution]);
 
   const chartConfig = {
     count: {
