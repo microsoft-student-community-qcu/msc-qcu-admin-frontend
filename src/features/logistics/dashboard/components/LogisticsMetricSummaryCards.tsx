@@ -5,14 +5,14 @@ import {
   PulseRegular,
   ArrowDownRightRegular,
 } from "@fluentui/react-icons";
-import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
 import { useEvents } from "../../hooks/useEvents";
 
 export const LogisticsMetricSummaryCards: React.FC = () => {
-  const { data: applicants, isLoading: isApplicantsLoading } = useApplicants();
+  const { data: counts, isLoading: isApplicantsLoading } = useApplicantCounts();
   const { data: events, isLoading: isEventsLoading } = useEvents();
 
-  const activeMembers = applicants ? applicants.filter((app) => app.status === "APPROVED").length : 0;
+  const activeMembers = counts ? counts.APPROVED : 0;
   const upcomingCount = events ? events.length : 0;
 
   const nextEventText = React.useMemo(() => {

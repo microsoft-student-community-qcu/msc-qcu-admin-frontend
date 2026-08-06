@@ -7,14 +7,14 @@ import {
   ArrowUpRightRegular,
   ArrowDownRightRegular,
 } from "@fluentui/react-icons";
-import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
 
 export const HrMetricSummaryCards: React.FC = () => {
-  const { data: applicants, isLoading } = useApplicants();
+  const { data: counts, isLoading } = useApplicantCounts();
 
-  const totalApplicants = applicants ? applicants.length : 0;
-  const pendingApprovals = applicants ? applicants.filter((app) => app.status === "PENDING_REVIEW").length : 0;
-  const activeMembers = applicants ? applicants.filter((app) => app.status === "APPROVED").length : 0;
+  const totalApplicants = counts ? counts.ALL : 0;
+  const pendingApprovals = counts ? counts.PENDING_REVIEW : 0;
+  const activeMembers = counts ? counts.APPROVED : 0;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-size240 shrink-0">

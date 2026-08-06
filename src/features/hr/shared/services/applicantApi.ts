@@ -63,7 +63,12 @@ export async function openDocument(documentUrl: string): Promise<void> {
   setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
 }
 
-export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise<Applicant[]> {
+export interface FetchApplicantsResult {
+  applicants: Applicant[];
+  total: number;
+}
+
+export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise<FetchApplicantsResult> {
   const apiBase = getApiBaseURL();
   const queryParams = new URLSearchParams();
   if (filters?.status) {
@@ -74,6 +79,9 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
   }
   if (filters?.offset !== undefined) {
     queryParams.append("offset", filters.offset.toString());
+  }
+  if (filters?.search) {
+    queryParams.append("search", filters.search);
   }
 
   const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
@@ -87,39 +95,42 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
   if (!json.success) {
     throw new Error(json.message || "Failed to fetch applicants");
   }
-  return json.data.applicants.map((backendApp: any) => {
-    return {
-      id: backendApp.id,
-      studentId: backendApp.studentId || "",
-      name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
-      rawFirstName: backendApp.firstName,
-      rawLastName: backendApp.lastName,
-      rawMiddleInitial: backendApp.middleInitial || null,
-      email: backendApp.email,
-      department: backendApp.office,
-      corUrl: toDocumentApiUrl(backendApp.certificateOfRegistration),
-      cvUrl: toDocumentApiUrl(backendApp.curriculumVitae),
-      submissionDate: backendApp.createdAt,
-      status: backendApp.status,
-      idCardUrl: backendApp.idImagePath ? toImageApiUrl(backendApp.idImagePath) : undefined,
-      manualApplication: backendApp.manual_application,
-      college: backendApp.college,
-      program: backendApp.program,
-      section: backendApp.section,
-      campus: backendApp.campus,
-      dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
-      placeOfBirth: backendApp.placeOfBirth,
-      gender: backendApp.gender ? backendApp.gender.charAt(0) + backendApp.gender.slice(1).toLowerCase() : "",
-      houseAddress: backendApp.houseAddress,
-      cellphone: backendApp.cellphoneNumber,
-      interests: backendApp.interestsSkillsHobbies,
-      pastOrganizations: backendApp.organizationHistory,
-      portfolioUrl: backendApp.portfolio || undefined,
-      githubUrl: backendApp.githubOrProjectLinks || undefined,
-      facebookUrl: backendApp.facebookLink,
-      previousWorks: backendApp.previousWorksAchievements || undefined,
-    };
-  });
+  return {
+    total: json.data.total,
+    applicants: json.data.applicants.map((backendApp: any) => {
+      return {
+        id: backendApp.id,
+        studentId: backendApp.studentId || "",
+        name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
+        rawFirstName: backendApp.firstName,
+        rawLastName: backendApp.lastName,
+        rawMiddleInitial: backendApp.middleInitial || null,
+        email: backendApp.email,
+        department: backendApp.office,
+        corUrl: toDocumentApiUrl(backendApp.certificateOfRegistration),
+        cvUrl: toDocumentApiUrl(backendApp.curriculumVitae),
+        submissionDate: backendApp.createdAt,
+        status: backendApp.status,
+        idCardUrl: backendApp.idImagePath ? toImageApiUrl(backendApp.idImagePath) : undefined,
+        manualApplication: backendApp.manual_application,
+        college: backendApp.college,
+        program: backendApp.program,
+        section: backendApp.section,
+        campus: backendApp.campus,
+        dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
+        placeOfBirth: backendApp.placeOfBirth,
+        gender: backendApp.gender || "",
+        houseAddress: backendApp.houseAddress,
+        cellphone: backendApp.cellphoneNumber,
+        interests: backendApp.interestsSkillsHobbies,
+        pastOrganizations: backendApp.organizationHistory,
+        portfolioUrl: backendApp.portfolio || undefined,
+        githubUrl: backendApp.githubOrProjectLinks || undefined,
+        facebookUrl: backendApp.facebookLink,
+        previousWorks: backendApp.previousWorksAchievements || undefined,
+      };
+    })
+  };
 }
 
 export async function updateApplicantStatus(

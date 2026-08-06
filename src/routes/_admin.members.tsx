@@ -8,6 +8,8 @@ import { MemberFilterBar } from "@/features/hr/members/components/MemberFilterBa
 import { MemberDirectory } from "@/features/hr/members/components/MemberDirectory";
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
+import { Button } from "@/components/ui/button";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export const Route = createFileRoute("/_admin/members")({
   beforeLoad: async () => {
@@ -20,9 +22,25 @@ export const Route = createFileRoute("/_admin/members")({
 });
 
 function MembersRoute() {
-  const { data: members, isLoading, error } = useMembers();
-
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
+
+  const { data: membersData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useMembers({
+    search: submittedSearchQuery,
+  });
+
+  const members = React.useMemo(() => {
+    if (!membersData) return [];
+    return membersData.pages.flatMap((page) => page.applicants);
+  }, [membersData]);
+
+  const sentinelRef = React.useRef<HTMLDivElement>(null);
+
+  useIntersectionObserver({
+    target: sentinelRef,
+    onIntersect: () => fetchNextPage?.(),
+    enabled: !!hasNextPage && !isFetchingNextPage,
+  });
   const [selectedDeptFilter, setSelectedDeptFilter] = React.useState<string>("ALL");
   const [selectedMember, setSelectedMember] = React.useState<Applicant | null>(null);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
@@ -35,8 +53,8 @@ function MembersRoute() {
       if (selectedDeptFilter !== "ALL" && m.department !== selectedDeptFilter) return false;
 
       // 2. Filter by Search Query
-      if (searchQuery.trim() !== "") {
-        const query = searchQuery.toLowerCase();
+      if (submittedSearchQuery.trim() !== "") {
+        const query = submittedSearchQuery.toLowerCase();
         return (
           (m.name?.toLowerCase() || "").includes(query) ||
           (m.studentId?.toLowerCase() || "").includes(query) ||
@@ -48,7 +66,7 @@ function MembersRoute() {
 
       return true;
     });
-  }, [members, selectedDeptFilter, searchQuery]);
+  }, [members, selectedDeptFilter, submittedSearchQuery]);
 
   const handleOpenProfile = (member: Applicant) => {
     setSelectedMember(member);
@@ -62,25 +80,6 @@ function MembersRoute() {
     window.location.href = `mailto:${member.email}?subject=QCU%20MSC%20Community%20Update`;
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
-        <span className="text-sm text-muted-foreground animate-pulse">Loading members...</span>
-      </div>
-    );
-  }
-
-  if (error || !members) {
-    return (
-      <div className="flex h-[calc(100vh-7.5rem)] items-center justify-center">
-        <div className="text-center">
-          <p className="text-sm text-destructive font-medium">Failed to load members</p>
-          <p className="text-xs text-muted-foreground mt-1">Please check your backend connection or refresh.</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-size320 w-full relative">
       {/* Top Action Bar (Filters & Search) - Sticky / Stationary */}
@@ -88,17 +87,42 @@ function MembersRoute() {
         <MemberFilterBar
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}
+          onSearchSubmit={setSubmittedSearchQuery}
           selectedDept={selectedDeptFilter}
           onSelectDept={setSelectedDeptFilter}
         />
       </div>
 
-      {/* Main Grid View */}
-      <MemberDirectory
-        members={filteredMembers}
-        onOpenProfile={handleOpenProfile}
-        onContactMember={handleContactMember}
-      />
+      {/* Content Area */}
+      {isLoading ? (
+        <div className="flex h-[calc(100vh-15rem)] items-center justify-center">
+          <span className="text-sm text-muted-foreground animate-pulse">Loading members...</span>
+        </div>
+      ) : error || !members ? (
+        <div className="flex h-[calc(100vh-15rem)] items-center justify-center">
+          <div className="text-center">
+            <p className="text-sm text-destructive font-medium">Failed to load members</p>
+            <p className="text-xs text-muted-foreground mt-1">Please check your backend connection or refresh.</p>
+          </div>
+        </div>
+      ) : (
+        <MemberDirectory
+          members={filteredMembers}
+          onOpenProfile={handleOpenProfile}
+          onContactMember={handleContactMember}
+        />
+      )}
+
+      {/* Infinite Scroll Sentinel */}
+      {hasNextPage && (
+        <div ref={sentinelRef} className="h-4 w-full" />
+      )}
+
+      {isFetchingNextPage && (
+        <div className="flex justify-center mt-size120 pb-size240 text-xs text-muted-foreground animate-pulse">
+          Loading more...
+        </div>
+      )}
 
       {/* Slide-out Sheet Profile Drawer */}
       <MemberProfileSheet

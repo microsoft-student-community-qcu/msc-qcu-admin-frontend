@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Applicant } from "@/features/hr/shared/types";
 import { openDocument } from "@/features/hr/shared/services/applicantApi";
 import { useAuthorizedImage } from "@/features/hr/shared/hooks/useAuthorizedImage";
@@ -59,28 +60,28 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex-1 flex flex-col h-full min-h-0 bg-card shadow-4 ring-1 ring-foreground/10 animate-pulse">
+      <div className="flex-1 flex flex-col h-full min-h-0 bg-card shadow-4 ring-1 ring-foreground/10">
         {/* Detail Header Skeleton */}
         <div className="p-size240 border-b border-border flex items-center gap-size160 bg-muted/10 shrink-0">
-          <div className="h-16 w-16 bg-muted shrink-0" />
+          <Skeleton className="h-16 w-16 shrink-0" />
           <div className="space-y-2 flex-1">
-            <div className="h-5 bg-muted w-40" />
-            <div className="h-4 bg-muted w-48" />
-            <div className="h-3 bg-muted w-32" />
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-3 w-32" />
           </div>
         </div>
         {/* Detail Body Skeleton */}
         <div className="flex-1 p-size240 space-y-6">
           <div className="space-y-2">
-            <div className="h-4 bg-muted w-28" />
+            <Skeleton className="h-4 w-28" />
             <div className="grid grid-cols-2 gap-4">
-              <div className="h-12 bg-muted" />
-              <div className="h-12 bg-muted" />
+              <Skeleton className="h-12 w-full" />
+              <Skeleton className="h-12 w-full" />
             </div>
           </div>
           <div className="space-y-2">
-            <div className="h-4 bg-muted w-36" />
-            <div className="h-24 bg-muted" />
+            <Skeleton className="h-4 w-36" />
+            <Skeleton className="h-24 w-full" />
           </div>
         </div>
       </div>

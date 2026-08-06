@@ -33,7 +33,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-size200 w-full pb-size320">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-size200 w-full">
       {members.map((member) => (
         <Card
           key={member.id}
