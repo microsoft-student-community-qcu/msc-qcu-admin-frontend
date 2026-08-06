@@ -83,6 +83,9 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
   if (filters?.search) {
     queryParams.append("search", filters.search);
   }
+  if (filters?.office) {
+    queryParams.append("office", filters.office);
+  }
 
   const queryString = queryParams.toString() ? `?${queryParams.toString()}` : "";
   const res = await fetch(`${apiBase}/applicants${queryString}`, {
@@ -236,4 +239,81 @@ export async function updateApplicantDetails(
     throw new Error(json.message || "Failed to update applicant details");
   }
   return json.data;
+}
+
+export async function fetchApplicantCounts(): Promise<any> {
+  const apiBase = getApiBaseURL();
+  const res = await fetch(`${apiBase}/applicants/counts`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("Counts endpoint not available");
+  }
+  const json = await res.json();
+  if (!json.success) {
+    throw new Error(json.message || "Failed to fetch counts");
+  }
+  return json.data;
+}
+
+export async function fetchDashboardStats(): Promise<any> {
+  const apiBase = getApiBaseURL();
+  const res = await fetch(`${apiBase}/applicants/dashboard-stats`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("Dashboard stats endpoint not available");
+  }
+  const json = await res.json();
+  if (!json.success) {
+    throw new Error(json.message || "Failed to fetch dashboard stats");
+  }
+  return json.data;
+}
+
+export async function fetchApplicantById(applicantId: string): Promise<Applicant> {
+  const apiBase = getApiBaseURL();
+  const res = await fetch(`${apiBase}/applicants/${applicantId}`, {
+    credentials: "include",
+  });
+  if (!res.ok) {
+    throw new Error("Failed to fetch applicant details");
+  }
+  const json = await res.json();
+  if (!json.success) {
+    throw new Error(json.message || "Failed to fetch applicant details");
+  }
+  
+  const backendApp = json.data;
+  return {
+    id: backendApp.id,
+    studentId: backendApp.studentId || "",
+    name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
+    rawFirstName: backendApp.firstName,
+    rawLastName: backendApp.lastName,
+    rawMiddleInitial: backendApp.middleInitial || null,
+    email: backendApp.email,
+    department: backendApp.office,
+    corUrl: toDocumentApiUrl(backendApp.certificateOfRegistration),
+    cvUrl: toDocumentApiUrl(backendApp.curriculumVitae),
+    submissionDate: backendApp.createdAt,
+    status: backendApp.status,
+    idCardUrl: backendApp.idImagePath ? toImageApiUrl(backendApp.idImagePath) : "",
+    manualApplication: backendApp.manual_application,
+    college: backendApp.college,
+    program: backendApp.program,
+    section: backendApp.section,
+    campus: backendApp.campus,
+    dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
+    placeOfBirth: backendApp.placeOfBirth,
+    gender: backendApp.gender || "",
+    houseAddress: backendApp.houseAddress,
+    cellphone: backendApp.cellphoneNumber,
+    interests: backendApp.interestsSkillsHobbies,
+    pastOrganizations: backendApp.organizationHistory,
+    portfolioUrl: backendApp.portfolio || undefined,
+    githubUrl: backendApp.githubOrProjectLinks || undefined,
+    facebookUrl: backendApp.facebookLink,
+    previousWorks: backendApp.previousWorksAchievements || undefined,
+  };
 }

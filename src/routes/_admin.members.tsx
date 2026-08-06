@@ -24,9 +24,11 @@ export const Route = createFileRoute("/_admin/members")({
 function MembersRoute() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
+  const [selectedDeptFilter, setSelectedDeptFilter] = React.useState<string>("ALL");
 
   const { data: membersData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = useMembers({
     search: submittedSearchQuery,
+    office: selectedDeptFilter === "ALL" ? undefined : selectedDeptFilter,
   });
 
   const members = React.useMemo(() => {
@@ -41,7 +43,7 @@ function MembersRoute() {
     onIntersect: () => fetchNextPage?.(),
     enabled: !!hasNextPage && !isFetchingNextPage,
   });
-  const [selectedDeptFilter, setSelectedDeptFilter] = React.useState<string>("ALL");
+  
   const [selectedMember, setSelectedMember] = React.useState<Applicant | null>(null);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
@@ -60,6 +62,7 @@ function MembersRoute() {
           (m.studentId?.toLowerCase() || "").includes(query) ||
           (m.id?.toLowerCase() || "").includes(query) ||
           (m.department?.toLowerCase() || "").includes(query) ||
+          (m.department?.toLowerCase() || "").replace(/_/g, " ").includes(query) ||
           formatOffice(m.department).toLowerCase().includes(query)
         );
       }

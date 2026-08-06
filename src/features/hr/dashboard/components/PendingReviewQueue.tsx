@@ -10,13 +10,12 @@ import { useNavigate } from "@tanstack/react-router";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 export const PendingReviewQueue: React.FC = () => {
-  const { data: applicants, isLoading, error } = useApplicants();
+  const { data: applicants, isLoading, error } = useApplicants({ status: "PENDING_REVIEW", limit: 5 });
   const navigate = useNavigate();
 
   const pendingList = React.useMemo(() => {
     if (!applicants) return [];
-    return applicants
-      .filter((app) => app.status === "PENDING_REVIEW")
+    return [...applicants]
       .sort((a, b) => new Date(a.submissionDate).getTime() - new Date(b.submissionDate).getTime()) // oldest first
       .slice(0, 5);
   }, [applicants]);
@@ -26,7 +25,7 @@ export const PendingReviewQueue: React.FC = () => {
   };
 
   return (
-    <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0">
+    <Card className="shadow-4 border-transparent bg-card flex flex-col h-full min-h-0">
       <CardHeader className="shrink-0 flex flex-row items-center justify-between pb-size80">
         <div>
           <CardTitle>Pending Review Queue</CardTitle>
@@ -61,7 +60,7 @@ export const PendingReviewQueue: React.FC = () => {
               <div
                 key={app.id}
                 onClick={() => navigate({ to: "/applications", search: { id: app.id } })}
-                className="flex items-center justify-between p-3 bg-card border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
+                className="flex items-center justify-between p-3 bg-background border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
               >
                 <div className="flex items-center gap-4 min-w-0">
                   <Avatar className="h-9 w-9 rounded-none shrink-0 border border-border/50">

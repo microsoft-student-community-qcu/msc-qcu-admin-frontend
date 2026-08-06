@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { useApplicants } from "@/features/hr/shared/hooks/useApplicants";
+import { useDashboardStats } from "@/features/hr/shared/hooks/useDashboardStats";
 
 const appChartConfig = {
   apps: {
@@ -12,34 +12,25 @@ const appChartConfig = {
 } satisfies ChartConfig;
 
 export const ApplicationGrowthChart: React.FC = () => {
-  const { data: applicants = [] } = useApplicants();
+  const { data: stats } = useDashboardStats();
+  const applicationGrowth = stats?.applicationGrowth || [];
 
   const applicationsData = React.useMemo(() => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const result = [];
-    const now = new Date();
     
-    for (let i = 5; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthLabel = months[d.getMonth()];
-      const year = d.getFullYear();
-      const monthIdx = d.getMonth();
+    return applicationGrowth.map((item) => {
+      const [_, monthStr] = item.month.split("-");
+      const monthIdx = parseInt(monthStr, 10) - 1;
+      const monthLabel = months[monthIdx] || item.month;
       
-      const count = applicants.filter(app => {
-        const appDate = new Date(app.submissionDate);
-        return appDate.getFullYear() === year && appDate.getMonth() === monthIdx;
-      }).length;
-      
-      result.push({
+      return {
         month: monthLabel,
-        apps: count
-      });
-    }
-    
-    return result;
-  }, [applicants]);
+        apps: item.count
+      };
+    });
+  }, [applicationGrowth]);
   return (
-    <Card className="shadow-4 border-transparent bg-background flex flex-col h-full min-h-0 md:col-span-3">
+    <Card className="shadow-4 border-transparent bg-card flex flex-col h-full min-h-0 md:col-span-3">
       <CardHeader className="shrink-0">
         <CardTitle>Application Growth</CardTitle>
         <CardDescription>Showing total applications for the last 6 months</CardDescription>
