@@ -43,8 +43,18 @@ type FilterTab =
 
 function ApplicationsRoute() {
   const { id } = Route.useSearch();
+  const selectedId = id || null;
 
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
+  const setSelectedId = React.useCallback((newId: string | null) => {
+    navigate({
+      to: "/applications",
+      search: (prev) => ({
+        ...prev,
+        id: newId || undefined,
+      }),
+      replace: true,
+    });
+  }, []);
   const {
     applicantsSearch: searchQuery,
     setApplicantsSearch: setSearchQuery,
@@ -85,16 +95,18 @@ function ApplicationsRoute() {
     return list;
   }, [applicantsData, urlApplicant]);
 
-  // Sync selectedId and reset filters when URL search param `id` is present
+  const resetFiltersRef = React.useRef(!!id);
+
+  // Reset filters to default on initial mount if an applicant ID is present in the URL search params
   React.useEffect(() => {
-    if (id) {
-      setSelectedId(id);
+    if (resetFiltersRef.current) {
       setActiveTabRaw("ALL");
       setSearchQuery("");
       setSubmittedSearchQuery("");
       setSelectedOffices([]);
+      resetFiltersRef.current = false;
     }
-  }, [id, setActiveTabRaw, setSearchQuery, setSubmittedSearchQuery, setSelectedOffices]);
+  }, [setActiveTabRaw, setSearchQuery, setSubmittedSearchQuery, setSelectedOffices]);
 
   const isPendingSmtp = updateStatusMutation.isPending || approveManualIdMutation.isPending;
 
@@ -112,7 +124,7 @@ function ApplicationsRoute() {
     if (applicants && applicants.length > 0 && !selectedId && !id) {
       setSelectedId(applicants[0].id);
     }
-  }, [applicants, selectedId, id, isLoading]);
+  }, [applicants, selectedId, id, isLoading, setSelectedId]);
 
   const selectedApplicant = React.useMemo(() => {
     if (!applicants) return null;
@@ -184,7 +196,7 @@ function ApplicationsRoute() {
     } else {
       setSelectedId(null);
     }
-  }, [filteredApplicants, selectedId, isLoading, id, isApplicantLoading]);
+  }, [filteredApplicants, selectedId, isLoading, id, isApplicantLoading, setSelectedId]);
 
   const triggerStatusChange = (status: Applicant["status"]) => {
     if (selectedApplicant?.status === status) return;
