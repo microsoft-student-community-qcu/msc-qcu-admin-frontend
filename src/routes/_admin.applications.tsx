@@ -71,7 +71,7 @@ function ApplicationsRoute() {
     search: submittedSearchQuery,
     office: selectedOffices.length > 0 ? selectedOffices.join(",") : undefined,
   });
-  const { data: urlApplicant } = useApplicant(id);
+  const { data: urlApplicant, isLoading: isApplicantLoading } = useApplicant(id);
   const { data: countsData } = useApplicantCounts();
   const updateStatusMutation = useUpdateApplicantStatus();
   const approveManualIdMutation = useApproveManualId();
@@ -174,7 +174,7 @@ function ApplicationsRoute() {
 
   // Auto-select first item in filtered list if current selected is not in the filtered list
   React.useEffect(() => {
-    if (isLoading) return;
+    if (isLoading || (id && isApplicantLoading)) return;
 
     if (filteredApplicants.length > 0) {
       const isStillInList = filteredApplicants.some((app) => app.id === selectedId);
@@ -184,7 +184,7 @@ function ApplicationsRoute() {
     } else {
       setSelectedId(null);
     }
-  }, [filteredApplicants, selectedId, isLoading]);
+  }, [filteredApplicants, selectedId, isLoading, id, isApplicantLoading]);
 
   const triggerStatusChange = (status: Applicant["status"]) => {
     if (selectedApplicant?.status === status) return;
