@@ -37,11 +37,9 @@ export const editApplicantSchema = z.object({
       errorMap: () => ({ message: "Please select a valid department/office." }),
     },
   ),
-  cellphone: z
-    .string()
-    .regex(/^09\d{9}$/, {
-      message: "Cellphone number must be 11 digits starting with 09 (e.g., 09123456789)",
-    }),
+  cellphone: z.string().regex(/^09\d{9}$/, {
+    message: "Cellphone number must be 11 digits starting with 09 (e.g., 09123456789)",
+  }),
   houseAddress: z.string().min(1, { message: "Address is required." }),
   interests: z.string().optional(),
 });

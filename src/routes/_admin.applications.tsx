@@ -157,7 +157,10 @@ function ApplicationsRoute() {
           (app.id?.toLowerCase() || "").includes(query) ||
           (app.department?.toLowerCase() || "").includes(query) ||
           (app.department?.toLowerCase() || "").replace(/_/g, " ").includes(query) ||
-          formatOffice(app.department).toLowerCase().includes(query)
+          formatOffice(app.department).toLowerCase().includes(query) ||
+          (app.section?.toLowerCase() || "").includes(query) ||
+          (app.college?.toLowerCase() || "").includes(query) ||
+          (app.program?.toLowerCase() || "").includes(query)
         );
       }
 

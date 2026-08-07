@@ -87,7 +87,10 @@ function MembersRoute() {
           (m.id?.toLowerCase() || "").includes(query) ||
           (m.department?.toLowerCase() || "").includes(query) ||
           (m.department?.toLowerCase() || "").replace(/_/g, " ").includes(query) ||
-          formatOffice(m.department).toLowerCase().includes(query)
+          formatOffice(m.department).toLowerCase().includes(query) ||
+          (m.section?.toLowerCase() || "").includes(query) ||
+          (m.college?.toLowerCase() || "").includes(query) ||
+          (m.program?.toLowerCase() || "").includes(query)
         );
       }
 
