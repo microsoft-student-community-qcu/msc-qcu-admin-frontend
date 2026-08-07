@@ -40,7 +40,9 @@ export const HrMetricSummaryCards: React.FC = () => {
           <ClipboardTaskRegular className="w-5 h-5 text-muted-foreground" />
         </CardHeader>
         <CardContent className="z-10 relative">
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-500">{isLoading ? "..." : pendingApprovals}</div>
+          <div className="text-2xl font-bold text-amber-600 dark:text-amber-500">
+            {isLoading ? "..." : pendingApprovals}
+          </div>
           <p className="text-xs text-muted-foreground flex items-center mt-1">
             Requires your attention
           </p>

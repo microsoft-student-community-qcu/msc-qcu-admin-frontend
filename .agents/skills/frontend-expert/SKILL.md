@@ -10,6 +10,7 @@ Modern React/TypeScript development patterns for high-performance, premium appli
 ## Overview
 
 This skill provides comprehensive guidelines for building production-grade React applications with:
+
 - **Suspense-first architecture** - No loading spinners, no early returns
 - **Type-safe patterns** - Strict TypeScript, no `any` types, Zod validation
 - **Performance by default** - Lazy loading, memoization, cache strategies
@@ -49,12 +50,12 @@ This skill provides comprehensive guidelines for building production-grade React
 
 ## Import Aliases
 
-| Alias | Resolves To | Example |
-|-------|-------------|---------|
-| `@/` | `src/` | `import { cn } from '@/lib/utils'` |
-| `~types` | `src/types` | `import type { User } from '~types/user'` |
+| Alias         | Resolves To      | Example                                                |
+| ------------- | ---------------- | ------------------------------------------------------ |
+| `@/`          | `src/`           | `import { cn } from '@/lib/utils'`                     |
+| `~types`      | `src/types`      | `import type { User } from '~types/user'`              |
 | `~components` | `src/components` | `import { Sidebar } from '~components/shared/sidebar'` |
-| `~features` | `src/features` | `import { authApi } from '~features/auth'` |
+| `~features`   | `src/features`   | `import { authApi } from '~features/auth'`             |
 
 ---
 
@@ -80,10 +81,10 @@ Always reference the design guidelines in [design.md](file:///e:/Github/msc-qcu-
 
 ```typescript
 // ❌ NEVER use standard tailwind classes
-className="p-4 gap-2 shadow-md rounded-md"
+className = "p-4 gap-2 shadow-md rounded-md";
 
 // ✅ ALWAYS use Fluent tokens
-className="p-size160 gap-size80 shadow-4 rounded-md"
+className = "p-size160 gap-size80 shadow-4 rounded-md";
 ```
 
 ### Base UI Context Safety
@@ -109,18 +110,21 @@ className="p-size160 gap-size80 shadow-4 rounded-md"
 ## Topic Guides
 
 ### Component Patterns
+
 - `React.FC<Props>` for type safety
 - `React.lazy()` for code splitting
 - Named const + default export pattern
 - **[Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
 
 ### Data Fetching
+
 - `useSuspenseQuery` as primary pattern
 - Query keys structured logically
 - Bridge to API client in `src/services/`
 - **[Full Guide: objective.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/rules/objective.md)**
 
 ### Styling
+
 - Tailwind CSS v4 config-driven values
 - Strict adherence to spacing, typography, shadow, and transition tokens
 - **[Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**

@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-
 interface FilterState {
   // Applications page filters
   applicantsSearch: string;
@@ -50,6 +49,6 @@ export const useFilterStore = create<FilterState>()(
     }),
     {
       name: "msc-qcu-filters", // unique name for localStorage key
-    }
-  )
+    },
+  ),
 );

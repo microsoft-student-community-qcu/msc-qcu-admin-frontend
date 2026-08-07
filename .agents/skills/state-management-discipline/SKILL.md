@@ -16,7 +16,9 @@ If data comes from the backend, it belongs to TanStack Query. If it's a UI toggl
 ## Core Patterns
 
 ### ❌ The Anti-Pattern (Syncing State)
+
 Never use `useEffect` to copy API data into local state.
+
 ```tsx
 const { data } = useQuery(...);
 const [applicants, setApplicants] = useState([]);
@@ -28,7 +30,9 @@ useEffect(() => {
 ```
 
 ### ✅ The Correct Pattern (Derived State & Mutations)
+
 Rely on the TanStack Query cache. For forms, pass the initial data directly to the form default values. For updates, use Mutations with Cache Invalidation.
+
 ```tsx
 const { data } = useSuspenseQuery(...);
 const mutation = useMutation({
@@ -52,11 +56,11 @@ const mutation = useMutation({
 
 ## Common Rationalizations & Reality
 
-| Excuse | Reality |
-|--------|---------|
-| "I need to edit the data before saving, so I must put it in useState." | Initialize a form with the cache data as default values. Don't sync the whole API array to state. |
+| Excuse                                                                   | Reality                                                                                           |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| "I need to edit the data before saving, so I must put it in useState."   | Initialize a form with the cache data as default values. Don't sync the whole API array to state. |
 | "I'll put the applicants list in Zustand so I don't have to prop-drill." | TanStack Query acts as a global cache. Just call `useSuspenseQuery` again in the child component. |
-| "I need to filter the table, I'll use useState for the search query." | Admin portal filters must be shareable and persistent via URL. Use TanStack Router. |
+| "I need to filter the table, I'll use useState for the search query."    | Admin portal filters must be shareable and persistent via URL. Use TanStack Router.               |
 
 ## Red Flags - STOP and Refactor
 

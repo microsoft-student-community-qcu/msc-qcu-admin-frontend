@@ -83,7 +83,7 @@ export const LoginForm: React.FC = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   // Trigger form submission manually if we click the next button so native validation runs
-                  if (!email) return; 
+                  if (!email) return;
                   handleNext(e as any);
                 }}
                 className="rounded-none px-8 min-w-[108px] min-h-9 text-md cursor-pointer"
@@ -117,11 +117,7 @@ export const LoginForm: React.FC = () => {
                 className="absolute right-0 pr-1 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {showPassword ? (
-                  <EyeOffRegular fontSize={23} />
-                ) : (
-                  <EyeRegular fontSize={23} />
-                )}
+                {showPassword ? <EyeOffRegular fontSize={23} /> : <EyeRegular fontSize={23} />}
               </button>
             </div>
 

@@ -38,7 +38,7 @@ export function useUpdateApplicantStatus() {
           pages: old.pages.map((page: any) => ({
             ...page,
             applicants: page.applicants.map((app: Applicant) =>
-              app.id === applicantId ? { ...app, status } : app
+              app.id === applicantId ? { ...app, status } : app,
             ),
           })),
         };
@@ -47,9 +47,7 @@ export function useUpdateApplicantStatus() {
       // Optimistically update standard applicants list
       queryClient.setQueriesData({ queryKey: ["applicants"] }, (old: any) => {
         if (!old) return old;
-        return old.map((app: Applicant) =>
-          app.id === applicantId ? { ...app, status } : app
-        );
+        return old.map((app: Applicant) => (app.id === applicantId ? { ...app, status } : app));
       });
 
       // Optimistically update single applicant

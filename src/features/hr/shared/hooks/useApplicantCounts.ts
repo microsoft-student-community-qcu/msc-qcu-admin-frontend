@@ -38,11 +38,12 @@ export function useApplicantCounts() {
           FOR_INTERVIEW: 0,
         };
         const promises = STATUSES.map(async (status) => {
-          const filters = status === "ALL" ? { limit: 0 } : { status: status as Applicant["status"], limit: 0 };
+          const filters =
+            status === "ALL" ? { limit: 0 } : { status: status as Applicant["status"], limit: 0 };
           const result = await fetchApplicants(filters);
           counts[status] = result.total;
         });
-        
+
         await Promise.all(promises);
         return counts;
       }

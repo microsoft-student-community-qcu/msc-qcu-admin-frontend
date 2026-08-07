@@ -5,7 +5,7 @@ description: Use when asked to document the codebase, a feature, or architecture
 
 # Codebase Documentation Workflow
 
-Use this skill when requested to document the codebase, a specific feature, or the overall architecture. 
+Use this skill when requested to document the codebase, a specific feature, or the overall architecture.
 
 ## Workflow Steps
 
@@ -23,7 +23,7 @@ Use this skill when requested to document the codebase, a specific feature, or t
 3. **Format the Documentation**:
    - Use strict Markdown formatting with clear hierarchy (H1, H2, H3).
    - Use **Mermaid diagrams** (if possible) to visualize component trees, state flows, or complex data pipelines.
-   - Explain *why* certain patterns are used (e.g., why Zustand is used for a specific state, how TanStack Query handles caching).
+   - Explain _why_ certain patterns are used (e.g., why Zustand is used for a specific state, how TanStack Query handles caching).
    - Include brief code snippets to demonstrate usage patterns for other developers.
 
 4. **Verify Detail Level**:

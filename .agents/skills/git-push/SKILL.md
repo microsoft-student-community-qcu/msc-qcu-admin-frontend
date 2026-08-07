@@ -5,7 +5,7 @@ description: Use when explicitly asked to push code, commit changes, or save wor
 
 # Git Push Workflow
 
-This skill is designed to handle committing and pushing code to the remote repository. 
+This skill is designed to handle committing and pushing code to the remote repository.
 **DO NOT trigger this automatically.** You must only run this skill when the user explicitly calls for it (e.g., "run the git-push workflow", "push the code", or "@git-push").
 
 ## Workflow Steps
@@ -16,8 +16,8 @@ This skill is designed to handle committing and pushing code to the remote repos
    - Run `git add .` to stage all changes.
 3. **Generate Commit Message**:
    - Generate a highly detailed commit message following the Conventional Commits format (`feat:`, `fix:`, `docs:`, `refactor:`, etc.).
-   - The body of the commit message MUST include a detailed bulleted list of the specific changes made. 
-   - *Example:* "Fixed skeleton loader flash on uncached tabs by extracting isFetching from TanStack Query."
+   - The body of the commit message MUST include a detailed bulleted list of the specific changes made.
+   - _Example:_ "Fixed skeleton loader flash on uncached tabs by extracting isFetching from TanStack Query."
 4. **Commit**:
    - Run `git commit -m "<message>"` (ensure the message is properly escaped for the command line, or write it to a temporary file and use `git commit -F <file>`).
 5. **Push**:

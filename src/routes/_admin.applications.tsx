@@ -38,11 +38,12 @@ export const Route = createFileRoute("/_admin/applications")({
   component: ApplicationsRoute,
 });
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
+type FilterTab =
+  "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 function ApplicationsRoute() {
   const { id } = Route.useSearch();
-  
+
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
   const {
     applicantsSearch: searchQuery,
@@ -57,8 +58,16 @@ function ApplicationsRoute() {
   const activeTab = activeTabRaw as FilterTab;
   const setActiveTab = (tab: FilterTab) => setActiveTabRaw(tab);
 
-  const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = usePaginatedApplicants({ 
-    status: activeTab === "ALL" ? undefined : activeTab as Applicant["status"],
+  const {
+    data: applicantsData,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = usePaginatedApplicants({
+    status: activeTab === "ALL" ? undefined : (activeTab as Applicant["status"]),
     search: submittedSearchQuery,
     office: selectedOffices.length > 0 ? selectedOffices.join(",") : undefined,
   });
@@ -69,8 +78,8 @@ function ApplicationsRoute() {
 
   const applicants = React.useMemo(() => {
     if (!applicantsData) return [];
-    const list = applicantsData.pages.flatMap(page => page.applicants);
-    if (urlApplicant && !list.some(app => app.id === urlApplicant.id)) {
+    const list = applicantsData.pages.flatMap((page) => page.applicants);
+    if (urlApplicant && !list.some((app) => app.id === urlApplicant.id)) {
       return [urlApplicant, ...list];
     }
     return list;
@@ -126,7 +135,7 @@ function ApplicationsRoute() {
   // Filtered applicants
   const filteredApplicants = React.useMemo(() => {
     if (!applicants) return [];
-    
+
     return applicants.filter((app) => {
       // 1. Filter by Tab
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
@@ -159,7 +168,7 @@ function ApplicationsRoute() {
   // Auto-select first item in filtered list if current selected is not in the filtered list
   React.useEffect(() => {
     if (isLoading) return;
-    
+
     if (filteredApplicants.length > 0) {
       const isStillInList = filteredApplicants.some((app) => app.id === selectedId);
       if (selectedId && !isStillInList) {
@@ -181,33 +190,37 @@ function ApplicationsRoute() {
 
     setIsConfirmOpen(false);
 
-    const statusText = {
-      PENDING_REVIEW: "Pending Review",
-      APPROVED: "Approved",
-      REJECTED: "Rejected",
-      CANCELLED: "Cancelled",
-      RESUBMIT: "Resubmit",
-      FOR_INTERVIEW: "For Interview",
-    }[pendingStatus] ?? pendingStatus;
+    const statusText =
+      {
+        PENDING_REVIEW: "Pending Review",
+        APPROVED: "Approved",
+        REJECTED: "Rejected",
+        CANCELLED: "Cancelled",
+        RESUBMIT: "Resubmit",
+        FOR_INTERVIEW: "For Interview",
+      }[pendingStatus] ?? pendingStatus;
 
     // Optimistically show success toast
     toast.success(`Applicant status updated to ${statusText}.`, {
       description: `Backend status updated and email dispatched successfully.`,
     });
 
-    updateStatusMutation.mutate({
-      applicantId: selectedId,
-      status: pendingStatus,
-      message,
-      resubmitFields,
-    }, {
-      onError: (err) => {
-        toast.error(`Failed to update status.`, {
-          description: err.message || "An error occurred while updating status.",
-        });
-      }
-    });
-    
+    updateStatusMutation.mutate(
+      {
+        applicantId: selectedId,
+        status: pendingStatus,
+        message,
+        resubmitFields,
+      },
+      {
+        onError: (err) => {
+          toast.error(`Failed to update status.`, {
+            description: err.message || "An error occurred while updating status.",
+          });
+        },
+      },
+    );
+
     setPendingStatus(null);
   };
 
@@ -248,7 +261,9 @@ function ApplicationsRoute() {
         activeTab={activeTab}
         onActiveTabChange={setActiveTab}
         tabCounts={tabCounts}
-        isLoading={isLoading || (isFetching && !isFetchingNextPage && filteredApplicants.length === 0)}
+        isLoading={
+          isLoading || (isFetching && !isFetchingNextPage && filteredApplicants.length === 0)
+        }
         error={!!error}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}

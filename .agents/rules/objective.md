@@ -3,6 +3,7 @@
 This repository is the **Admin Frontend** for the QCU MSC Central Portal. It is strictly the internal command center for the organization. (The public-facing portal is handled in a separate repository).
 
 **Primary Goals:**
+
 1. Secure Authentication & Role Management (Admin roles).
 2. **HR & Recruitment Pipeline:** Manage applicant data, resolve ID verification errors, update application statuses, and trigger emails.
 3. **Event Logistics & Check-In:** Create public events, manage attendee rosters, and scan QR tickets (mobile-friendly route).
@@ -12,6 +13,7 @@ This repository is the **Admin Frontend** for the QCU MSC Central Portal. It is 
 **Key Directive:** Always maintain a scalable, readable, and modular folder structure. Adherence to this architecture is mandatory to ensure backend integration is seamless and straightforward.
 
 ### Source Code (`src/`)
+
 We use a Feature-Driven Architecture (Vertical Slicing) combined with standard shared layers. Never place feature-specific logic in global shared folders.
 
 - `src/assets/`: Static assets (images, fonts, global CSS).
@@ -30,7 +32,9 @@ We use a Feature-Driven Architecture (Vertical Slicing) combined with standard s
 - `src/utils/`: Generic helper functions (formatting, parsers).
 
 ### Documentation (`docs/`)
+
 Use the `docs/` folder to document API contracts and frontend flows for the backend team.
+
 - `docs/architecture/`: Overall frontend system design and routing strategy.
 - `docs/api-integration/`: Expected API contracts, payloads, methods, and response codes.
 - `docs/components/`: Component usage guidelines.

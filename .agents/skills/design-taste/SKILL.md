@@ -10,30 +10,30 @@ Principles and checklists for crafting high-fidelity, premium user interfaces th
 ## Aesthetic Pillars
 
 1.  **Refined Typography**:
-    *   ONLY use `Segoe UI Variable` (with options like `Segoe UI Variable Display` for large headers, `Segoe UI Variable Text` for body, and `Segoe UI Variable Small` for metadata).
-    *   Strictly adhere to letter-spacing and font-weights: headers should be semibold or bold with tight tracking (`tracking-tight`), body text should be regular/normal, and uppercase labels should be rare.
+    - ONLY use `Segoe UI Variable` (with options like `Segoe UI Variable Display` for large headers, `Segoe UI Variable Text` for body, and `Segoe UI Variable Small` for metadata).
+    - Strictly adhere to letter-spacing and font-weights: headers should be semibold or bold with tight tracking (`tracking-tight`), body text should be regular/normal, and uppercase labels should be rare.
 2.  **Harmonious Color Palettes**:
-    *   Avoid raw primaries. Use the CSS variables defined in `src/styles.css` (e.g. `var(--color-primary)`, `var(--color-accent-subtle)`, `var(--color-background-hover)`).
-    *   Calibrate contrasts for both Light and Dark modes. Text color must contrast strongly against card backgrounds.
+    - Avoid raw primaries. Use the CSS variables defined in `src/styles.css` (e.g. `var(--color-primary)`, `var(--color-accent-subtle)`, `var(--color-background-hover)`).
+    - Calibrate contrasts for both Light and Dark modes. Text color must contrast strongly against card backgrounds.
 3.  **Depth & Elevation (z-axis)**:
-    *   Use shadow-based layers to establish visual hierarchy.
-    *   *Flat Page Canvas* (`bg-background`) → *Subtle Cards* (`bg-card`, `shadow-4`, border-border) → *Dropdowns & Floating Flyouts* (`bg-popover`, `shadow-8`) → *Modals & Overlays* (`shadow-28` or `shadow-64` + backdrop blur).
+    - Use shadow-based layers to establish visual hierarchy.
+    - _Flat Page Canvas_ (`bg-background`) → _Subtle Cards_ (`bg-card`, `shadow-4`, border-border) → _Dropdowns & Floating Flyouts_ (`bg-popover`, `shadow-8`) → _Modals & Overlays_ (`shadow-28` or `shadow-64` + backdrop blur).
 4.  **Crisp Layout & Alignment**:
-    *   Never mix layout spacing. Maintain a rigid grid using the Fluent Spacing Ramp (`size20` to `size480`).
-    *   Align all interactive elements, icons, and text fields perfectly. Use `items-center` for flex rows and ensure consistent text baselines.
+    - Never mix layout spacing. Maintain a rigid grid using the Fluent Spacing Ramp (`size20` to `size480`).
+    - Align all interactive elements, icons, and text fields perfectly. Use `items-center` for flex rows and ensure consistent text baselines.
 
 ---
 
 ## What is AI Visual Slop? (Avoid these tropes!)
 
-| Feature | AI Visual Slop | Premium Fluent Design |
-|---|---|---|
-| **Typography** | Generic `Inter` everywhere with generic font-weights. | `Segoe UI Variable` with semantic weights (Semibold/Regular). |
-| **Gradients** | Shiny purple-to-blue gradients on every card and button. | Solid colors or highly restricted, soft brand gradients. |
-| **Shadows** | Thick, blurry black shadows (`shadow-lg`). | Light, dynamic, luminosity-adjusted shadows (`shadow-4`, `shadow-8`). |
-| **Borders** | Bold, high-contrast borders or no borders at all. | Extremely thin, subtle, semi-transparent borders (`border-border`). |
-| **Interaction** | Buttons scale down on click; cards lift up heavily on hover. | Snappy transitions, background color changes, thin ring outlines. |
-| **Rounding** | Extreme rounding (`rounded-3xl` or `rounded-2xl` on tiny buttons). | Intentional rounding (`rounded-md` on buttons/inputs, `rounded-lg` on cards). |
+| Feature         | AI Visual Slop                                                     | Premium Fluent Design                                                         |
+| --------------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| **Typography**  | Generic `Inter` everywhere with generic font-weights.              | `Segoe UI Variable` with semantic weights (Semibold/Regular).                 |
+| **Gradients**   | Shiny purple-to-blue gradients on every card and button.           | Solid colors or highly restricted, soft brand gradients.                      |
+| **Shadows**     | Thick, blurry black shadows (`shadow-lg`).                         | Light, dynamic, luminosity-adjusted shadows (`shadow-4`, `shadow-8`).         |
+| **Borders**     | Bold, high-contrast borders or no borders at all.                  | Extremely thin, subtle, semi-transparent borders (`border-border`).           |
+| **Interaction** | Buttons scale down on click; cards lift up heavily on hover.       | Snappy transitions, background color changes, thin ring outlines.             |
+| **Rounding**    | Extreme rounding (`rounded-3xl` or `rounded-2xl` on tiny buttons). | Intentional rounding (`rounded-md` on buttons/inputs, `rounded-lg` on cards). |
 
 ---
 

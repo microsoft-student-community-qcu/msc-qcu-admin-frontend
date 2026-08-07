@@ -5,7 +5,10 @@ import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
 import { useMembers } from "@/features/hr/shared/hooks/useMembers";
 import { MemberFilterBar } from "@/features/hr/members/components/MemberFilterBar";
-import { MemberDirectory, MemberCardSkeleton } from "@/features/hr/members/components/MemberDirectory";
+import {
+  MemberDirectory,
+  MemberCardSkeleton,
+} from "@/features/hr/members/components/MemberDirectory";
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 import { useFilterStore } from "@/store/useFilterStore";
@@ -39,7 +42,15 @@ function MembersRoute() {
     setMembersDept: setSelectedDeptFilter,
   } = useFilterStore();
 
-  const { data: membersData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useMembers({
+  const {
+    data: membersData,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = useMembers({
     search: submittedSearchQuery,
     office: selectedDeptFilter === "ALL" ? undefined : selectedDeptFilter,
   });
@@ -56,7 +67,7 @@ function MembersRoute() {
     onIntersect: () => fetchNextPage?.(),
     enabled: !!hasNextPage && !isFetchingNextPage,
   });
-  
+
   const [selectedMember, setSelectedMember] = React.useState<Applicant | null>(null);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
@@ -98,7 +109,8 @@ function MembersRoute() {
 
   // Determine if we should show the full page skeleton.
   // If we are hard-loading OR if we are background fetching a completely empty local state (e.g. switched to uncached tab)
-  const shouldShowSkeleton = isLoading || (isFetching && !isFetchingNextPage && filteredMembers.length === 0);
+  const shouldShowSkeleton =
+    isLoading || (isFetching && !isFetchingNextPage && filteredMembers.length === 0);
 
   return (
     <div className="flex flex-col gap-size320 w-full relative">
@@ -124,7 +136,9 @@ function MembersRoute() {
         <div className="flex h-[calc(100vh-15rem)] items-center justify-center">
           <div className="text-center">
             <p className="text-sm text-destructive font-medium">Failed to load members</p>
-            <p className="text-xs text-muted-foreground mt-1">Please check your backend connection or refresh.</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Please check your backend connection or refresh.
+            </p>
           </div>
         </div>
       ) : (
@@ -136,9 +150,7 @@ function MembersRoute() {
       )}
 
       {/* Infinite Scroll Sentinel */}
-      {hasNextPage && (
-        <div ref={sentinelRef} className="h-4 w-full" />
-      )}
+      {hasNextPage && <div ref={sentinelRef} className="h-4 w-full" />}
 
       {isFetchingNextPage && (
         <div className="flex justify-center mt-size120 pb-size240 text-xs text-muted-foreground animate-pulse">

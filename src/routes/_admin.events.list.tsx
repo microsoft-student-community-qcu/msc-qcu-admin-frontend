@@ -1,15 +1,15 @@
-import * as React from 'react'
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { UserProfile } from '@/components/shared/sidebar'
+import * as React from "react";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { UserProfile } from "@/components/shared/sidebar";
 
-export const Route = createFileRoute('/_admin/events/list')({
+export const Route = createFileRoute("/_admin/events/list")({
   beforeLoad: () => {
     try {
-      const rawUser = sessionStorage.getItem("currentUser")
+      const rawUser = sessionStorage.getItem("currentUser");
       if (rawUser) {
-        const user = JSON.parse(rawUser) as UserProfile
+        const user = JSON.parse(rawUser) as UserProfile;
         if (user.role === "ADMIN_HR") {
-          throw redirect({ to: "/dashboard" })
+          throw redirect({ to: "/dashboard" });
         }
       }
     } catch (e) {
@@ -17,8 +17,8 @@ export const Route = createFileRoute('/_admin/events/list')({
     }
   },
   component: EventsRoute,
-})
+});
 
 function EventsRoute() {
-  return <div>Event Logistics Management</div>
+  return <div>Event Logistics Management</div>;
 }
