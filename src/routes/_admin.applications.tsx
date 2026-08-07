@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { getApiBaseURL } from "@/utils/env";
 import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
@@ -42,19 +42,22 @@ type FilterTab =
   "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 function ApplicationsRoute() {
+  const navigate = useNavigate({ from: Route.fullPath });
   const { id } = Route.useSearch();
   const selectedId = id || null;
 
-  const setSelectedId = React.useCallback((newId: string | null) => {
-    navigate({
-      to: "/applications",
-      search: (prev) => ({
-        ...prev,
-        id: newId || undefined,
-      }),
-      replace: true,
-    });
-  }, []);
+  const setSelectedId = React.useCallback(
+    (newId: string | null) => {
+      navigate({
+        search: (prev: any) => ({
+          ...prev,
+          id: newId || undefined,
+        }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
   const {
     applicantsSearch: searchQuery,
     setApplicantsSearch: setSearchQuery,
