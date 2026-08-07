@@ -85,12 +85,16 @@ function ApplicationsRoute() {
     return list;
   }, [applicantsData, urlApplicant]);
 
-  // Sync selectedId with URL search param `id` if present
+  // Sync selectedId and reset filters when URL search param `id` is present
   React.useEffect(() => {
     if (id) {
       setSelectedId(id);
+      setActiveTabRaw("ALL");
+      setSearchQuery("");
+      setSubmittedSearchQuery("");
+      setSelectedOffices([]);
     }
-  }, [id]);
+  }, [id, setActiveTabRaw, setSearchQuery, setSubmittedSearchQuery, setSelectedOffices]);
 
   const isPendingSmtp = updateStatusMutation.isPending || approveManualIdMutation.isPending;
 
