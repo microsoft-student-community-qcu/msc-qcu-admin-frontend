@@ -157,7 +157,6 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                   size="sm"
                   className="h-8 text-xs rounded-none font-semibold"
                   onClick={() => onManualIdAction?.("reject")}
-                  disabled={isPendingSmtp}
                 >
                   Reject ID
                 </Button>
@@ -166,7 +165,6 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                   size="sm"
                   className="h-8 text-xs rounded-none font-semibold"
                   onClick={() => onManualIdAction?.("approve")}
-                  disabled={isPendingSmtp}
                 >
                   Approve ID
                 </Button>
@@ -182,7 +180,6 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
               </Label>
               <Select
                 value={applicant.status}
-                disabled={isPendingSmtp}
                 onValueChange={(val) => onStatusChange(val as Applicant["status"])}
               >
                 <SelectTrigger id="status-select" className="w-[160px] h-9 rounded-none font-medium">

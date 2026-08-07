@@ -16,11 +16,18 @@ import { StatusConfirmDialog } from "@/features/hr/applicants/components/StatusC
 import { ImageZoomDialog } from "@/features/hr/applicants/components/ImageZoomDialog";
 
 export const Route = createFileRoute("/_admin/applications")({
-  beforeLoad: async () => {
-    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
-    const data = await res.json();
-    const role = data.data?.role || data.role || data.user?.role;
-    if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
+  beforeLoad: () => {
+    try {
+      const rawUser = sessionStorage.getItem("currentUser");
+      if (rawUser) {
+        const user = JSON.parse(rawUser);
+        if (user.role !== "ADMIN_HR") {
+          throw redirect({ to: "/dashboard" });
+        }
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.includes("Redirect")) throw e;
+    }
   },
   validateSearch: (search: Record<string, unknown>) => {
     return {
@@ -160,30 +167,42 @@ function ApplicationsRoute() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirmStatusChange = async (message?: string, resubmitFields?: string[]) => {
+  const handleConfirmStatusChange = (message?: string, resubmitFields?: string[]) => {
     if (!selectedId || !pendingStatus) return;
 
     setIsConfirmOpen(false);
 
-    try {
-      await updateStatusMutation.mutateAsync({
-        applicantId: selectedId,
-        status: pendingStatus,
-        message,
-        resubmitFields,
-      });
-      toast.success(`Applicant status updated to ${pendingStatus}.`, {
-        description: `Backend status updated and email dispatched successfully.`,
-      });
-    } catch (err) {
-      console.warn("Failed to update status on backend.", err);
-      // Toast is already handled in the hook if error occurs, but we can keep this for safety
-    } finally {
-      setPendingStatus(null);
-    }
+    const statusText = {
+      PENDING_REVIEW: "Pending Review",
+      APPROVED: "Approved",
+      REJECTED: "Rejected",
+      CANCELLED: "Cancelled",
+      RESUBMIT: "Resubmit",
+      FOR_INTERVIEW: "For Interview",
+    }[pendingStatus] ?? pendingStatus;
+
+    // Optimistically show success toast
+    toast.success(`Applicant status updated to ${statusText}.`, {
+      description: `Backend status updated and email dispatched successfully.`,
+    });
+
+    updateStatusMutation.mutate({
+      applicantId: selectedId,
+      status: pendingStatus,
+      message,
+      resubmitFields,
+    }, {
+      onError: (err) => {
+        toast.error(`Failed to update status.`, {
+          description: err.message || "An error occurred while updating status.",
+        });
+      }
+    });
+    
+    setPendingStatus(null);
   };
 
-  const handleManualIdAction = async (action: "approve" | "reject") => {
+  const handleManualIdAction = (action: "approve" | "reject") => {
     if (!selectedId || !selectedApplicant) return;
 
     if (action === "approve" && !selectedApplicant.studentId) {
@@ -191,15 +210,14 @@ function ApplicationsRoute() {
       return;
     }
 
-    try {
-      await approveManualIdMutation.mutateAsync({
-        applicantId: selectedId,
-        action,
-        studentId: action === "approve" ? selectedApplicant.studentId : undefined,
-      });
-    } catch (err) {
-      console.warn("Failed to process manual ID action.", err);
-    }
+    const actionText = action === "approve" ? "approved" : "rejected";
+    toast.success(`Manual ID verification ${actionText} successfully.`);
+
+    approveManualIdMutation.mutate({
+      applicantId: selectedId,
+      action,
+      studentId: action === "approve" ? selectedApplicant.studentId : undefined,
+    });
   };
 
   const handleZoomImage = (src: string, title: string) => {

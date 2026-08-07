@@ -47,6 +47,7 @@ export function useApplicantCounts() {
         return counts;
       }
     },
+    staleTime: 3 * 60 * 1000,
     retry: false,
   });
 }
