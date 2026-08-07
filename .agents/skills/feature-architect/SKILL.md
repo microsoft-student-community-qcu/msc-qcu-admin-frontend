@@ -1,6 +1,6 @@
 ---
 name: feature-architect
-description: Use whenever creating or organizing files. Enforces Feature-Based File Structure / Domain-Driven Design constraints.
+description: Use when creating new files, moving files, or deciding where to place new components, hooks, or logic
 ---
 # Feature Architect & Architecture Guardian
 
@@ -39,3 +39,19 @@ Before saving a component or module, verify:
 - [ ] **Separated Types:** Complex TypeScript interfaces are in a dedicated `.ts` types file, not inline above the React component.
 
 *If you violate these rules, the workspace architecture degrades. Always build modularly.*
+
+## Common Rationalizations & Reality
+
+| Excuse | Reality |
+|--------|---------|
+| "It's just a small helper function, I'll put it in `src/utils`" | If it's only used by HR, it goes in `src/features/hr/shared/utils/`. No exceptions. |
+| "I don't know what feature this belongs to yet" | Figure it out before writing the file. Ask for clarification if needed. |
+| "The component is too big, but splitting it is tedious" | UI Clumping makes code unmaintainable. Extract logic to hooks and sub-components. |
+
+## Red Flags - STOP and Relocate
+
+- Creating a file in `src/hooks/` that has the word "Applicant" or "Event" in it (these are domain-specific).
+- A `.tsx` file that exceeds 150 lines and contains both `useQuery` and multiple inline `<div className="...">` structures.
+- Exporting a type from `src/types/` that is only imported by one feature.
+
+**All of these mean: Stop. Move the file or refactor the component to follow the Domain-Driven Design.**

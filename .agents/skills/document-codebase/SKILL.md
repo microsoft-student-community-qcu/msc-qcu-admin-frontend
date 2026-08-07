@@ -1,6 +1,6 @@
 ---
 name: document-codebase
-description: Use this skill to automatically analyze the project structure or specific features and generate comprehensive documentation in the docs/ directory.
+description: Use when asked to document the codebase, a feature, or architecture for future developers
 ---
 
 # Codebase Documentation Workflow

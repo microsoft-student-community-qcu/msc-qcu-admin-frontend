@@ -1,6 +1,6 @@
 ---
 name: pr-generation
-description: Use this skill to generate a detailed Pull Request (PR) summary and write it to the .pr/ directory when a task is completed.
+description: Use when a task is completed and the work is ready for review as a Pull Request
 ---
 
 # Pull Request (PR) Generation Workflow

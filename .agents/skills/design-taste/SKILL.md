@@ -1,13 +1,13 @@
 ---
 name: design-taste
-description: Use when building, styling, or refining user interfaces. Enforces a premium look-and-feel (anti-slop), Microsoft Fluent UI design principles, crisp layout hierarchy, dark/light compatibility, and micro-interactions.
+description: Use when building, styling, or refining user interfaces
 ---
 
 # Design Taste & Anti-Slop Guidelines (Fluent UI Edition)
 
 Principles and checklists for crafting high-fidelity, premium user interfaces that feel native to the Microsoft Fluent Design System.
 
-## 🎯 Aesthetic Pillars
+## Aesthetic Pillars
 
 1.  **Refined Typography**:
     *   ONLY use `Segoe UI Variable` (with options like `Segoe UI Variable Display` for large headers, `Segoe UI Variable Text` for body, and `Segoe UI Variable Small` for metadata).
@@ -24,9 +24,9 @@ Principles and checklists for crafting high-fidelity, premium user interfaces th
 
 ---
 
-## 🚫 What is AI Visual Slop? (Avoid these tropes!)
+## What is AI Visual Slop? (Avoid these tropes!)
 
-| Feature | ❌ AI Visual Slop | ✅ Premium Fluent Design |
+| Feature | AI Visual Slop | Premium Fluent Design |
 |---|---|---|
 | **Typography** | Generic `Inter` everywhere with generic font-weights. | `Segoe UI Variable` with semantic weights (Semibold/Regular). |
 | **Gradients** | Shiny purple-to-blue gradients on every card and button. | Solid colors or highly restricted, soft brand gradients. |
@@ -37,7 +37,7 @@ Principles and checklists for crafting high-fidelity, premium user interfaces th
 
 ---
 
-## 📋 Premium UI Craft Checklist
+## Premium UI Craft Checklist
 
 Whenever building or editing a UI component, review these items before completion:
 
@@ -51,7 +51,7 @@ Whenever building or editing a UI component, review these items before completio
 
 ---
 
-## 💡 Example: Premium Table Component
+## Example: Premium Table Component
 
 ```typescript
 import React from 'react';

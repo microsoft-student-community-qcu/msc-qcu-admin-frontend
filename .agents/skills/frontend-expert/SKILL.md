@@ -1,13 +1,13 @@
 ---
 name: frontend-expert
-description: Use when creating React/TypeScript components, pages, or features. For modern patterns including Suspense, useSuspenseQuery, lazy loading, Tailwind CSS v4, Microsoft Fluent design tokens, TanStack Router, and performance optimization.
+description: Use when creating or modifying React/TypeScript components, pages, routing, or state
 ---
 
 # Frontend Expert (Tailwind CSS v4 & Fluent UI Edition)
 
 Modern React/TypeScript development patterns for high-performance, premium applications in this workspace.
 
-## 🎯 Overview
+## Overview
 
 This skill provides comprehensive guidelines for building production-grade React applications with:
 - **Suspense-first architecture** - No loading spinners, no early returns
@@ -16,7 +16,7 @@ This skill provides comprehensive guidelines for building production-grade React
 - **Fluent UI & Tailwind v4** - Adherence to Fluent elevation, typography, and spacing ramps
 - **Organized structure** - Feature-based directory organization
 
-## 📋 Quick Start: Component Checklist
+## Quick Start: Component Checklist
 
 ```markdown
 - [ ] Use `React.FC<Props>` pattern with TypeScript
@@ -33,7 +33,7 @@ This skill provides comprehensive guidelines for building production-grade React
 - [ ] No early returns with loading spinners
 ```
 
-## 📋 Quick Start: Feature Checklist
+## Quick Start: Feature Checklist
 
 ```markdown
 - [ ] Create `src/features/{feature-name}/` directory
@@ -47,7 +47,7 @@ This skill provides comprehensive guidelines for building production-grade React
 
 ---
 
-## 🧩 Import Aliases
+## Import Aliases
 
 | Alias | Resolves To | Example |
 |-------|-------------|---------|
@@ -58,7 +58,7 @@ This skill provides comprehensive guidelines for building production-grade React
 
 ---
 
-## 🚫 Critical Rules
+## Critical Rules
 
 ### No Early Returns for Loading
 
@@ -106,28 +106,28 @@ className="p-size160 gap-size80 shadow-4 rounded-md"
 
 ---
 
-## 📂 Topic Guides
+## Topic Guides
 
 ### Component Patterns
 - `React.FC<Props>` for type safety
 - `React.lazy()` for code splitting
 - Named const + default export pattern
-- **[📖 Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
+- **[Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
 
 ### Data Fetching
 - `useSuspenseQuery` as primary pattern
 - Query keys structured logically
 - Bridge to API client in `src/services/`
-- **[📖 Full Guide: objective.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/rules/objective.md)**
+- **[Full Guide: objective.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/rules/objective.md)**
 
 ### Styling
 - Tailwind CSS v4 config-driven values
 - Strict adherence to spacing, typography, shadow, and transition tokens
-- **[📖 Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
+- **[Full Guide: design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md)**
 
 ---
 
-## 🔧 Modern Component Template
+## Modern Component Template
 
 ```typescript
 import React, { useState, useCallback } from 'react';

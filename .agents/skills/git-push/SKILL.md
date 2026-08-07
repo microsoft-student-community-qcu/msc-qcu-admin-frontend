@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: Use this skill to automatically stage, commit, and push all code changes to the repository with a highly detailed, conventional commit message.
+description: Use when explicitly asked to push code, commit changes, or save work to the repository
 ---
 
 # Git Push Workflow
