@@ -26,10 +26,7 @@ import {
 
 import { Applicant } from "@/features/hr/shared/types";
 import { useUpdateApplicantDetails } from "@/features/hr/shared/hooks/useUpdateApplicantDetails";
-import {
-  editApplicantSchema,
-  EditApplicantFormValues,
-} from "../schemas/editApplicantSchema";
+import { editApplicantSchema, EditApplicantFormValues } from "../schemas/editApplicantSchema";
 
 interface EditApplicantDialogProps {
   isOpen: boolean;
@@ -123,7 +120,9 @@ export const EditApplicantDialog: React.FC<EditApplicantDialogProps> = ({
           <div className="space-y-size80">
             <Label>First Name</Label>
             <Input {...register("firstName")} />
-            {errors.firstName && <span className="text-xs text-destructive">{errors.firstName.message}</span>}
+            {errors.firstName && (
+              <span className="text-xs text-destructive">{errors.firstName.message}</span>
+            )}
           </div>
 
           <div className="space-y-size80">
@@ -134,13 +133,17 @@ export const EditApplicantDialog: React.FC<EditApplicantDialogProps> = ({
           <div className="space-y-size80">
             <Label>Last Name</Label>
             <Input {...register("lastName")} />
-            {errors.lastName && <span className="text-xs text-destructive">{errors.lastName.message}</span>}
+            {errors.lastName && (
+              <span className="text-xs text-destructive">{errors.lastName.message}</span>
+            )}
           </div>
 
           <div className="space-y-size80">
             <Label>Email</Label>
             <Input {...register("email")} type="email" />
-            {errors.email && <span className="text-xs text-destructive">{errors.email.message}</span>}
+            {errors.email && (
+              <span className="text-xs text-destructive">{errors.email.message}</span>
+            )}
           </div>
 
           {/* Student ID & Cellphone: 2-column grid */}
@@ -152,7 +155,9 @@ export const EditApplicantDialog: React.FC<EditApplicantDialogProps> = ({
             <div className="space-y-size80">
               <Label>Cellphone</Label>
               <Input {...register("cellphone")} />
-              {errors.cellphone && <span className="text-xs text-destructive">{errors.cellphone.message}</span>}
+              {errors.cellphone && (
+                <span className="text-xs text-destructive">{errors.cellphone.message}</span>
+              )}
             </div>
           </div>
 
@@ -182,19 +187,27 @@ export const EditApplicantDialog: React.FC<EditApplicantDialogProps> = ({
                     <SelectItem value="FINANCE_OFFICE">Finance Office</SelectItem>
                     <SelectItem value="LOGISTICS_OFFICE">Logistics Office</SelectItem>
                     <SelectItem value="CREATIVES_OFFICE">Creatives Office</SelectItem>
-                    <SelectItem value="MANAGEMENT_AND_DEVELOPMENT_OFFICE">Management & Dev. Office</SelectItem>
-                    <SelectItem value="STARTUP_DEVELOPERS_OFFICE">Startup Developers Office</SelectItem>
+                    <SelectItem value="MANAGEMENT_AND_DEVELOPMENT_OFFICE">
+                      Management & Dev. Office
+                    </SelectItem>
+                    <SelectItem value="STARTUP_DEVELOPERS_OFFICE">
+                      Startup Developers Office
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
             />
-            {errors.department && <span className="text-xs text-destructive">{errors.department.message}</span>}
+            {errors.department && (
+              <span className="text-xs text-destructive">{errors.department.message}</span>
+            )}
           </div>
 
           <div className="space-y-size80">
             <Label>College</Label>
             <Input {...register("college")} />
-            {errors.college && <span className="text-xs text-destructive">{errors.college.message}</span>}
+            {errors.college && (
+              <span className="text-xs text-destructive">{errors.college.message}</span>
+            )}
           </div>
 
           {/* Program & Section: 4-column unequal grid */}
@@ -202,12 +215,16 @@ export const EditApplicantDialog: React.FC<EditApplicantDialogProps> = ({
             <div className="col-span-3 space-y-size80">
               <Label>Program</Label>
               <Input {...register("program")} />
-              {errors.program && <span className="text-xs text-destructive">{errors.program.message}</span>}
+              {errors.program && (
+                <span className="text-xs text-destructive">{errors.program.message}</span>
+              )}
             </div>
             <div className="col-span-1 space-y-size80">
               <Label>Section</Label>
               <Input {...register("section")} />
-              {errors.section && <span className="text-xs text-destructive">{errors.section.message}</span>}
+              {errors.section && (
+                <span className="text-xs text-destructive">{errors.section.message}</span>
+              )}
             </div>
           </div>
 
@@ -235,17 +252,26 @@ export const EditApplicantDialog: React.FC<EditApplicantDialogProps> = ({
                 </Select>
               )}
             />
-            {errors.campus && <span className="text-xs text-destructive">{errors.campus.message}</span>}
+            {errors.campus && (
+              <span className="text-xs text-destructive">{errors.campus.message}</span>
+            )}
           </div>
 
           <div className="space-y-size80">
             <Label>House Address</Label>
             <Textarea {...register("houseAddress")} rows={3} />
-            {errors.houseAddress && <span className="text-xs text-destructive">{errors.houseAddress.message}</span>}
+            {errors.houseAddress && (
+              <span className="text-xs text-destructive">{errors.houseAddress.message}</span>
+            )}
           </div>
 
           <SheetFooter className="mt-size240 -mx-4 -mb-4 px-4 pb-4 border-t border-border pt-size160 flex flex-col gap-size80">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="w-full cursor-pointer">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="w-full cursor-pointer"
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting} className="w-full cursor-pointer">

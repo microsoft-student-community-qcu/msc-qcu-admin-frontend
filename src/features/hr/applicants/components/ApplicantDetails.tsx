@@ -157,7 +157,6 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                   size="sm"
                   className="h-8 text-xs rounded-none font-semibold"
                   onClick={() => onManualIdAction?.("reject")}
-                  disabled={isPendingSmtp}
                 >
                   Reject ID
                 </Button>
@@ -166,7 +165,6 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                   size="sm"
                   className="h-8 text-xs rounded-none font-semibold"
                   onClick={() => onManualIdAction?.("approve")}
-                  disabled={isPendingSmtp}
                 >
                   Approve ID
                 </Button>
@@ -182,10 +180,12 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
               </Label>
               <Select
                 value={applicant.status}
-                disabled={isPendingSmtp}
                 onValueChange={(val) => onStatusChange(val as Applicant["status"])}
               >
-                <SelectTrigger id="status-select" className="w-[160px] h-9 rounded-none font-medium">
+                <SelectTrigger
+                  id="status-select"
+                  className="w-[160px] h-9 rounded-none font-medium"
+                >
                   <SelectValue>
                     {{
                       PENDING_REVIEW: "Pending Review",
@@ -288,7 +288,9 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">{applicant.portfolioUrl ? "Invalid URL format" : "Not provided"}</span>
+                          <span className="italic">
+                            {applicant.portfolioUrl ? "Invalid URL format" : "Not provided"}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -311,7 +313,9 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">{applicant.githubUrl ? "Invalid URL format" : "Not provided"}</span>
+                          <span className="italic">
+                            {applicant.githubUrl ? "Invalid URL format" : "Not provided"}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -334,7 +338,9 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                         </a>
                       ) : (
                         <div className="flex items-center p-1.5 border border-border/50 border-dashed text-muted-foreground/60 text-xs rounded-none">
-                          <span className="italic">{applicant.facebookUrl ? "Invalid URL format" : "Not provided"}</span>
+                          <span className="italic">
+                            {applicant.facebookUrl ? "Invalid URL format" : "Not provided"}
+                          </span>
                         </div>
                       )}
                     </div>
@@ -460,7 +466,12 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
                     <PersonRegular className="w-4 h-4 text-primary" />
                     Applicant Information
                   </CardTitle>
-                  <Button variant="outline" size="sm" onClick={() => setIsEditOpen(true)} className="h-7 text-xs px-2 gap-1 rounded-none shadow-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsEditOpen(true)}
+                    className="h-7 text-xs px-2 gap-1 rounded-none shadow-1"
+                  >
                     <EditRegular className="w-3.5 h-3.5" />
                     Edit
                   </Button>
@@ -568,11 +579,7 @@ export const ApplicantDetails: React.FC<ApplicantDetailsProps> = ({
           </div>
         </div>
       </div>
-      <EditApplicantDialog
-        isOpen={isEditOpen}
-        onOpenChange={setIsEditOpen}
-        applicant={applicant}
-      />
+      <EditApplicantDialog isOpen={isEditOpen} onOpenChange={setIsEditOpen} applicant={applicant} />
     </div>
   );
 };

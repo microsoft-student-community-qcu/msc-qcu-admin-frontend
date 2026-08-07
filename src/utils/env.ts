@@ -28,4 +28,3 @@ export const getAuthBaseURL = () => {
     return "/api/auth";
   }
 };
-

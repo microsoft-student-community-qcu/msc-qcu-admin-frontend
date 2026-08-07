@@ -30,7 +30,8 @@ const OFFICES = [
   "STARTUP_DEVELOPERS_OFFICE",
 ];
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
+type FilterTab =
+  "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 interface ApplicantListProps {
   applicants: Applicant[];
@@ -111,7 +112,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
               className="pl-9 h-9"
             />
           </div>
-          
+
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button
@@ -363,11 +364,9 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
               </p>
             </div>
           )}
-          
+
           {/* Infinite Scroll Sentinel */}
-          {hasNextPage && (
-            <div ref={sentinelRef} className="h-4 w-full" />
-          )}
+          {hasNextPage && <div ref={sentinelRef} className="h-4 w-full" />}
 
           {isFetchingNextPage && (
             <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse">
