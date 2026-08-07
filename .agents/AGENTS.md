@@ -88,12 +88,16 @@ Strictly adhere to the design guidelines in [design.md](file:///e:/Github/msc-qc
 ## Issue Resolution & Backend Rules
 
 - **Frontend Only**: Fixes made in this repository must only target frontend code.
-- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Follow the Backend Issue Workflow defined in [backend-issue.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/workflows/backend-issue.md).
-- **Backend Documentation:** Always consult the highly detailed API docs in the backend repo before modifying frontend integration logic. See [backend-docs.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/workflows/backend-docs.md) for details.
+- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Use the `backend-issue` skill to generate a backend issue report.
+- **Backend Documentation:** Always consult the highly detailed API docs in the backend repo before modifying frontend integration logic. Use the `backend-docs` skill for details.
 
 ## Git Rules
 
 - Use meaningful and descriptive commit messages (conventional commits).
 - Do not commit undocumented breaking changes.
 - Keep commits focused on a single logical change.
-- **PR Generation:** Follow the Pull Request (PR) Generation Workflow defined in [pr-generation.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/workflows/pr-generation.md) to generate a detailed changes summary after every completed task.
+- **PR Generation:** Use the `pr-generation` skill to generate a detailed changes summary after every completed task.
+
+## Communication & Output Rules
+
+- **NO EMOJIS ALLOWED STRICTLY**: Do not use emojis in commit messages, pull request summaries, documentation, chat responses, or any generated content.
