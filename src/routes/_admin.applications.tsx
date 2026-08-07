@@ -14,6 +14,7 @@ import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList
 import { ApplicantDetails } from "@/features/hr/applicants/components/ApplicantDetails";
 import { StatusConfirmDialog } from "@/features/hr/applicants/components/StatusConfirmDialog";
 import { ImageZoomDialog } from "@/features/hr/applicants/components/ImageZoomDialog";
+import { useFilterStore } from "@/store/useFilterStore";
 
 export const Route = createFileRoute("/_admin/applications")({
   beforeLoad: () => {
@@ -43,12 +44,20 @@ function ApplicationsRoute() {
   const { id } = Route.useSearch();
   
   const [selectedId, setSelectedId] = React.useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
-  const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
-  const [selectedOffices, setSelectedOffices] = React.useState<string[]>([]);
+  const {
+    applicantsSearch: searchQuery,
+    setApplicantsSearch: setSearchQuery,
+    applicantsSubmittedSearch: submittedSearchQuery,
+    setApplicantsSubmittedSearch: setSubmittedSearchQuery,
+    applicantsTab: activeTabRaw,
+    setApplicantsTab: setActiveTabRaw,
+    applicantsOffices: selectedOffices,
+    setApplicantsOffices: setSelectedOffices,
+  } = useFilterStore();
+  const activeTab = activeTabRaw as FilterTab;
+  const setActiveTab = (tab: FilterTab) => setActiveTabRaw(tab);
 
-  const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedApplicants({ 
+  const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = usePaginatedApplicants({ 
     status: activeTab === "ALL" ? undefined : activeTab as Applicant["status"],
     search: submittedSearchQuery,
     office: selectedOffices.length > 0 ? selectedOffices.join(",") : undefined,
@@ -239,7 +248,7 @@ function ApplicationsRoute() {
         activeTab={activeTab}
         onActiveTabChange={setActiveTab}
         tabCounts={tabCounts}
-        isLoading={isLoading}
+        isLoading={isLoading || (isFetching && !isFetchingNextPage && filteredApplicants.length === 0)}
         error={!!error}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}
