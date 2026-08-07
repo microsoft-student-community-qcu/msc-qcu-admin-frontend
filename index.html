@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,13 +6,16 @@
     <link rel="icon" type="image/png" href="/src/assets/qcu-msc-logo.png" />
     <title>QCU MSC Admin</title>
     <script>
-      (function() {
+      (function () {
         try {
-          const savedTheme = localStorage.getItem('theme');
-          if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+          const savedTheme = localStorage.getItem("theme");
+          if (
+            savedTheme === "dark" ||
+            (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+          ) {
+            document.documentElement.classList.add("dark");
           } else {
-            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.remove("dark");
           }
         } catch (e) {}
       })();
@@ -23,4 +26,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

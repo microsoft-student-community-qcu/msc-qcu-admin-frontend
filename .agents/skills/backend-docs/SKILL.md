@@ -1,6 +1,6 @@
 ---
 name: backend-docs
-description: Use this skill to consult the backend documentation in the companion repository before integrating APIs or modifying schemas.
+description: Use when integrating APIs, fetching data, or modifying frontend data schemas that interact with the server
 ---
 
 # Backend Documentation Workflow

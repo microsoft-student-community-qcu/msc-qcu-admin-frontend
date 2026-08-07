@@ -6,13 +6,8 @@ export function useUpdateApplicantDetails() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      applicantId,
-      data,
-    }: {
-      applicantId: string;
-      data: Partial<Applicant>;
-    }) => updateApplicantDetails(applicantId, data),
+    mutationFn: ({ applicantId, data }: { applicantId: string; data: Partial<Applicant> }) =>
+      updateApplicantDetails(applicantId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applicants"] });
       queryClient.invalidateQueries({ queryKey: ["paginatedApplicants"] });

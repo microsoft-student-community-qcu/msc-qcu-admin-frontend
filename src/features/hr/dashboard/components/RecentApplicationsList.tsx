@@ -44,101 +44,111 @@ export const RecentApplicationsList: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {sortedApplicants.map((app) => (
-            <div
-              key={app.id}
-              onClick={() => navigate({ to: "/applications", search: { id: app.id } })}
-              className="flex items-center justify-between p-3 bg-background border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
-            >
-              <div className="flex items-center gap-4 min-w-0">
-                <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0">
-                  {app.name.charAt(0)}
+              <div
+                key={app.id}
+                onClick={() => navigate({ to: "/applications", search: { id: app.id } })}
+                className="flex items-center justify-between p-3 bg-background border border-border hover:bg-muted/50 transition-colors duration-200 cursor-pointer"
+              >
+                <div className="flex items-center gap-4 min-w-0">
+                  <div className="w-10 h-10 bg-primary/10 flex items-center justify-center text-primary font-semibold shrink-0">
+                    {app.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium leading-none truncate" title={app.name}>
+                      {app.name}
+                    </p>
+                    <p
+                      className="text-sm text-muted-foreground mt-1 truncate"
+                      title={formatOffice(app.department)}
+                    >
+                      {formatOffice(app.department)}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium leading-none truncate" title={app.name}>{app.name}</p>
-                  <p className="text-sm text-muted-foreground mt-1 truncate" title={formatOffice(app.department)}>{formatOffice(app.department)}</p>
-                </div>
-              </div>
-              <div className="flex flex-col items-end gap-1 shrink-0 ml-4">
-                {(() => {
-                  if (app.status === "APPROVED") {
-                    return (
-                      <Badge
-                        variant="default"
-                        className="font-normal text-xs bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/15 whitespace-nowrap"
-                      >
-                        Approved
-                      </Badge>
-                    );
-                  }
-                  if (app.status === "REJECTED") {
-                    return (
-                      <Badge variant="destructive" className="font-normal text-xs whitespace-nowrap">
-                        Rejected
-                      </Badge>
-                    );
-                  }
-                  if (app.status === "PENDING_REVIEW") {
-                    if (app.manualApplication) {
+                <div className="flex flex-col items-end gap-1 shrink-0 ml-4">
+                  {(() => {
+                    if (app.status === "APPROVED") {
+                      return (
+                        <Badge
+                          variant="default"
+                          className="font-normal text-xs bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/15 whitespace-nowrap"
+                        >
+                          Approved
+                        </Badge>
+                      );
+                    }
+                    if (app.status === "REJECTED") {
+                      return (
+                        <Badge
+                          variant="destructive"
+                          className="font-normal text-xs whitespace-nowrap"
+                        >
+                          Rejected
+                        </Badge>
+                      );
+                    }
+                    if (app.status === "PENDING_REVIEW") {
+                      if (app.manualApplication) {
+                        return (
+                          <Badge
+                            variant="outline"
+                            className="font-normal text-xs bg-blue-500/10 text-yellow-600 dark:bg-blue-500/20 dark:text-yellow-400 border border-blue-500/20 hover:bg-blue-500/15 whitespace-nowrap"
+                          >
+                            Quarantined
+                          </Badge>
+                        );
+                      }
                       return (
                         <Badge
                           variant="outline"
-                          className="font-normal text-xs bg-blue-500/10 text-yellow-600 dark:bg-blue-500/20 dark:text-yellow-400 border border-blue-500/20 hover:bg-blue-500/15 whitespace-nowrap"
+                          className="font-normal text-xs bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 border border-blue-500/20 hover:bg-blue-500/15 whitespace-nowrap"
                         >
-                          Quarantined
+                          Pending Review
+                        </Badge>
+                      );
+                    }
+                    if (app.status === "RESUBMIT") {
+                      return (
+                        <Badge
+                          variant="outline"
+                          className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/15 whitespace-nowrap"
+                        >
+                          Resubmit
+                        </Badge>
+                      );
+                    }
+                    if (app.status === "FOR_INTERVIEW") {
+                      return (
+                        <Badge
+                          variant="outline"
+                          className="font-normal text-xs bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 hover:bg-purple-500/15 whitespace-nowrap"
+                        >
+                          For Interview
+                        </Badge>
+                      );
+                    }
+                    if (app.status === "CANCELLED") {
+                      return (
+                        <Badge
+                          variant="outline"
+                          className="font-normal text-xs bg-slate-500/10 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400 border border-slate-500/20 hover:bg-slate-500/15 whitespace-nowrap"
+                        >
+                          Cancelled
                         </Badge>
                       );
                     }
                     return (
-                      <Badge
-                        variant="outline"
-                        className="font-normal text-xs bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 border border-blue-500/20 hover:bg-blue-500/15 whitespace-nowrap"
-                      >
-                        Pending Review
+                      <Badge variant="outline" className="font-normal text-xs whitespace-nowrap">
+                        {app.status}
                       </Badge>
                     );
-                  }
-                  if (app.status === "RESUBMIT") {
-                    return (
-                      <Badge
-                        variant="outline"
-                        className="font-normal text-xs bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 border border-amber-500/20 hover:bg-amber-500/15 whitespace-nowrap"
-                      >
-                        Resubmit
-                      </Badge>
-                    );
-                  }
-                  if (app.status === "FOR_INTERVIEW") {
-                    return (
-                      <Badge
-                        variant="outline"
-                        className="font-normal text-xs bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 hover:bg-purple-500/15 whitespace-nowrap"
-                      >
-                        For Interview
-                      </Badge>
-                    );
-                  }
-                  if (app.status === "CANCELLED") {
-                    return (
-                      <Badge
-                        variant="outline"
-                        className="font-normal text-xs bg-slate-500/10 text-slate-600 dark:bg-slate-500/20 dark:text-slate-400 border border-slate-500/20 hover:bg-slate-500/15 whitespace-nowrap"
-                      >
-                        Cancelled
-                      </Badge>
-                    );
-                  }
-                  return (
-                    <Badge variant="outline" className="font-normal text-xs whitespace-nowrap">
-                      {app.status}
-                    </Badge>
-                  );
-                })()}
-                <span className="text-xs flex items-center text-muted-foreground mt-1 gap-1">
-                  <ClockRegular className="w-3.5 h-3.5" />
-                  {formatTimeAgo(app.submissionDate)}
-                </span>
+                  })()}
+                  <span className="text-xs flex items-center text-muted-foreground mt-1 gap-1">
+                    <ClockRegular className="w-3.5 h-3.5" />
+                    {formatTimeAgo(app.submissionDate)}
+                  </span>
+                </div>
               </div>
-            </div>
             ))}
           </div>
         )}

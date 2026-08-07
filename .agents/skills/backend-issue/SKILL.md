@@ -1,6 +1,6 @@
 ---
 name: backend-issue
-description: Use this skill to generate a backend issue report when a fix or new feature requires backend API changes instead of modifying the frontend.
+description: Use when a bug fix or feature request cannot be completed in the frontend alone and requires changes to the backend API or database
 ---
 
 # Backend Issue Generation Workflow

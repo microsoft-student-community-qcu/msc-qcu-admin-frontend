@@ -1,7 +1,7 @@
 export function formatApplicantName(
   firstName?: string | null,
   lastName?: string | null,
-  middleInitial?: string | null
+  middleInitial?: string | null,
 ): string {
   const f = (firstName || "").trim();
   const l = (lastName || "").trim();
@@ -15,7 +15,7 @@ export function formatApplicantName(
   } else if (l) {
     name = l;
   }
-  return name.trim().replace(/\s+/g, ' ');
+  return name.trim().replace(/\s+/g, " ");
 }
 
 export function formatCampus(campus?: string | null): string {
@@ -35,15 +35,21 @@ export function formatCampus(campus?: string | null): string {
 export function formatOffice(office?: string | null): string {
   if (!office) return "";
   const mappings: Record<string, string> = {
-    "SECRETARIAT_OFFICE": "Secretariat Office",
-    "RELATIONS_OFFICE": "Relations Office",
-    "FINANCE_OFFICE": "Finance Office",
-    "LOGISTICS_OFFICE": "Logistics Office",
-    "CREATIVES_OFFICE": "Creatives Office",
-    "MANAGEMENT_AND_DEVELOPMENT_OFFICE": "Management & Dev. Office",
-    "STARTUP_DEVELOPERS_OFFICE": "Startup Developers Office",
+    SECRETARIAT_OFFICE: "Secretariat Office",
+    RELATIONS_OFFICE: "Relations Office",
+    FINANCE_OFFICE: "Finance Office",
+    LOGISTICS_OFFICE: "Logistics Office",
+    CREATIVES_OFFICE: "Creatives Office",
+    MANAGEMENT_AND_DEVELOPMENT_OFFICE: "Management & Dev. Office",
+    STARTUP_DEVELOPERS_OFFICE: "Startup Developers Office",
   };
-  return mappings[office] || office.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return (
+    mappings[office] ||
+    office
+      .toLowerCase()
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase())
+  );
 }
 
 export function formatGender(gender?: string | null): string {

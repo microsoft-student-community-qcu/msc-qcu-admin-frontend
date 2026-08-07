@@ -78,6 +78,7 @@ msc-qcu-admin-frontend/
 ## Microsoft Fluent Design System
 
 Strictly adhere to the design guidelines in [design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md):
+
 - **Typography**: Use only Fluent-approved fonts (e.g., `Segoe UI Variable`).
 - **Spacing**: Use the custom Fluent Spacing Ramp (`p-size160`, `gap-size80`, etc.) instead of standard Tailwind spacing values.
 - **Elevation**: Use custom shadow classes (`shadow-4`, `shadow-8`, etc.) rather than default Tailwind shadows.
