@@ -1,3 +1,8 @@
+---
+name: backend-issue
+description: Use this skill to generate a backend issue report when a fix or new feature requires backend API changes instead of modifying the frontend.
+---
+
 # Backend Issue Generation Workflow
 
 If a fix or a new feature requires backend changes (e.g., adding a new field to a database, creating a new endpoint, modifying an existing API response), you must NOT attempt to fix it in this frontend repository. Instead, follow this workflow:
