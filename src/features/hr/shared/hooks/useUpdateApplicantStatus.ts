@@ -19,6 +19,10 @@ export function useUpdateApplicantStatus() {
     }) => updateApplicantStatus(applicantId, status, message, resubmitFields),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applicants"] });
+      queryClient.invalidateQueries({ queryKey: ["paginatedApplicants"] });
+      queryClient.invalidateQueries({ queryKey: ["applicantCounts"] });
+      queryClient.invalidateQueries({ queryKey: ["applicant"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
     },
   });
 }

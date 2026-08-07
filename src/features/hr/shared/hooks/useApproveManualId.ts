@@ -18,6 +18,10 @@ export function useApproveManualId() {
     onSuccess: (data, variables) => {
       // Invalidate the applicants list query to refresh data
       queryClient.invalidateQueries({ queryKey: ["applicants"] });
+      queryClient.invalidateQueries({ queryKey: ["paginatedApplicants"] });
+      queryClient.invalidateQueries({ queryKey: ["applicantCounts"] });
+      queryClient.invalidateQueries({ queryKey: ["applicant"] });
+      queryClient.invalidateQueries({ queryKey: ["dashboardStats"] });
       
       const actionText = variables.action === "approve" ? "approved" : "rejected";
       toast.success(`Manual ID verification ${actionText} successfully.`);
