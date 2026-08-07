@@ -64,6 +64,7 @@ msc-qcu-admin-frontend/
 
 ### Code Structure Rules
 
+- **Agent Guidance:** You MUST follow the constraints defined in [architecture.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/rules/architecture.md) and load the `feature-architect` skill before creating or moving files.
 - Never allow a single file/component to become too large or hard to navigate.
 - **Separation of Concerns (No Component Clumping)**: Avoid mixing UI layout, form validation, business logic, and types in a single file. Keep components focused solely on rendering the view.
 - **Folder and File Separation**:
@@ -84,13 +85,15 @@ Strictly adhere to the design guidelines in [design.md](file:///e:/Github/msc-qc
 - **Animations**: Prefer snappy and solid interactions over bouncy scale/translate effects.
 - **Base UI / Shadcn**: Wrap grouped dropdown menu items in `DropdownMenuGroup` to prevent Base UI context crashes.
 
-## Issue Resolution Rules
+## Issue Resolution & Backend Rules
 
 - **Frontend Only**: Fixes made in this repository must only target frontend code.
-- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Instead, create a Markdown (.md) file documenting the required backend changes. This file will be pasted into the backend repository's issue tracker.
+- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Follow the Backend Issue Workflow defined in [backend-issue.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/workflows/backend-issue.md).
+- **Backend Documentation:** Always consult the highly detailed API docs in the backend repo before modifying frontend integration logic. See [backend-docs.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/workflows/backend-docs.md) for details.
 
 ## Git Rules
 
 - Use meaningful and descriptive commit messages (conventional commits).
 - Do not commit undocumented breaking changes.
 - Keep commits focused on a single logical change.
+- **PR Generation:** Follow the Pull Request (PR) Generation Workflow defined in [pr-generation.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/workflows/pr-generation.md) to generate a detailed changes summary after every completed task.
