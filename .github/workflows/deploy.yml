@@ -13,8 +13,8 @@ jobs:
   deploy:
     uses: microsoft-student-community-qcu/qcu-msc-cicd/.github/workflows/deploy-azure-blob-static.yml@main
     with:
-      build-command: 'npm run build'
-      source-path: 'dist'
+      build-command: "npm run build"
+      source-path: "dist"
       storage-account-name: ${{ github.ref_name == 'develop' && 'stsamscqcuadmindev' || github.ref_name == 'release' && 'stsamscqcuadminrel' || 'stsamscqcuadmin' }}
     secrets:
       azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -23,5 +23,3 @@ jobs:
       cloudflare-zone-id: ${{ secrets.CLOUDFLARE_ZONE_ID }}
       cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       vite-sentry-dsn: ${{ secrets.VITE_SENTRY_DSN }}
-
-

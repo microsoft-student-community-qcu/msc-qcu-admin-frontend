@@ -1,7 +1,12 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pie, PieChart } from "recharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { useDashboardStats } from "@/features/hr/shared/hooks/useDashboardStats";
 
 const deptChartConfig = {
@@ -50,7 +55,7 @@ const getDeptKey = (deptStr: string): string => {
     MANAGEMENT_AND_DEVELOPMENT_OFFICE: "ManagementDev",
     STARTUP_DEVELOPERS_OFFICE: "StartupDevelopers",
   };
-  
+
   if (map[upper]) return map[upper];
 
   const lower = deptStr.toLowerCase();
@@ -92,7 +97,11 @@ export const DepartmentDistributionChart: React.FC = () => {
       { department: "Logistics", students: counts.Logistics, fill: "var(--color-chart-4)" },
       { department: "Creatives", students: counts.Creatives, fill: "var(--color-chart-5)" },
       { department: "ManagementDev", students: counts.ManagementDev, fill: "var(--color-chart-6)" },
-      { department: "StartupDevelopers", students: counts.StartupDevelopers, fill: "var(--color-chart-7)" },
+      {
+        department: "StartupDevelopers",
+        students: counts.StartupDevelopers,
+        fill: "var(--color-chart-7)",
+      },
     ];
   }, [departmentDistribution]);
 
@@ -108,10 +117,7 @@ export const DepartmentDistributionChart: React.FC = () => {
       </CardHeader>
       <CardContent className="flex-1 pb-4 flex flex-row items-center justify-between gap-size240 min-h-0">
         <div className="w-[58%] h-full flex items-center justify-center relative">
-          <ChartContainer
-            config={deptChartConfig}
-            className="aspect-square w-full h-full max-h-70"
-          >
+          <ChartContainer config={deptChartConfig} className="aspect-square w-full h-full max-h-70">
             <PieChart>
               <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
               <Pie
@@ -135,7 +141,10 @@ export const DepartmentDistributionChart: React.FC = () => {
         </div>
         <div className="w-[42%] flex flex-col gap-size80 pr-size160 justify-center min-w-0">
           {departmentData.map((item) => {
-            const config = deptChartConfig[item.department as keyof typeof deptChartConfig] as { label: string; color?: string };
+            const config = deptChartConfig[item.department as keyof typeof deptChartConfig] as {
+              label: string;
+              color?: string;
+            };
             return (
               <div key={item.department} className="flex items-center gap-size80 text-xs min-w-0">
                 <div

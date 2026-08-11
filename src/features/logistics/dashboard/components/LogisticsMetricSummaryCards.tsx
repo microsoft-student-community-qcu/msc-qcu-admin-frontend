@@ -1,10 +1,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  CalendarRegular,
-  PulseRegular,
-  ArrowDownRightRegular,
-} from "@fluentui/react-icons";
+import { CalendarRegular, PulseRegular, ArrowDownRightRegular } from "@fluentui/react-icons";
 import { useApplicantCounts } from "@/features/hr/shared/hooks/useApplicantCounts";
 import { useEvents } from "../../hooks/useEvents";
 
@@ -18,14 +14,14 @@ export const LogisticsMetricSummaryCards: React.FC = () => {
   const nextEventText = React.useMemo(() => {
     if (!events || events.length === 0) return "No upcoming events scheduled";
     const now = new Date();
-    
+
     // Find the next upcoming event (events are sorted asc by backend)
     const nextEvent = events[0];
     const eventDate = new Date(nextEvent.date);
-    
+
     const diffTime = eventDate.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     if (diffDays <= 0) {
       return "Next event is today";
     } else if (diffDays === 1) {
@@ -47,9 +43,7 @@ export const LogisticsMetricSummaryCards: React.FC = () => {
         </CardHeader>
         <CardContent className="z-10 relative">
           <div className="text-2xl font-bold">{isEventsLoading ? "..." : upcomingCount}</div>
-          <p className="text-xs text-muted-foreground flex items-center mt-1">
-            {nextEventText}
-          </p>
+          <p className="text-xs text-muted-foreground flex items-center mt-1">{nextEventText}</p>
         </CardContent>
       </Card>
 

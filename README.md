@@ -43,10 +43,13 @@ _See [`design.md`](./design.md) for the complete rules and tokens._
    ```
 3. Configure environment variables:
    Create a `.env` or `.env.local` file by copying `.env.example`:
+
    ```bash
    cp .env.example .env
    ```
+
    Ensure `VITE_API_URL` points to your backend instance:
+
    ```env
    VITE_API_URL=http://localhost:5000/api/v1
    VITE_AZURE_STORAGE_ACCOUNT_NAME=your_azure_storage_account_name
@@ -63,7 +66,7 @@ _See [`design.md`](./design.md) for the complete rules and tokens._
      ```bash
      npx prisma db seed
      ```
-     *(This seeds system HR Admin and Logistics Admin credentials to log into this panel).*
+     _(This seeds system HR Admin and Logistics Admin credentials to log into this panel)._
 
 5. Start the development server:
    ```bash

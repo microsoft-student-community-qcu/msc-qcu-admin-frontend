@@ -13,29 +13,132 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CodeRegular, WarningRegular } from "@fluentui/react-icons";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Bar, BarChart, CartesianGrid, XAxis, PieChart, Pie, RadarChart, Radar, PolarGrid, PolarAngleAxis } from "recharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuGroup,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  PieChart,
+  Pie,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+} from "recharts";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
 
 // NEW IMPORTS
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Calendar } from "@/components/ui/calendar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from "@/components/ui/context-menu";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Toggle } from "@/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -48,7 +151,7 @@ const chartData = [
   { month: "Apr", desktop: 73, mobile: 190 },
   { month: "May", desktop: 209, mobile: 130 },
   { month: "Jun", desktop: 214, mobile: 140 },
-]
+];
 
 const chartConfig = {
   desktop: {
@@ -59,11 +162,11 @@ const chartConfig = {
     label: "Mobile",
     color: "hsl(var(--secondary))",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export const Route = createFileRoute('/design-system')({
+export const Route = createFileRoute("/design-system")({
   component: DesignSystemPage,
-})
+});
 
 function DesignSystemPage() {
   return (
@@ -83,13 +186,27 @@ function DesignSystemPage() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-4">
-            <div className="w-24 h-24 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold">Primary</div>
-            <div className="w-24 h-24 rounded-lg bg-secondary text-secondary-foreground flex items-center justify-center font-bold">Secondary</div>
-            <div className="w-24 h-24 rounded-lg bg-accent text-accent-foreground flex items-center justify-center font-bold">Accent</div>
-            <div className="w-24 h-24 rounded-lg bg-destructive text-destructive-foreground flex items-center justify-center font-bold text-sm">Destructive</div>
-            <div className="w-24 h-24 rounded-lg bg-muted text-muted-foreground flex items-center justify-center font-bold">Muted</div>
-            <div className="w-24 h-24 rounded-lg bg-card text-card-foreground shadow-4 border flex items-center justify-center font-bold">Card</div>
-            <div className="w-24 h-24 rounded-lg bg-background text-foreground border flex items-center justify-center font-bold text-sm">Background</div>
+            <div className="w-24 h-24 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold">
+              Primary
+            </div>
+            <div className="w-24 h-24 rounded-lg bg-secondary text-secondary-foreground flex items-center justify-center font-bold">
+              Secondary
+            </div>
+            <div className="w-24 h-24 rounded-lg bg-accent text-accent-foreground flex items-center justify-center font-bold">
+              Accent
+            </div>
+            <div className="w-24 h-24 rounded-lg bg-destructive text-destructive-foreground flex items-center justify-center font-bold text-sm">
+              Destructive
+            </div>
+            <div className="w-24 h-24 rounded-lg bg-muted text-muted-foreground flex items-center justify-center font-bold">
+              Muted
+            </div>
+            <div className="w-24 h-24 rounded-lg bg-card text-card-foreground shadow-4 border flex items-center justify-center font-bold">
+              Card
+            </div>
+            <div className="w-24 h-24 rounded-lg bg-background text-foreground border flex items-center justify-center font-bold text-sm">
+              Background
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -102,9 +219,12 @@ function DesignSystemPage() {
           <TabsTrigger value="navigation">Navigation</TabsTrigger>
           <TabsTrigger value="advanced">Advanced</TabsTrigger>
         </TabsList>
-        
+
         {/* FORMS TAB */}
-        <TabsContent value="forms" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-size320">
+        <TabsContent
+          value="forms"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-size320"
+        >
           <Card>
             <CardHeader>
               <CardTitle>Buttons</CardTitle>
@@ -189,7 +309,9 @@ function DesignSystemPage() {
                 <Label>Toggle</Label>
                 <div className="flex gap-2">
                   <Toggle aria-label="Toggle italic">I</Toggle>
-                  <Toggle aria-label="Toggle bold" variant="outline">B</Toggle>
+                  <Toggle aria-label="Toggle bold" variant="outline">
+                    B
+                  </Toggle>
                 </div>
               </div>
               <div className="space-y-2">
@@ -225,7 +347,10 @@ function DesignSystemPage() {
         </TabsContent>
 
         {/* OVERLAYS TAB */}
-        <TabsContent value="overlays" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-size320">
+        <TabsContent
+          value="overlays"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-size320"
+        >
           <Card className="col-span-full lg:col-span-2">
             <CardHeader>
               <CardTitle>Alerts</CardTitle>
@@ -241,9 +366,7 @@ function DesignSystemPage() {
               <Alert variant="destructive">
                 <WarningRegular className="h-size160 w-size160" />
                 <AlertTitle>Error</AlertTitle>
-                <AlertDescription>
-                  Your session has expired. Please log in again.
-                </AlertDescription>
+                <AlertDescription>Your session has expired. Please log in again.</AlertDescription>
               </Alert>
             </CardContent>
           </Card>
@@ -260,13 +383,13 @@ function DesignSystemPage() {
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle>Edit profile</DialogTitle>
-                    <DialogDescription>
-                      Make changes to your profile here.
-                    </DialogDescription>
+                    <DialogDescription>Make changes to your profile here.</DialogDescription>
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name2" className="text-right">Name</Label>
+                      <Label htmlFor="name2" className="text-right">
+                        Name
+                      </Label>
                       <Input id="name2" value="Pedro Duarte" className="col-span-3" />
                     </div>
                   </div>
@@ -283,9 +406,7 @@ function DesignSystemPage() {
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone.
-                    </AlertDialogDescription>
+                    <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -321,10 +442,9 @@ function DesignSystemPage() {
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
-
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Context & Hover Cards</CardTitle>
@@ -336,7 +456,9 @@ function DesignSystemPage() {
                 </ContextMenuTrigger>
                 <ContextMenuContent className="w-64">
                   <ContextMenuItem inset>Back</ContextMenuItem>
-                  <ContextMenuItem inset disabled>Forward</ContextMenuItem>
+                  <ContextMenuItem inset disabled>
+                    Forward
+                  </ContextMenuItem>
                   <ContextMenuItem inset>Reload</ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
@@ -407,9 +529,7 @@ function DesignSystemPage() {
                 </AccordionItem>
                 <AccordionItem value="item-2">
                   <AccordionTrigger>Is it styled?</AccordionTrigger>
-                  <AccordionContent>
-                    Yes. It comes with default styles.
-                  </AccordionContent>
+                  <AccordionContent>Yes. It comes with default styles.</AccordionContent>
                 </AccordionItem>
               </Accordion>
 
@@ -448,9 +568,9 @@ function DesignSystemPage() {
                   </TableRow>
                 </TableBody>
               </Table>
-              
+
               <Separator className="my-4" />
-              
+
               <div className="text-sm text-muted-foreground">
                 <p>This is separated content.</p>
               </div>
@@ -463,16 +583,15 @@ function DesignSystemPage() {
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                Jokester began sneaking into the castle in the middle of the night and leaving
-                jokes all over the place: under the king's pillow, in his soup, even in the
-                royal toilet. The king was furious, but he couldn't seem to stop Jokester.
-                And then, one day, the people of the kingdom discovered that the jokes left by
-                Jokester were so funny that they couldn't help but laugh.
-                The king was furious, but he couldn't seem to stop Jokester.
-                And then, one day, the people of the kingdom discovered that the jokes left by
-                Jokester were so funny that they couldn't help but laugh.
+                Jokester began sneaking into the castle in the middle of the night and leaving jokes
+                all over the place: under the king's pillow, in his soup, even in the royal toilet.
+                The king was furious, but he couldn't seem to stop Jokester. And then, one day, the
+                people of the kingdom discovered that the jokes left by Jokester were so funny that
+                they couldn't help but laugh. The king was furious, but he couldn't seem to stop
+                Jokester. And then, one day, the people of the kingdom discovered that the jokes
+                left by Jokester were so funny that they couldn't help but laugh.
               </ScrollArea>
-              
+
               <div className="flex items-center space-x-4">
                 <Skeleton className="h-12 w-12 rounded-full" />
                 <div className="space-y-2">
@@ -489,7 +608,10 @@ function DesignSystemPage() {
               <CardDescription>Beautiful charts built using Recharts and shadcn/ui</CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={chartConfig} className="min-h-[200px] w-full max-w-4xl mx-auto">
+              <ChartContainer
+                config={chartConfig}
+                className="min-h-[200px] w-full max-w-4xl mx-auto"
+              >
                 <BarChart accessibilityLayer data={chartData}>
                   <CartesianGrid vertical={false} strokeDasharray="3 3" />
                   <XAxis
@@ -508,7 +630,7 @@ function DesignSystemPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* NAVIGATION TAB */}
         <TabsContent value="navigation" className="grid grid-cols-1 gap-size320">
           <Card>
@@ -582,7 +704,7 @@ function DesignSystemPage() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         {/* ADVANCED TAB */}
         <TabsContent value="advanced" className="grid grid-cols-1 md:grid-cols-2 gap-size320">
           <Card>
@@ -617,8 +739,7 @@ function DesignSystemPage() {
             </CardContent>
           </Card>
         </TabsContent>
-
       </Tabs>
     </div>
-  )
+  );
 }

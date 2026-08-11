@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import { fetchApplicants } from "../services/applicantApi";
 import { FetchApplicantsFilters } from "../types";
 
@@ -14,7 +14,7 @@ export function usePaginatedApplicants(filters?: FetchApplicantsFilters) {
       }
       return undefined;
     },
-    gcTime: 0,
+    placeholderData: keepPreviousData,
     retry: false,
   });
 }

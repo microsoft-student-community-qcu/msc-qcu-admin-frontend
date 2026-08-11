@@ -17,14 +17,14 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
   const handleNext = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    
+
     // Validate only email field on the first step
     const emailResult = loginSchema.shape.email.safeParse(email.trim());
     if (!emailResult.success) {
       setError(emailResult.error.issues[0].message);
       return;
     }
-    
+
     setStep(2);
   };
 
@@ -45,12 +45,20 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
 
       if (json.user) {
         const role = json.user.role || "ADMIN_HR";
-        const name = json.user.name || `${json.user.firstName || ""} ${json.user.lastName || ""}`.trim() || "Admin";
+        const name =
+          json.user.name ||
+          `${json.user.firstName || ""} ${json.user.lastName || ""}`.trim() ||
+          "Admin";
         const account: UserProfile = {
           email: json.user.email,
           name: name,
           role: role as UserRole, // Cast to UserRole enum type
-          avatarFallback: name.split(" ").map((n: string) => n[0]).join("").toUpperCase().substring(0, 2),
+          avatarFallback: name
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .toUpperCase()
+            .substring(0, 2),
         };
 
         setIsTransitioning(true);

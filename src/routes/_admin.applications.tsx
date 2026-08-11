@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { getApiBaseURL } from "@/utils/env";
 import { toast } from "sonner";
 import { Applicant } from "@/features/hr/shared/types";
@@ -14,13 +14,21 @@ import { ApplicantList } from "@/features/hr/applicants/components/ApplicantList
 import { ApplicantDetails } from "@/features/hr/applicants/components/ApplicantDetails";
 import { StatusConfirmDialog } from "@/features/hr/applicants/components/StatusConfirmDialog";
 import { ImageZoomDialog } from "@/features/hr/applicants/components/ImageZoomDialog";
+import { useFilterStore } from "@/store/useFilterStore";
 
 export const Route = createFileRoute("/_admin/applications")({
-  beforeLoad: async () => {
-    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
-    const data = await res.json();
-    const role = data.data?.role || data.role || data.user?.role;
-    if (role !== "ADMIN_HR") throw redirect({ to: "/dashboard" });
+  beforeLoad: () => {
+    try {
+      const rawUser = sessionStorage.getItem("currentUser");
+      if (rawUser) {
+        const user = JSON.parse(rawUser);
+        if (user.role !== "ADMIN_HR") {
+          throw redirect({ to: "/dashboard" });
+        }
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.includes("Redirect")) throw e;
+    }
   },
   validateSearch: (search: Record<string, unknown>) => {
     return {
@@ -30,42 +38,78 @@ export const Route = createFileRoute("/_admin/applications")({
   component: ApplicationsRoute,
 });
 
-type FilterTab = "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
+type FilterTab =
+  "ALL" | "PENDING_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMIT" | "CANCELLED" | "FOR_INTERVIEW";
 
 function ApplicationsRoute() {
+  const navigate = useNavigate({ from: Route.fullPath });
   const { id } = Route.useSearch();
-  
-  const [selectedId, setSelectedId] = React.useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [submittedSearchQuery, setSubmittedSearchQuery] = React.useState("");
-  const [activeTab, setActiveTab] = React.useState<FilterTab>("ALL");
-  const [selectedOffices, setSelectedOffices] = React.useState<string[]>([]);
+  const selectedId = id || null;
 
-  const { data: applicantsData, isLoading, error, fetchNextPage, hasNextPage, isFetchingNextPage } = usePaginatedApplicants({ 
-    status: activeTab === "ALL" ? undefined : activeTab as Applicant["status"],
+  const setSelectedId = React.useCallback(
+    (newId: string | null) => {
+      navigate({
+        search: (prev: any) => ({
+          ...prev,
+          id: newId || undefined,
+        }),
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+  const {
+    applicantsSearch: searchQuery,
+    setApplicantsSearch: setSearchQuery,
+    applicantsSubmittedSearch: submittedSearchQuery,
+    setApplicantsSubmittedSearch: setSubmittedSearchQuery,
+    applicantsTab: activeTabRaw,
+    setApplicantsTab: setActiveTabRaw,
+    applicantsOffices: selectedOffices,
+    setApplicantsOffices: setSelectedOffices,
+  } = useFilterStore();
+  const activeTab = activeTabRaw as FilterTab;
+  const setActiveTab = (tab: FilterTab) => setActiveTabRaw(tab);
+
+  const {
+    data: applicantsData,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+  } = usePaginatedApplicants({
+    status: activeTab === "ALL" ? undefined : (activeTab as Applicant["status"]),
     search: submittedSearchQuery,
     office: selectedOffices.length > 0 ? selectedOffices.join(",") : undefined,
   });
-  const { data: urlApplicant } = useApplicant(id);
+  const { data: urlApplicant, isLoading: isApplicantLoading } = useApplicant(id);
   const { data: countsData } = useApplicantCounts();
   const updateStatusMutation = useUpdateApplicantStatus();
   const approveManualIdMutation = useApproveManualId();
 
   const applicants = React.useMemo(() => {
     if (!applicantsData) return [];
-    const list = applicantsData.pages.flatMap(page => page.applicants);
-    if (urlApplicant && !list.some(app => app.id === urlApplicant.id)) {
+    const list = applicantsData.pages.flatMap((page) => page.applicants);
+    if (urlApplicant && !list.some((app) => app.id === urlApplicant.id)) {
       return [urlApplicant, ...list];
     }
     return list;
   }, [applicantsData, urlApplicant]);
 
-  // Sync selectedId with URL search param `id` if present
+  const resetFiltersRef = React.useRef(!!id);
+
+  // Reset filters to default on initial mount if an applicant ID is present in the URL search params
   React.useEffect(() => {
-    if (id) {
-      setSelectedId(id);
+    if (resetFiltersRef.current) {
+      setActiveTabRaw("ALL");
+      setSearchQuery("");
+      setSubmittedSearchQuery("");
+      setSelectedOffices([]);
+      resetFiltersRef.current = false;
     }
-  }, [id]);
+  }, [setActiveTabRaw, setSearchQuery, setSubmittedSearchQuery, setSelectedOffices]);
 
   const isPendingSmtp = updateStatusMutation.isPending || approveManualIdMutation.isPending;
 
@@ -83,7 +127,7 @@ function ApplicationsRoute() {
     if (applicants && applicants.length > 0 && !selectedId && !id) {
       setSelectedId(applicants[0].id);
     }
-  }, [applicants, selectedId, id, isLoading]);
+  }, [applicants, selectedId, id, isLoading, setSelectedId]);
 
   const selectedApplicant = React.useMemo(() => {
     if (!applicants) return null;
@@ -110,7 +154,7 @@ function ApplicationsRoute() {
   // Filtered applicants
   const filteredApplicants = React.useMemo(() => {
     if (!applicants) return [];
-    
+
     return applicants.filter((app) => {
       // 1. Filter by Tab
       if (activeTab === "PENDING_REVIEW" && app.status !== "PENDING_REVIEW") return false;
@@ -132,7 +176,10 @@ function ApplicationsRoute() {
           (app.id?.toLowerCase() || "").includes(query) ||
           (app.department?.toLowerCase() || "").includes(query) ||
           (app.department?.toLowerCase() || "").replace(/_/g, " ").includes(query) ||
-          formatOffice(app.department).toLowerCase().includes(query)
+          formatOffice(app.department).toLowerCase().includes(query) ||
+          (app.section?.toLowerCase() || "").includes(query) ||
+          (app.college?.toLowerCase() || "").includes(query) ||
+          (app.program?.toLowerCase() || "").includes(query)
         );
       }
 
@@ -142,8 +189,8 @@ function ApplicationsRoute() {
 
   // Auto-select first item in filtered list if current selected is not in the filtered list
   React.useEffect(() => {
-    if (isLoading) return;
-    
+    if (isLoading || (id && isApplicantLoading)) return;
+
     if (filteredApplicants.length > 0) {
       const isStillInList = filteredApplicants.some((app) => app.id === selectedId);
       if (selectedId && !isStillInList) {
@@ -152,7 +199,7 @@ function ApplicationsRoute() {
     } else {
       setSelectedId(null);
     }
-  }, [filteredApplicants, selectedId, isLoading]);
+  }, [filteredApplicants, selectedId, isLoading, id, isApplicantLoading, setSelectedId]);
 
   const triggerStatusChange = (status: Applicant["status"]) => {
     if (selectedApplicant?.status === status) return;
@@ -160,30 +207,46 @@ function ApplicationsRoute() {
     setIsConfirmOpen(true);
   };
 
-  const handleConfirmStatusChange = async (message?: string, resubmitFields?: string[]) => {
+  const handleConfirmStatusChange = (message?: string, resubmitFields?: string[]) => {
     if (!selectedId || !pendingStatus) return;
 
     setIsConfirmOpen(false);
 
-    try {
-      await updateStatusMutation.mutateAsync({
+    const statusText =
+      {
+        PENDING_REVIEW: "Pending Review",
+        APPROVED: "Approved",
+        REJECTED: "Rejected",
+        CANCELLED: "Cancelled",
+        RESUBMIT: "Resubmit",
+        FOR_INTERVIEW: "For Interview",
+      }[pendingStatus] ?? pendingStatus;
+
+    // Optimistically show success toast
+    toast.success(`Applicant status updated to ${statusText}.`, {
+      description: `Backend status updated and email dispatched successfully.`,
+    });
+
+    updateStatusMutation.mutate(
+      {
         applicantId: selectedId,
         status: pendingStatus,
         message,
         resubmitFields,
-      });
-      toast.success(`Applicant status updated to ${pendingStatus}.`, {
-        description: `Backend status updated and email dispatched successfully.`,
-      });
-    } catch (err) {
-      console.warn("Failed to update status on backend.", err);
-      // Toast is already handled in the hook if error occurs, but we can keep this for safety
-    } finally {
-      setPendingStatus(null);
-    }
+      },
+      {
+        onError: (err) => {
+          toast.error(`Failed to update status.`, {
+            description: err.message || "An error occurred while updating status.",
+          });
+        },
+      },
+    );
+
+    setPendingStatus(null);
   };
 
-  const handleManualIdAction = async (action: "approve" | "reject") => {
+  const handleManualIdAction = (action: "approve" | "reject") => {
     if (!selectedId || !selectedApplicant) return;
 
     if (action === "approve" && !selectedApplicant.studentId) {
@@ -191,15 +254,14 @@ function ApplicationsRoute() {
       return;
     }
 
-    try {
-      await approveManualIdMutation.mutateAsync({
-        applicantId: selectedId,
-        action,
-        studentId: action === "approve" ? selectedApplicant.studentId : undefined,
-      });
-    } catch (err) {
-      console.warn("Failed to process manual ID action.", err);
-    }
+    const actionText = action === "approve" ? "approved" : "rejected";
+    toast.success(`Manual ID verification ${actionText} successfully.`);
+
+    approveManualIdMutation.mutate({
+      applicantId: selectedId,
+      action,
+      studentId: action === "approve" ? selectedApplicant.studentId : undefined,
+    });
   };
 
   const handleZoomImage = (src: string, title: string) => {
@@ -221,7 +283,9 @@ function ApplicationsRoute() {
         activeTab={activeTab}
         onActiveTabChange={setActiveTab}
         tabCounts={tabCounts}
-        isLoading={isLoading}
+        isLoading={
+          isLoading || (isFetching && !isFetchingNextPage && filteredApplicants.length === 0)
+        }
         error={!!error}
         fetchNextPage={fetchNextPage}
         hasNextPage={hasNextPage}

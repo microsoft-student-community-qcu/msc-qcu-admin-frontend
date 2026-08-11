@@ -68,7 +68,9 @@ export interface FetchApplicantsResult {
   total: number;
 }
 
-export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise<FetchApplicantsResult> {
+export async function fetchApplicants(
+  filters?: FetchApplicantsFilters,
+): Promise<FetchApplicantsResult> {
   const apiBase = getApiBaseURL();
   const queryParams = new URLSearchParams();
   if (filters?.status) {
@@ -104,7 +106,11 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
       return {
         id: backendApp.id,
         studentId: backendApp.studentId || "",
-        name: formatApplicantName(backendApp.firstName, backendApp.lastName, backendApp.middleInitial),
+        name: formatApplicantName(
+          backendApp.firstName,
+          backendApp.lastName,
+          backendApp.middleInitial,
+        ),
         rawFirstName: backendApp.firstName,
         rawLastName: backendApp.lastName,
         rawMiddleInitial: backendApp.middleInitial || null,
@@ -120,7 +126,7 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
         program: backendApp.program,
         section: backendApp.section,
         campus: backendApp.campus,
-        dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
+        dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split("T")[0],
         placeOfBirth: backendApp.placeOfBirth,
         gender: backendApp.gender || "",
         houseAddress: backendApp.houseAddress,
@@ -132,7 +138,7 @@ export async function fetchApplicants(filters?: FetchApplicantsFilters): Promise
         facebookUrl: backendApp.facebookLink,
         previousWorks: backendApp.previousWorksAchievements || undefined,
       };
-    })
+    }),
   };
 }
 
@@ -140,7 +146,7 @@ export async function updateApplicantStatus(
   applicantId: string,
   status: Applicant["status"],
   message?: string,
-  resubmitFields?: string[]
+  resubmitFields?: string[],
 ): Promise<any> {
   const apiBase = getApiBaseURL();
   const res = await fetch(`${apiBase}/applicants/${applicantId}/status`, {
@@ -164,14 +170,14 @@ export async function updateApplicantStatus(
 export async function approveManualId(
   applicantId: string,
   action: "approve" | "reject",
-  studentId?: string
+  studentId?: string,
 ): Promise<any> {
   const apiBase = getApiBaseURL();
   const body: Record<string, string> = { action };
   if (action === "approve" && studentId) {
     body.studentId = studentId;
   }
-  
+
   const res = await fetch(`${apiBase}/applicants/${applicantId}/approve-id`, {
     method: "PATCH",
     headers: {
@@ -180,7 +186,7 @@ export async function approveManualId(
     body: JSON.stringify(body),
     credentials: "include",
   });
-  
+
   if (!res.ok) {
     throw new Error("Failed to process manual ID verification");
   }
@@ -193,29 +199,29 @@ export async function approveManualId(
 
 export async function updateApplicantDetails(
   applicantId: string,
-  data: Partial<Applicant>
+  data: Partial<Applicant>,
 ): Promise<Applicant> {
   const apiBase = getApiBaseURL();
-  
+
   // Map frontend field names to backend field names if necessary.
   // The backend expects flat fields matching the original creation request.
   const backendPayload: Record<string, any> = { ...data };
-  
+
   // Re-map fields that differ
   if (data.department) backendPayload.office = data.department;
   if (data.cellphone) backendPayload.cellphoneNumber = data.cellphone;
   if (data.interests) backendPayload.interestsSkillsHobbies = data.interests;
   if (data.pastOrganizations) backendPayload.organizationHistory = data.pastOrganizations;
-  
+
   // Clean up empty fields that fail backend regex constraints if sent as empty strings
   if (backendPayload.middleInitial === "") {
     delete backendPayload.middleInitial;
   } else if (backendPayload.middleInitial) {
     backendPayload.middleInitial = backendPayload.middleInitial.replace(/\./g, "");
   }
-  
+
   if (backendPayload.studentId === "") delete backendPayload.studentId;
-  
+
   const res = await fetch(`${apiBase}/applicants/${applicantId}`, {
     method: "PATCH",
     headers: {
@@ -224,7 +230,7 @@ export async function updateApplicantDetails(
     body: JSON.stringify(backendPayload),
     credentials: "include",
   });
-  
+
   if (!res.ok) {
     throw new Error("Failed to update applicant details");
   }
@@ -283,7 +289,7 @@ export async function fetchApplicantById(applicantId: string): Promise<Applicant
   if (!json.success) {
     throw new Error(json.message || "Failed to fetch applicant details");
   }
-  
+
   const backendApp = json.data;
   return {
     id: backendApp.id,
@@ -304,7 +310,7 @@ export async function fetchApplicantById(applicantId: string): Promise<Applicant
     program: backendApp.program,
     section: backendApp.section,
     campus: backendApp.campus,
-    dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split('T')[0],
+    dateOfBirth: new Date(backendApp.dateOfBirth).toISOString().split("T")[0],
     placeOfBirth: backendApp.placeOfBirth,
     gender: backendApp.gender || "",
     houseAddress: backendApp.houseAddress,

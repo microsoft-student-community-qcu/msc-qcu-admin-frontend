@@ -4,8 +4,46 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { Applicant } from "@/features/hr/shared/types";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
+
+export const MemberCardSkeleton: React.FC = () => {
+  return (
+    <Card className="rounded-none border-transparent bg-card shadow-4 flex flex-col justify-between">
+      <CardContent className="p-size160 flex flex-row items-start gap-size160">
+        {/* Left Side: Avatar Skeleton */}
+        <Skeleton className="h-20 w-20 shrink-0" />
+
+        {/* Right Side: Info Skeletons */}
+        <div className="flex-1 min-w-0 space-y-2 text-left">
+          <div className="space-y-1">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-3.5 w-1/2" />
+          </div>
+
+          <div className="space-y-1.5">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-3.5 w-2/3" />
+          </div>
+        </div>
+      </CardContent>
+
+      {/* Footer Actions Skeleton */}
+      <div
+        data-slot="card-footer"
+        className="border-t border-border/60 p-size120 bg-muted/10 flex items-center justify-between gap-2"
+      >
+        <div className="flex gap-1.5">
+          <Skeleton className="h-7 w-7" />
+          <Skeleton className="h-7 w-7" />
+        </div>
+
+        <Skeleton className="h-7 w-20" />
+      </div>
+    </Card>
+  );
+};
 
 interface MemberDirectoryProps {
   members: Applicant[];
@@ -20,7 +58,7 @@ export const MemberDirectory: React.FC<MemberDirectoryProps> = ({
 }) => {
   if (members.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-size320 text-muted-foreground text-sm space-y-3 bg-card shadow-4 ring-1 ring-foreground/10 h-[300px] w-full">
+      <div className="flex flex-col items-center justify-center p-size320 text-muted-foreground text-sm space-y-3 bg-card shadow-4 ring-1 ring-foreground/10 h-75 w-full">
         <PersonRegular className="w-12 h-12 text-muted-foreground/30 animate-pulse" />
         <div className="text-center">
           <p className="font-semibold text-foreground">No active members found</p>

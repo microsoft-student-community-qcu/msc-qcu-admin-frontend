@@ -1,6 +1,7 @@
 # Product Requirements Document (PRD) - QCU MSC Admin Dashboard
 
 ## 1. Document Overview
+
 **Project Name:** QCU MSC Admin Dashboard (July V1 Release)
 **Objective:** The internal command center for the QCU Microsoft Student Community executive board. This dashboard serves as the administrative backbone for managing the community's operations, specifically focusing on HR applicant tracking and event logistics.
 
@@ -10,17 +11,17 @@
 
 ## 2. User Roles and Permissions
 
-| Role | Description | Key Permissions |
-|------|-------------|-----------------|
-| **Admin (Management & Dev)** | HR & Organizational Management | Full access to the HR & Recruitment Pipeline. Can view/export sortable lists of applicant data, manually verify flagged IDs, mutate application statuses, and trigger automated/branded emails. |
-| **Admin (Logistics)** | Event Operations & Technical Staging | Full access to Event Logistics & Check-In. Can create new event entries, view attendee rosters, validate tickets via mobile QR scanner, and perform manual check-in overrides. |
+| Role                         | Description                          | Key Permissions                                                                                                                                                                                 |
+| ---------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Admin (Management & Dev)** | HR & Organizational Management       | Full access to the HR & Recruitment Pipeline. Can view/export sortable lists of applicant data, manually verify flagged IDs, mutate application statuses, and trigger automated/branded emails. |
+| **Admin (Logistics)**        | Event Operations & Technical Staging | Full access to Event Logistics & Check-In. Can create new event entries, view attendee rosters, validate tickets via mobile QR scanner, and perform manual check-in overrides.                  |
 
 ---
 
 ## 3. Global Non-Functional Requirements
 
 - **Performance:** Fast load times for data-heavy tables (utilizing lazy loading and memoization).
-- **Security:** 
+- **Security:**
   - Routes must be protected via JWT authentication.
   - Role-Based Access Control (RBAC) to ensure Logistics Admins cannot access HR data, and vice versa (unless they have dual roles).
   - All actions (status mutations, check-ins) must be securely sent to the backend to generate tamper-evident audit logs.
@@ -31,12 +32,14 @@
 ## 4. Module Specifications
 
 ### Module A: Admin Authentication & Security
+
 - **Description:** The gateway to the internal command center.
-- **Features:** 
+- **Features:**
   - Secure login portal for Core Team members.
   - Role-based routing upon successful authentication (directing HR officers to `/admin/hr` and Logistics officers to `/admin/events`).
 
 ### Module B: HR & Recruitment Pipeline
+
 - **Description:** The workspace for the Management & Development team to process incoming member applications captured by the public portal.
 - **Acceptance Criteria:**
   - **Quarantine Queue:** A data table view that flags applicants whose automated Zonal OCR scan failed on the public portal (Status: `Pending ID Verification`).
@@ -46,6 +49,7 @@
 - **Edge Cases:** If the email dispatch service (SMTP) fails, the UI must revert state and display a prominent error ("Failed to dispatch email. Status not updated.").
 
 ### Module C: Event Logistics & Check-In
+
 - **Description:** The control center for creating events and managing venue check-ins.
 - **Acceptance Criteria:**
   - **Event Creation Form:** Admins can input Event Title, Date, Type (Public/Members-Only), and Max Capacity.

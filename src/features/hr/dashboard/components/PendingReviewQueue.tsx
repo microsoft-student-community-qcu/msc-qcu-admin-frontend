@@ -10,7 +10,11 @@ import { useNavigate } from "@tanstack/react-router";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 
 export const PendingReviewQueue: React.FC = () => {
-  const { data: applicants, isLoading, error } = useApplicants({ status: "PENDING_REVIEW", limit: 5 });
+  const {
+    data: applicants,
+    isLoading,
+    error,
+  } = useApplicants({ status: "PENDING_REVIEW", limit: 5 });
   const navigate = useNavigate();
 
   const pendingList = React.useMemo(() => {
@@ -69,10 +73,16 @@ export const PendingReviewQueue: React.FC = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium leading-none truncate text-foreground" title={app.name}>
+                    <p
+                      className="text-sm font-medium leading-none truncate text-foreground"
+                      title={app.name}
+                    >
                       {app.name}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1 truncate" title={formatOffice(app.department)}>
+                    <p
+                      className="text-xs text-muted-foreground mt-1 truncate"
+                      title={formatOffice(app.department)}
+                    >
                       {formatOffice(app.department)}
                     </p>
                   </div>

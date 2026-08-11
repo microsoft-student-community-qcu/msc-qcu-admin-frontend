@@ -64,6 +64,7 @@ msc-qcu-admin-frontend/
 
 ### Code Structure Rules
 
+- **Agent Guidance:** You MUST follow the constraints defined in [architecture.md](file:///e:/Github/msc-qcu-admin-frontend/.agents/rules/architecture.md) and load the `feature-architect` skill before creating or moving files.
 - Never allow a single file/component to become too large or hard to navigate.
 - **Separation of Concerns (No Component Clumping)**: Avoid mixing UI layout, form validation, business logic, and types in a single file. Keep components focused solely on rendering the view.
 - **Folder and File Separation**:
@@ -77,6 +78,7 @@ msc-qcu-admin-frontend/
 ## Microsoft Fluent Design System
 
 Strictly adhere to the design guidelines in [design.md](file:///e:/Github/msc-qcu-admin-frontend/design.md):
+
 - **Typography**: Use only Fluent-approved fonts (e.g., `Segoe UI Variable`).
 - **Spacing**: Use the custom Fluent Spacing Ramp (`p-size160`, `gap-size80`, etc.) instead of standard Tailwind spacing values.
 - **Elevation**: Use custom shadow classes (`shadow-4`, `shadow-8`, etc.) rather than default Tailwind shadows.
@@ -84,13 +86,19 @@ Strictly adhere to the design guidelines in [design.md](file:///e:/Github/msc-qc
 - **Animations**: Prefer snappy and solid interactions over bouncy scale/translate effects.
 - **Base UI / Shadcn**: Wrap grouped dropdown menu items in `DropdownMenuGroup` to prevent Base UI context crashes.
 
-## Issue Resolution Rules
+## Issue Resolution & Backend Rules
 
 - **Frontend Only**: Fixes made in this repository must only target frontend code.
-- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Instead, create a Markdown (.md) file documenting the required backend changes. This file will be pasted into the backend repository's issue tracker.
+- **Backend Dependencies**: If a fix requires backend changes, do not attempt to fix it in this repository. Use the `backend-issue` skill to generate a backend issue report.
+- **Backend Documentation:** Always consult the highly detailed API docs in the backend repo before modifying frontend integration logic. Use the `backend-docs` skill for details.
 
 ## Git Rules
 
 - Use meaningful and descriptive commit messages (conventional commits).
 - Do not commit undocumented breaking changes.
 - Keep commits focused on a single logical change.
+- **PR Generation:** Use the `pr-generation` skill to generate a detailed changes summary after every completed task.
+
+## Communication & Output Rules
+
+- **NO EMOJIS ALLOWED STRICTLY**: Do not use emojis in commit messages, pull request summaries, documentation, chat responses, or any generated content.

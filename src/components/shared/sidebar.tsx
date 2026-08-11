@@ -68,18 +68,17 @@ export interface UserProfile {
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = React.useState<UserProfile | null>(null);
-
-  React.useEffect(() => {
+  const [currentUser, setCurrentUser] = React.useState<UserProfile | null>(() => {
     const rawUser = sessionStorage.getItem("currentUser");
     if (rawUser) {
       try {
-        setCurrentUser(JSON.parse(rawUser) as UserProfile);
+        return JSON.parse(rawUser) as UserProfile;
       } catch (err) {
         console.error("Failed to parse user session", err);
       }
     }
-  }, []);
+    return null;
+  });
 
   const handleLogout = () => {
     sessionStorage.clear();

@@ -1,7 +1,12 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import { useDashboardStats } from "@/features/hr/shared/hooks/useDashboardStats";
 
 const appChartConfig = {
@@ -16,16 +21,29 @@ export const ApplicationGrowthChart: React.FC = () => {
   const applicationGrowth = stats?.applicationGrowth || [];
 
   const applicationsData = React.useMemo(() => {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
     return applicationGrowth.map((item) => {
       const [_, monthStr] = item.month.split("-");
       const monthIdx = parseInt(monthStr, 10) - 1;
       const monthLabel = months[monthIdx] || item.month;
-      
+
       return {
         month: monthLabel,
-        apps: item.count
+        apps: item.count,
       };
     });
   }, [applicationGrowth]);

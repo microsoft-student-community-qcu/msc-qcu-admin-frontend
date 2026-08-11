@@ -18,6 +18,11 @@ function AdminRoute() {
     return sessionStorage.getItem("justLoggedIn") ? 0 : 2;
   });
 
+  const savedCardHeight = React.useMemo(() => {
+    const height = sessionStorage.getItem("loginCardHeight");
+    return height ? `${height}px` : "390px";
+  }, []);
+
   const isFromLogin = React.useRef(stage === 0).current;
 
   React.useEffect(() => {
@@ -71,10 +76,13 @@ function AdminRoute() {
       <motion.div
         layout={isFromLogin}
         initial={{ borderRadius: 0 }}
+        style={{
+          height: stage === 0 ? savedCardHeight : "100vh",
+        }}
         transition={{ type: "spring", bounce: 0, duration: 0.7 }}
         className={cn(
-          "relative z-10 bg-background flex flex-col origin-center",
-          stage === 0 ? "w-full max-w-[440px] h-[320px] shadow-64" : "w-screen h-screen max-w-none",
+          "relative z-10 bg-background flex flex-col origin-center overflow-hidden",
+          stage === 0 ? "w-full max-w-[440px] shadow-64" : "w-screen h-screen max-w-none",
         )}
       >
         <div

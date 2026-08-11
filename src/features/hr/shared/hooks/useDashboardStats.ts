@@ -28,7 +28,7 @@ export function useDashboardStats() {
         return await fetchDashboardStats();
       } catch (err) {
         console.warn("New dashboard stats endpoint failed, using fallback:", err);
-        
+
         // Fallback: Fetch all/large page of applicants to compute statistics client-side
         const res = await fetchApplicants({ limit: 1000 });
         const applicants = res.applicants;
@@ -57,7 +57,7 @@ export function useDashboardStats() {
 
         // 2. Department Distribution (APPROVED only)
         const approved = applicants.filter((app) => app.status === "APPROVED");
-        
+
         const deptCounts: Record<string, number> = {};
         approved.forEach((app) => {
           deptCounts[app.department] = (deptCounts[app.department] || 0) + 1;
@@ -97,6 +97,7 @@ export function useDashboardStats() {
         };
       }
     },
+    staleTime: 5 * 60 * 1000,
     retry: false,
   });
 }

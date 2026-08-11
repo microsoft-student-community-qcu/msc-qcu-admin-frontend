@@ -35,4 +35,4 @@ dist-ssr
 
 # Generated documentation/issues
 docs/issues/
-docs/to-fix/
+docs/pr/

@@ -42,7 +42,10 @@ export const CampusDistributionChart: React.FC = () => {
         <CardDescription>Breakdown of active members by QCU Campus</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-4 min-h-0 flex flex-col justify-end">
-        <ChartContainer config={chartConfig} className="aspect-auto flex-1 w-full min-h-0 max-h-[220px]">
+        <ChartContainer
+          config={chartConfig}
+          className="aspect-auto flex-1 w-full min-h-0 max-h-[220px]"
+        >
           <BarChart data={campusData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis dataKey="campus" tickLine={false} axisLine={false} tickMargin={8} />

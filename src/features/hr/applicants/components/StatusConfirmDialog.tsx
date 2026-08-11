@@ -44,14 +44,18 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
   const [message, setMessage] = useState("");
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const statusLabel = pendingStatus ? (STATUS_LABELS[pendingStatus] ?? pendingStatus) : "";
-  
+
   // Need to provide instructions for student if status is RESUBMIT or optionally if REJECTED
   const requiresMessage = pendingStatus === "RESUBMIT";
-  const allowsMessage = pendingStatus === "RESUBMIT" || pendingStatus === "REJECTED" || pendingStatus === "CANCELLED" || pendingStatus === "FOR_INTERVIEW";
-  
+  const allowsMessage =
+    pendingStatus === "RESUBMIT" ||
+    pendingStatus === "REJECTED" ||
+    pendingStatus === "CANCELLED" ||
+    pendingStatus === "FOR_INTERVIEW";
+
   // Disable confirm if message is empty OR (if status is RESUBMIT and no fields are selected)
-  const isConfirmDisabled = 
-    (requiresMessage && message.trim().length === 0) || 
+  const isConfirmDisabled =
+    (requiresMessage && message.trim().length === 0) ||
     (requiresMessage && selectedFields.length === 0);
 
   useEffect(() => {
@@ -68,13 +72,13 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
     }
     onConfirm(
       message.trim() || undefined,
-      pendingStatus === "RESUBMIT" ? selectedFields : undefined
+      pendingStatus === "RESUBMIT" ? selectedFields : undefined,
     );
   };
 
   const handleToggleField = (field: string) => {
     setSelectedFields((prev) =>
-      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field]
+      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field],
     );
   };
 
@@ -90,7 +94,7 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
             <strong>{applicantEmail}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        
+
         {allowsMessage && (
           <div className="py-4 space-y-2">
             <Label htmlFor="status-message">
@@ -99,8 +103,8 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
             <Textarea
               id="status-message"
               placeholder={
-                requiresMessage 
-                  ? "Enter instructions for what the applicant needs to resubmit..." 
+                requiresMessage
+                  ? "Enter instructions for what the applicant needs to resubmit..."
                   : "Enter an optional message for the applicant..."
               }
               className="resize-none h-24 rounded-none"
@@ -119,7 +123,10 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
                       checked={selectedFields.includes("personalInfo")}
                       onCheckedChange={() => handleToggleField("personalInfo")}
                     />
-                    <label htmlFor="field-personalInfo" className="text-sm font-medium leading-none select-none cursor-pointer">
+                    <label
+                      htmlFor="field-personalInfo"
+                      className="text-sm font-medium leading-none select-none cursor-pointer"
+                    >
                       Personal Information
                     </label>
                   </div>
@@ -129,7 +136,10 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
                       checked={selectedFields.includes("certificateOfRegistration")}
                       onCheckedChange={() => handleToggleField("certificateOfRegistration")}
                     />
-                    <label htmlFor="field-certificateOfRegistration" className="text-sm font-medium leading-none select-none cursor-pointer">
+                    <label
+                      htmlFor="field-certificateOfRegistration"
+                      className="text-sm font-medium leading-none select-none cursor-pointer"
+                    >
                       Certificate of Registration (File)
                     </label>
                   </div>
@@ -139,7 +149,10 @@ export const StatusConfirmDialog: React.FC<StatusConfirmDialogProps> = ({
                       checked={selectedFields.includes("curriculumVitae")}
                       onCheckedChange={() => handleToggleField("curriculumVitae")}
                     />
-                    <label htmlFor="field-curriculumVitae" className="text-sm font-medium leading-none select-none cursor-pointer">
+                    <label
+                      htmlFor="field-curriculumVitae"
+                      className="text-sm font-medium leading-none select-none cursor-pointer"
+                    >
                       Curriculum Vitae (File)
                     </label>
                   </div>
