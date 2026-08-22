@@ -57,10 +57,11 @@ export function Header() {
     if (pathname.startsWith("/dashboard")) return "Dashboard";
     if (pathname.startsWith("/applications")) return "Applicants";
     if (pathname.startsWith("/members")) return "Members";
-    if (pathname.startsWith("/events")) return "Events";
+    if (pathname.startsWith("/events/registrations")) return "Event Registrations";
+    if (pathname.startsWith("/events/attendance")) return "Live Check-In Desk";
+    if (pathname.startsWith("/events")) return "Events Management";
     if (pathname.startsWith("/settings")) return "Settings";
     if (pathname.startsWith("/design-system")) return "Design System";
-    if (pathname.startsWith("/notifications")) return "Notifications";
     return "Administration";
   };
 

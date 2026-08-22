@@ -1,9 +1,9 @@
 import * as React from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useAuthStore } from "@/store/useAuthStore";
-import { EventsGridView } from "@/features/logistics/components/EventsGridView";
+import { RegistrationsView } from "@/features/logistics/components/RegistrationsView";
 
-export const Route = createFileRoute("/_admin/events/list")({
+export const Route = createFileRoute("/_admin/events/registrations")({
   beforeLoad: () => {
     const role = useAuthStore.getState().user?.role;
     if (
@@ -14,11 +14,11 @@ export const Route = createFileRoute("/_admin/events/list")({
       throw redirect({ to: "/dashboard" });
     }
   },
-  component: EventsRoute,
+  component: RegistrationsRoute,
 });
 
-function EventsRoute() {
-  return <EventsGridView />;
+function RegistrationsRoute() {
+  return <RegistrationsView />;
 }
 
-export default EventsRoute;
+export default RegistrationsRoute;

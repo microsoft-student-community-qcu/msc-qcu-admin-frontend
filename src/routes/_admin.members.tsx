@@ -115,9 +115,9 @@ function MembersRoute() {
     isLoading || (isFetching && !isFetchingNextPage && filteredMembers.length === 0);
 
   return (
-    <div className="flex flex-col gap-size320 w-full relative">
+    <div className="flex flex-col gap-size160 w-full relative">
       {/* Top Action Bar (Filters & Search) - Sticky / Stationary */}
-      <div className="sticky top-[-32px] -mt-size320 pt-size320 pb-size160 z-10 bg-background/95 backdrop-blur-md -mx-size320 px-size320">
+      <div className="sticky top-[-32px] -mt-size320 pt-size320 pb-size80 z-10 bg-background/95 backdrop-blur-md -mx-size320 px-size320">
         <MemberFilterBar
           searchQuery={searchQuery}
           onSearchQueryChange={setSearchQuery}

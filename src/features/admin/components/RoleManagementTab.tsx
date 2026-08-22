@@ -146,47 +146,52 @@ export const RoleManagementTab: React.FC = () => {
     }
   };
 
+  const selectedRoleLabel = !role || role === "ALL" ? "All Roles" : ROLE_DISPLAY_NAMES[role as UserRole] || role;
+
   return (
-    <div className="h-full flex flex-col bg-card shadow-4 ring-1 ring-foreground/10 overflow-hidden w-full">
-      {/* Control Bar: Search, Role Filter, and Refresh */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-size120 p-size160 border-b border-border/60 shrink-0">
-        <div className="flex flex-1 items-center gap-size120">
-          <div className="relative flex-1 max-w-sm">
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden w-full">
+      {/* Search & Filter Toolbar */}
+      <div className="p-size200 border-b border-border bg-muted/10 shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-size160">
+        <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-size120 max-w-2xl">
+          {/* Search Input */}
+          <div className="relative flex-1">
             <SearchRegular className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search by name, email, or student ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 h-9 text-xs sm:text-sm"
+              className="pl-9 !h-9 text-xs sm:text-sm rounded-none bg-background placeholder:text-muted-foreground"
             />
           </div>
 
+          {/* Role Filter Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-9 gap-size80 text-xs sm:text-sm cursor-pointer"
+                className="h-9 px-3 text-xs gap-size60 shrink-0 rounded-none bg-background font-medium cursor-pointer"
               >
-                <FilterRegular className="w-4 h-4 text-muted-foreground" />
-                <span>
-                  {role === "ALL" ? "All Roles" : ROLE_DISPLAY_NAMES[role as UserRole] || role}
-                </span>
+                <FilterRegular className="w-3.5 h-3.5" />
+                <span>{selectedRoleLabel}</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
+            <DropdownMenuContent align="end" className="w-56 rounded-none shadow-8">
               <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-[11px] text-muted-foreground uppercase tracking-wider font-semibold">
+                  Filter by Role
+                </DropdownMenuLabel>
                 <DropdownMenuItem
                   onClick={() => setRole("ALL")}
                   className={`text-xs ${role === "ALL" ? "font-semibold bg-accent" : ""}`}
                 >
-                  All Roles ({total})
+                  All Roles
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
 
                 <DropdownMenuLabel className="text-[11px] text-muted-foreground uppercase tracking-wider font-semibold">
-                  Admin & Leadership
+                  Administrative Roles
                 </DropdownMenuLabel>
                 {ADMIN_ROLES.map((r) => (
                   <DropdownMenuItem
@@ -225,7 +230,7 @@ export const RoleManagementTab: React.FC = () => {
             size="sm"
             onClick={() => refetch()}
             disabled={isFetching}
-            className="h-9 text-xs gap-size60 cursor-pointer"
+            className="h-9 text-xs gap-size60 cursor-pointer rounded-none"
           >
             <ArrowClockwiseRegular
               className={`w-3.5 h-3.5 ${isFetching ? "animate-spin" : ""}`}
@@ -238,21 +243,21 @@ export const RoleManagementTab: React.FC = () => {
       {/* Users Table with Infinite Scroll */}
       <div className="flex-1 min-h-0 overflow-auto">
         <Table>
-          <TableHeader className="sticky top-0 bg-card z-10">
-            <TableRow>
-              <TableHead className="w-[300px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[300px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 User
               </TableHead>
-              <TableHead className="w-[140px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[140px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Student ID
               </TableHead>
-              <TableHead className="w-[160px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[160px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Role
               </TableHead>
-              <TableHead className="w-[150px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[150px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Joined
               </TableHead>
-              <TableHead className="w-[100px] text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[100px] pr-size200 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Actions
               </TableHead>
             </TableRow>
@@ -261,7 +266,7 @@ export const RoleManagementTab: React.FC = () => {
             {isLoading ? (
               Array.from({ length: 8 }).map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell>
+                  <TableCell className="pl-size200">
                     <div className="flex items-center gap-size120">
                       <Skeleton className="h-8 w-8 rounded-none" />
                       <div className="space-y-1">
@@ -270,16 +275,16 @@ export const RoleManagementTab: React.FC = () => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-3.5 w-20" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-5 w-24" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-3.5 w-20" />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="pr-size200 text-right">
                     <Skeleton className="h-7 w-16 ml-auto" />
                   </TableCell>
                 </TableRow>
@@ -294,7 +299,7 @@ export const RoleManagementTab: React.FC = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => refetch()}
-                      className="text-xs cursor-pointer mt-size40"
+                      className="text-xs rounded-none cursor-pointer mt-size40"
                     >
                       Try Again
                     </Button>
@@ -316,7 +321,7 @@ export const RoleManagementTab: React.FC = () => {
             ) : (
               users.map((user) => (
                 <TableRow key={user.id}>
-                  <TableCell>
+                  <TableCell className="pl-size200">
                     <div className="flex items-center gap-size120">
                       <Avatar className="h-8 w-8 rounded-none border border-border/60">
                         {user.image && <AvatarImage src={user.image} alt={user.name} />}
@@ -332,10 +337,10 @@ export const RoleManagementTab: React.FC = () => {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="font-mono text-xs text-muted-foreground">
+                  <TableCell className="px-size160 font-mono text-xs text-muted-foreground">
                     {user.studentId || "-"}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Badge
                       variant="outline"
                       className={`text-xs font-medium py-0 h-5 px-2 rounded-none border ${
@@ -345,10 +350,10 @@ export const RoleManagementTab: React.FC = () => {
                       {ROLE_DISPLAY_NAMES[user.role] || user.role}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
+                  <TableCell className="px-size160 text-xs text-muted-foreground">
                     {formatDate(user.createdAt)}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="pr-size200 text-right">
                     <Button
                       variant="outline"
                       size="sm"
@@ -372,19 +377,6 @@ export const RoleManagementTab: React.FC = () => {
           <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse">
             Loading more users...
           </div>
-        )}
-      </div>
-
-      {/* Summary Footer */}
-      <div className="shrink-0 flex items-center justify-between p-size120 border-t border-border/60 bg-muted/20 text-xs text-muted-foreground">
-        <div>
-          Showing <span className="font-medium text-foreground">{users.length}</span> of{" "}
-          <span className="font-medium text-foreground">{total}</span> users
-        </div>
-        {hasNextPage && (
-          <span className="text-[11px] text-muted-foreground">
-            Scroll down to load more
-          </span>
         )}
       </div>
 

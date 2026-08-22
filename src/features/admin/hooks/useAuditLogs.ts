@@ -42,6 +42,8 @@ export function useAuditLogs(options?: UseAuditLogsOptions) {
       }
       return undefined;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes cache
+    gcTime: 1000 * 60 * 15,
     placeholderData: keepPreviousData,
   });
 

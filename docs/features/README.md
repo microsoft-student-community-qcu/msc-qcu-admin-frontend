@@ -4,56 +4,62 @@ This document details the functional specifications, flows, and architectures of
 
 ---
 
-## 🔑 1. Admin Authentication & Role-Based Access Control (RBAC)
+## 1. Super Admin Settings Hub & 9-Role RBAC
+
+The administrative command center governing platform security, user privileges, and cryptographic compliance.
+
+* **Documentation Reference:** [Super Admin Settings Hub](superadmin-hub.md)
+* **Purpose:** Provides executive oversight for user roles, global system toggles, and chained HMAC audit logs.
+* **Key Workflows:**
+  * **Role Management:** Search, inspect, and elevate user roles across the 9-role authorization matrix.
+  * **System Switches:** Toggle global feature flags (`events_registration_open`, `merch_shop_open`, `maintenance_mode`).
+  * **Cryptographic Audit Trail:** Inspect immutable, HMAC-SHA256 chained system event logs with integrity indicators.
+
+---
+
+## 2. Event Logistics & Venue Attendance Desk
+
+The operational command center for event planning, tiered registration scheduling, attendee ticketing, and on-site door verification.
+
+* **Documentation Reference:** [Event Logistics & Attendee Management](events-logistics.md)
+* **Purpose:** Facilitate event lifecycle management from initial scheduling to on-site check-in.
+* **Key Workflows:**
+  * **Event Management (`/events/list`):** Card and tabular views with cover photo banners, occupancy meters, and cancellation modal.
+  * **Attendee Management (`/events/registrations`):** Pre-event registration review, manual ID verification review, and QR ticket issuance.
+  * **Live Door Desk (`/events/attendance`):** 4-column live KPI dashboard, rapid keystroke search, and instant verification toasts.
+
+---
+
+## 3. Admin Authentication & Session Hydration
 
 The gateway gating access to the internal community command center.
 
-- **Purpose**: Restrict access to administrative tools based on defined QCU MSC executive board roles.
-- **Roles & Workspace Routing**:
-  - **Admin (Management & Dev / HR)**: Redirected to `/applications` and `/members` to oversee recruitment and user records.
-  - **Admin (Logistics)**: Redirected to `/events/list` and the QR scanner tools to manage on-site meetups.
-- **Technical Flow**:
-  1. Core members enter credentials at `/login`.
-  2. Upon successful verification, a JWT token is saved, and role metadata is loaded.
-  3. Global layout route [\_admin.tsx](file:///e:/Github/msc-qcu-admin-frontend/src/routes/_admin.tsx) evaluates active session status and verifies access rights before rendering nested route views.
+* **Documentation Reference:** [Authentication & Password Reset](auth.md)
+* **Purpose:** Restrict access to administrative tools based on authoritative server sessions.
+* **Key Workflows:**
+  * **Server-Hydrated Auth:** Centralized Zustand auth store (`useAuthStore`) hydrated via `/api/v1/users/me` on route transitions.
+  * **Self-Service Password Reset:** Guided multi-step password reset workflow with security verification.
 
 ---
 
-## 👥 2. HR & Recruitment Pipeline
+## 4. HR & Recruitment Pipeline
 
 The workspace for the Management & Development core team to process student applications captured via the public-facing portals.
 
-- **Key Workflows**:
-  - **Applicant Registry**: A filterable master-detail table display of candidates, their details, and submitted portfolios.
-  - **Quarantine Queue (Status: `Pending ID Verification`)**: Outlines candidates whose automated Zonal OCR student ID checks failed during public intake.
-  - **Manual ID Verification Review**: Allows administrators to compare the student's uploaded ID photograph side-by-side with their manually typed student number. Admins select "Approve ID" to verify and unlock the profile.
-  - **Branded Communications**: Mutating a user's membership status (e.g. _Approved_ or _Rejected_) triggers backend hooks to compile and dispatch customized status emails.
-- **Client-Side Reference**: View [\_admin.applications.tsx](file:///e:/Github/msc-qcu-admin-frontend/src/routes/_admin.applications.tsx) for details.
+* **Documentation Reference:** [HR & Recruitment Pipeline](hr-pipeline.md)
+* **Key Workflows:**
+  * **Applicant Registry:** Filterable master-detail table display of candidates, their academic records, and submitted portfolios.
+  * **Quarantine Queue (Pending ID Verification):** Outlines candidates whose automated OCR student ID checks failed during public intake.
+  * **Manual ID Verification Review:** Side-by-side comparison of student ID photo and student number to approve or reject verification.
 
 ---
 
-## 👥 3. Active Members Directory
+## 5. Active Members Directory
 
 The roster containing all successfully approved and verified community members.
 
-- **Key Workflows**:
-  - **Team Directory Grid**: A visual card index layout displaying active members, sorted by their assigned departments.
-  - **Slide-out Profile Sheet**: Provides instant access to full academic records (College, Program, Section, Campus), contact coordinates, personal interests, and external links (GitHub/Facebook/Portfolio).
-  - **Quick Actions**: Enables HR to send emails directly to active members through native mailto actions from both the directory cards and profile sheets.
-- **Client-Side Reference**: View [\_admin.members.tsx](file:///e:/Github/msc-qcu-admin-frontend/src/routes/_admin.members.tsx) for details.
-
----
-
-## 📅 4. Event Logistics & Venue Check-In
-
-The command center for core logistics officers to coordinate community events and manage ticketholder check-ins at venue entry doors.
-
-- **Key Workflows**:
-  - **Event Orchestrator**: Simple form interface to establish Event Titles, Schedules, Types (Public/Members-only), and Max Occupancy limits.
-  - **Attendee Rosters**: Tracks check-in metrics and flags (`hasAttended`) for registered students.
-  - **Mobile QR Scanner (`/admin/events/scan`)**: A mobile-viewport-targeted route (optimized for 320px minimum screen width) that accesses the device camera on site to scan and validate student tickets.
-  - **Ticketing Validations**:
-    - Reads QR payload UUID.
-    - Queries the backend database to verify the registration status and checks off the attendee.
-    - Renders warning overlays (`Invalid Ticket or Already Scanned`) if fake, duplicate, or incorrect tickets are scanned.
-  - **Manual Check-In Override**: Searchable database directory to check in students manually if their phone screen is cracked or the camera scanner fails to read their QR code.
+* **Documentation Reference:** [Members Directory](members-directory.md)
+* **Key Workflows:**
+  * **Team Directory Grid:** Visual card index layout displaying active members, sorted by department.
+  * **Slide-out Profile Sheet:** Instant access to full academic records, contact coordinates, and portfolio links.
+  * **Quick Communications:** Direct email actions from directory cards and profile sheets.

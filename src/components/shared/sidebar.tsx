@@ -20,6 +20,8 @@ import {
   CalendarLtrRegular,
   PersonRegular,
   SettingsRegular,
+  PersonTagRegular,
+  CheckmarkCircleRegular,
 } from "@fluentui/react-icons";
 import logo from "@/assets/qcu-msc-logo.png";
 import {
@@ -57,6 +59,16 @@ const items = [
     icon: CalendarLtrRegular,
   },
   {
+    title: "Registrations",
+    url: "/events/registrations",
+    icon: PersonTagRegular,
+  },
+  {
+    title: "Live Check-In",
+    url: "/events/attendance",
+    icon: CheckmarkCircleRegular,
+  },
+  {
     title: "Settings",
     url: "/settings",
     icon: SettingsRegular,
@@ -87,7 +99,13 @@ export function Sidebar() {
         );
       case "ADMIN_LOGISTICS":
       case "ADMIN_LOGISTICS_HEAD":
-        return items.filter((item) => item.url === "/dashboard" || item.url === "/events/list");
+        return items.filter(
+          (item) =>
+            item.url === "/dashboard" ||
+            item.url === "/events/list" ||
+            item.url === "/events/registrations" ||
+            item.url === "/events/attendance",
+        );
       case "ADMIN_FINANCE":
       case "ADMIN_FINANCE_HEAD":
         return items.filter((item) => item.url === "/dashboard");
@@ -135,7 +153,9 @@ export function Sidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="gap-1">
               {visibleItems.map((item) => {
-                const isActive = location.pathname.startsWith(item.url);
+                const isActive =
+                  location.pathname === item.url ||
+                  (item.url !== "/dashboard" && location.pathname.startsWith(item.url));
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton

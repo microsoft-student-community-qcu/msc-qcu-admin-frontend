@@ -10,30 +10,32 @@ Welcome to the internal documentation for the QCU MSC Admin Frontend repository.
 
 Start here to understand how files are structured and how state is managed globally across the application.
 
-- **[File Structure & Domain-Driven Design](architecture/file-structure.md)**: Strict rules on where to place files, what belongs in `src/features/`, and when to use global `src/services/`.
-- **[State Management](architecture/state-management.md)**: How we divide state between Local UI (React `useState`), Global UI (Zustand `useFilterStore`), and Server State (TanStack Query).
+* **[File Structure & Domain-Driven Design](architecture/file-structure.md)**: Rules on file placement, domain slices inside `src/features/`, and shared services.
+* **[State Management](architecture/state-management.md)**: How state is divided between Local UI (`useState`), Global UI (`useFilterStore`), Authoritative Auth (`useAuthStore`), and Server State (TanStack Query).
 
 ## 2. UI & Design System
 
-Guidelines on how to style components and enforce the application feel.
+Guidelines on styling components and maintaining Microsoft Fluent Design standards.
 
-- **[Design Patterns & UI Standards](components/design-patterns.md)**: Microsoft Fluent Design integration, typography standards, elevation shadows, and Shadcn component structure.
-- **[Caching & Optimistic UI Strategy](api-integration/caching-and-optimistic-ui.md)**: How we configure TanStack Query to mutate UI, prevent layout shifting, and handle background polling.
+* **[Design Patterns & UI Standards](components/design-patterns.md)**: Microsoft Fluent Design integration, typography standards, elevation shadows, and Base UI component wrappers.
+* **[Caching & Optimistic UI Strategy](api-integration/caching-and-optimistic-ui.md)**: TanStack Query cache invalidation, background polling, and optimistic UI mutations.
 
 ## 3. Feature Implementations
 
-Detailed, component-level breakdowns of the active domains currently built into the dashboard.
+Detailed, component-level breakdowns of all active domains built into the dashboard.
 
-- **[Authentication & Password Reset](features/auth.md)**: The sign-in state machine, Zod schemas, self-service password reset, and Framer Motion height transitions (`useAutoHeight`).
-- **[HR & Recruitment Pipeline](features/hr-pipeline.md)**: The applicant registry, optimistic status mutations, and the Manual ID Verification review process.
-- **[Members Directory](features/members-directory.md)**: The active roster grid, infinite scrolling integrations, and the profile sheet slide-outs.
+* **[Super Admin Settings Hub](features/superadmin-hub.md)**: 9-role RBAC authorization matrix, authoritative session hydration, global system switches, and HMAC-SHA256 chained audit logs.
+* **[Event Logistics & Attendance Desk](features/events-logistics.md)**: Event scheduling, cover photo cards, pre-event attendee administration, and on-site door check-in desk.
+* **[Authentication & Password Reset](features/auth.md)**: Sign-in state machine, Zod schemas, self-service password reset, and Framer Motion transitions.
+* **[HR & Recruitment Pipeline](features/hr-pipeline.md)**: Applicant registry, optimistic status mutations, and Manual ID Verification review process.
+* **[Members Directory](features/members-directory.md)**: Active roster grid, infinite scrolling, and slide-out profile sheets.
 
 ---
 
 ## 4. Agent Workflows & Project Rules
 
-If you are developing in this workspace, adhere to the rules defined in `.agents/AGENTS.md`.
+Adhere to the rules defined in `.agents/AGENTS.md`:
 
-- **Issue Generation:** All backend dependencies must be documented.
-- **Pull Requests:** Detailed PR changes must be generated in `docs/pr/`.
-- **Architecture Enforcement:** The `feature-architect` skill governs all file creation.
+* **Strict Emoji Policy:** NO EMOJIS in code, comments, documentation, commit messages, or chat responses.
+* **Backend Issue Reporting:** All backend dependencies and schema additions must be documented in `issues/`.
+* **Architecture Enforcement:** New files must follow domain separation of concerns.

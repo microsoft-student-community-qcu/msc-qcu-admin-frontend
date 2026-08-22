@@ -96,6 +96,8 @@ export function useAdminUsers(options?: UseAdminUsersOptions) {
       }
       return undefined;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes fresh cache
+    gcTime: 1000 * 60 * 15, // 15 minutes garbage collection time
     placeholderData: keepPreviousData,
   });
 

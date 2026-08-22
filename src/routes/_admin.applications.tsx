@@ -270,7 +270,7 @@ function ApplicationsRoute() {
   };
 
   return (
-    <div className="flex gap-size240 h-[calc(100vh-7.5rem)]">
+    <div className="flex gap-size240 h-full min-h-0">
       {/* LEFT COLUMN: Master List */}
       <ApplicantList
         applicants={filteredApplicants}

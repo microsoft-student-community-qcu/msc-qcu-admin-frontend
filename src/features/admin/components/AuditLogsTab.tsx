@@ -10,6 +10,7 @@ import {
   DocumentBulletListRegular,
   HistoryRegular,
   KeyRegular,
+  ShieldCheckmarkRegular,
 } from "@fluentui/react-icons";
 
 import { useAuditLogs } from "../hooks/useAuditLogs";
@@ -62,6 +63,7 @@ export const AuditLogsTab: React.FC = () => {
   const {
     logs,
     total,
+    integrity,
     action,
     setAction,
     actorId,
@@ -122,12 +124,25 @@ export const AuditLogsTab: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col bg-card shadow-4 ring-1 ring-foreground/10 overflow-hidden w-full">
+    <div className="flex-1 min-h-0 flex flex-col overflow-hidden w-full">
       {/* Filter Toolbar */}
-      <div className="p-size160 border-b border-border/60 space-y-size120 shrink-0">
+      <div className="p-size200 border-b border-border bg-muted/10 space-y-size160 shrink-0">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-size120">
-          <div className="text-xs text-muted-foreground">
-            Filter administrative action logs by action, actor, or date range.
+          <div className="flex items-center gap-size120 flex-wrap">
+            <span className="text-xs font-semibold text-foreground">
+              Audit Filter Controls
+            </span>
+            {integrity?.integrityOk ? (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-medium">
+                <ShieldCheckmarkRegular className="w-3.5 h-3.5" />
+                Integrity Verified (HMAC-SHA256 Chained)
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-destructive/10 text-destructive border border-destructive/20 text-xs font-medium">
+                <WarningRegular className="w-3.5 h-3.5" />
+                Chain Integrity Issue Detected
+              </span>
+            )}
           </div>
 
           <div className="flex items-center gap-size80 justify-end">
@@ -155,7 +170,7 @@ export const AuditLogsTab: React.FC = () => {
         </div>
 
         {/* Filter Inputs Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-size120 pt-size80 border-t border-border/60">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-size120 pt-size120 border-t border-border">
           {/* Action Filter */}
           <div className="space-y-1">
             <label className="text-xs font-semibold text-muted-foreground block">
@@ -167,7 +182,7 @@ export const AuditLogsTab: React.FC = () => {
                 if (val) setAction(val as AuditAction | "ALL");
               }}
             >
-              <SelectTrigger className="w-full h-8 text-xs rounded-none">
+              <SelectTrigger className="w-full !h-9 text-xs rounded-none bg-background">
                 <SelectValue placeholder="All Actions">
                   {action === "ALL" || !action
                     ? "All Actions"
@@ -195,7 +210,7 @@ export const AuditLogsTab: React.FC = () => {
               placeholder="Filter by user UUID..."
               value={actorId}
               onChange={(e) => setActorId(e.target.value)}
-              className="h-8 text-xs rounded-none"
+              className="h-9 text-xs rounded-none bg-background"
             />
           </div>
 
@@ -206,7 +221,7 @@ export const AuditLogsTab: React.FC = () => {
               type="date"
               value={from}
               onChange={(e) => setFrom(e.target.value)}
-              className="h-8 text-xs rounded-none"
+              className="h-9 text-xs rounded-none bg-background"
             />
           </div>
 
@@ -217,7 +232,7 @@ export const AuditLogsTab: React.FC = () => {
               type="date"
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              className="h-8 text-xs rounded-none"
+              className="h-9 text-xs rounded-none bg-background"
             />
           </div>
         </div>
@@ -226,24 +241,24 @@ export const AuditLogsTab: React.FC = () => {
       {/* Audit Logs Table with Infinite Scroll */}
       <div className="flex-1 min-h-0 overflow-auto">
         <Table>
-          <TableHeader className="sticky top-0 bg-card z-10">
-            <TableRow>
-              <TableHead className="w-[180px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="w-[180px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Timestamp
               </TableHead>
-              <TableHead className="w-[150px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[150px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Action
               </TableHead>
-              <TableHead className="w-[130px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[130px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Actor
               </TableHead>
-              <TableHead className="w-[180px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[180px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Target Entity
               </TableHead>
-              <TableHead className="w-[180px] text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[180px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Hash
               </TableHead>
-              <TableHead className="w-[100px] text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <TableHead className="w-[100px] pr-size200 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Details
               </TableHead>
             </TableRow>
@@ -252,22 +267,22 @@ export const AuditLogsTab: React.FC = () => {
             {isLoading ? (
               Array.from({ length: 8 }).map((_, index) => (
                 <TableRow key={index}>
-                  <TableCell>
+                  <TableCell className="pl-size200">
                     <Skeleton className="h-3.5 w-32" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-5 w-24" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-3.5 w-20" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-3.5 w-28" />
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Skeleton className="h-3.5 w-24" />
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="pr-size200 text-right">
                     <Skeleton className="h-7 w-16 ml-auto" />
                   </TableCell>
                 </TableRow>
@@ -305,12 +320,12 @@ export const AuditLogsTab: React.FC = () => {
               logs.map((log) => (
                 <TableRow key={log.id}>
                   {/* Timestamp */}
-                  <TableCell className="font-mono text-xs text-muted-foreground">
+                  <TableCell className="pl-size200 font-mono text-xs text-muted-foreground">
                     {formatDateTime(log.createdAt)}
                   </TableCell>
 
                   {/* Action Badge */}
-                  <TableCell>
+                  <TableCell className="px-size160">
                     <Badge
                       variant="outline"
                       className={`text-xs font-medium py-0 h-5 px-2 rounded-none border ${
@@ -322,7 +337,7 @@ export const AuditLogsTab: React.FC = () => {
                   </TableCell>
 
                   {/* Actor ID */}
-                  <TableCell className="font-mono text-xs text-foreground">
+                  <TableCell className="px-size160 font-mono text-xs text-foreground">
                     {log.actorId ? (
                       <span title={log.actorId}>{truncateHash(log.actorId)}</span>
                     ) : (
@@ -331,11 +346,11 @@ export const AuditLogsTab: React.FC = () => {
                   </TableCell>
 
                   {/* Target Entity */}
-                  <TableCell className="text-xs">
+                  <TableCell className="px-size160 text-xs">
                     <div className="font-semibold text-foreground">{log.entityType}</div>
                     {log.entityId && (
                       <div
-                        className="text-xs font-mono text-muted-foreground truncate"
+                        className="text-xs font-mono text-muted-foreground truncate max-w-[180px]"
                         title={log.entityId}
                       >
                         {log.entityId}
@@ -344,7 +359,7 @@ export const AuditLogsTab: React.FC = () => {
                   </TableCell>
 
                   {/* Hash */}
-                  <TableCell className="font-mono text-xs text-muted-foreground">
+                  <TableCell className="px-size160 font-mono text-xs text-muted-foreground">
                     <div className="flex items-center gap-size40">
                       <KeyRegular className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                       <span title={log.hash}>{truncateHash(log.hash)}</span>
@@ -352,7 +367,7 @@ export const AuditLogsTab: React.FC = () => {
                   </TableCell>
 
                   {/* Action */}
-                  <TableCell className="text-right">
+                  <TableCell className="pr-size200 text-right">
                     <Button
                       variant="outline"
                       size="sm"
@@ -379,19 +394,6 @@ export const AuditLogsTab: React.FC = () => {
         )}
       </div>
 
-      {/* Summary Footer */}
-      <div className="shrink-0 flex items-center justify-between p-size120 border-t border-border/60 bg-muted/20 text-xs text-muted-foreground">
-        <div>
-          Showing <span className="font-medium text-foreground">{logs.length}</span> of{" "}
-          <span className="font-medium text-foreground">{total}</span> entries
-        </div>
-        {hasNextPage && (
-          <span className="text-[11px] text-muted-foreground">
-            Scroll down to load more
-          </span>
-        )}
-      </div>
-
       {/* Log Details Inspection Dialog */}
       <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>
         <DialogContent className="sm:max-w-lg">
@@ -408,7 +410,7 @@ export const AuditLogsTab: React.FC = () => {
           {selectedLog && (
             <div className="space-y-size160 py-size80 max-h-[60vh] overflow-y-auto pr-1">
               {/* Summary Metadata Grid */}
-              <div className="grid grid-cols-2 gap-size120 p-size120 bg-muted/40 border border-border/60 text-xs">
+              <div className="grid grid-cols-2 gap-size120 p-size120 bg-muted/40 border border-border text-xs">
                 <div>
                   <span className="text-muted-foreground block text-xs font-semibold">
                     Event Action
@@ -422,146 +424,160 @@ export const AuditLogsTab: React.FC = () => {
                     {ACTION_DISPLAY_NAMES[selectedLog.action] || selectedLog.action}
                   </Badge>
                 </div>
-
                 <div>
                   <span className="text-muted-foreground block text-xs font-semibold">
                     Timestamp
                   </span>
-                  <span className="font-mono text-xs text-foreground block mt-1">
+                  <span className="font-mono text-foreground mt-1 block">
                     {formatDateTime(selectedLog.createdAt)}
                   </span>
                 </div>
-
                 <div>
-                  <span className="text-muted-foreground block text-xs font-semibold">
-                    Actor ID
-                  </span>
-                  <span className="font-mono text-xs text-foreground block mt-1 break-all">
-                    {selectedLog.actorId || "System / Automated"}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="text-muted-foreground block text-xs font-semibold">
-                    IP Address
-                  </span>
-                  <span className="font-mono text-xs text-foreground block mt-1">
-                    {selectedLog.ipAddress || "Internal (N/A)"}
-                  </span>
-                </div>
-
-                <div className="col-span-2">
                   <span className="text-muted-foreground block text-xs font-semibold">
                     Target Entity
                   </span>
-                  <span className="font-mono text-xs text-foreground block mt-1">
+                  <span className="font-medium text-foreground mt-1 block">
                     {selectedLog.entityType}{" "}
-                    {selectedLog.entityId ? `(${selectedLog.entityId})` : ""}
-                  </span>
-                </div>
-              </div>
-
-              {/* Hash Details */}
-              <div className="space-y-size80 p-size120 bg-muted/40 border border-border/60 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-foreground flex items-center gap-1 text-xs">
-                    <KeyRegular className="w-3.5 h-3.5 text-primary" />
-                    Record Hashes
-                  </span>
-                </div>
-
-                <div className="space-y-1.5">
-                  <div>
-                    <span className="text-xs text-muted-foreground block font-medium">
-                      Record Hash
-                    </span>
-                    <div className="flex items-center justify-between gap-2 p-1.5 bg-background border border-border/60 font-mono text-xs text-foreground break-all">
-                      <span>{selectedLog.hash}</span>
-                      <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={() => handleCopy(selectedLog.hash, "hash")}
-                        className="h-6 w-6 shrink-0 cursor-pointer"
-                        title="Copy Hash"
-                      >
-                        {copiedHash === "hash" ? (
-                          <CheckmarkRegular className="w-3.5 h-3.5 text-emerald-600" />
-                        ) : (
-                          <CopyRegular className="w-3.5 h-3.5 text-muted-foreground" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-xs text-muted-foreground block font-medium">
-                      Previous Hash
-                    </span>
-                    <div className="flex items-center justify-between gap-2 p-1.5 bg-background border border-border/60 font-mono text-xs text-foreground break-all">
-                      <span>{selectedLog.prevHash || "(Genesis Record)"}</span>
-                      {selectedLog.prevHash && (
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => handleCopy(selectedLog.prevHash!, "prevHash")}
-                          className="h-6 w-6 shrink-0 cursor-pointer"
-                          title="Copy Previous Hash"
-                        >
-                          {copiedHash === "prevHash" ? (
-                            <CheckmarkRegular className="w-3.5 h-3.5 text-emerald-600" />
-                          ) : (
-                            <CopyRegular className="w-3.5 h-3.5 text-muted-foreground" />
-                          )}
-                        </Button>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payload Details */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                    <CodeRegular className="w-3.5 h-3.5 text-primary" />
-                    Payload Details (JSON)
-                  </label>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      handleCopy(JSON.stringify(selectedLog.details, null, 2), "payload")
-                    }
-                    className="h-6 text-xs px-1.5 text-muted-foreground hover:text-foreground cursor-pointer gap-1"
-                  >
-                    {copiedHash === "payload" ? (
-                      <>
-                        <CheckmarkRegular className="w-3 h-3 text-emerald-600" />
-                        <span>Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <CopyRegular className="w-3 h-3" />
-                        <span>Copy JSON</span>
-                      </>
+                    {selectedLog.entityId && (
+                      <span className="text-muted-foreground text-[11px] block font-mono truncate">
+                        {selectedLog.entityId}
+                      </span>
                     )}
-                  </Button>
+                  </span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground block text-xs font-semibold">
+                    Actor UUID
+                  </span>
+                  <span className="font-mono text-foreground mt-1 block truncate" title={selectedLog.actorId || "System"}>
+                    {selectedLog.actorId || "System"}
+                  </span>
+                </div>
+                {selectedLog.ipAddress && (
+                  <div className="col-span-2">
+                    <span className="text-muted-foreground block text-xs font-semibold">
+                      IP Address
+                    </span>
+                    <span className="font-mono text-foreground mt-1 block">
+                      {selectedLog.ipAddress}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Cryptographic Hash Section */}
+              <div className="space-y-size80 p-size120 bg-muted/20 border border-border text-xs">
+                <div className="font-semibold text-foreground flex items-center gap-size60">
+                  <KeyRegular className="w-4 h-4 text-primary" />
+                  <span>Cryptographic Integrity Hashes (HMAC-SHA256)</span>
                 </div>
 
-                <pre className="p-size120 bg-muted/70 text-foreground font-mono text-xs overflow-x-auto border border-border/60 rounded-none max-h-48 leading-relaxed">
-                  {JSON.stringify(selectedLog.details, null, 2)}
-                </pre>
+                {/* Current Row Hash */}
+                <div>
+                  <div className="flex items-center justify-between text-muted-foreground mb-1">
+                    <span>Row Hash:</span>
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(selectedLog.hash, "hash")}
+                      className="text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      {copiedHash === "hash" ? (
+                        <>
+                          <CheckmarkRegular className="w-3 h-3 text-emerald-500" />
+                          <span className="text-emerald-500">Copied</span>
+                        </>
+                      ) : (
+                        <>
+                          <CopyRegular className="w-3 h-3" />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <pre className="font-mono text-[11px] bg-background p-size80 border border-border/60 overflow-x-auto select-all">
+                    {selectedLog.hash}
+                  </pre>
+                </div>
+
+                {/* Previous Row Hash (Chain) */}
+                <div>
+                  <div className="flex items-center justify-between text-muted-foreground mb-1">
+                    <span>Previous Row Hash (Linkage):</span>
+                    {selectedLog.prevHash && (
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(selectedLog.prevHash!, "prevHash")}
+                        className="text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        {copiedHash === "prevHash" ? (
+                          <>
+                            <CheckmarkRegular className="w-3 h-3 text-emerald-500" />
+                            <span className="text-emerald-500">Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <CopyRegular className="w-3 h-3" />
+                            <span>Copy</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                  <pre className="font-mono text-[11px] bg-background p-size80 border border-border/60 overflow-x-auto select-all">
+                    {selectedLog.prevHash || "(Initial Genesis Row — No Previous Hash)"}
+                  </pre>
+                </div>
+              </div>
+
+              {/* Event Payload Details JSON */}
+              <div className="space-y-size60">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-foreground flex items-center gap-size60">
+                    <CodeRegular className="w-4 h-4 text-primary" />
+                    <span>Payload Details</span>
+                  </span>
+                  {selectedLog.details && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleCopy(JSON.stringify(selectedLog.details, null, 2), "details")
+                      }
+                      className="text-xs text-primary hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      {copiedHash === "details" ? (
+                        <>
+                          <CheckmarkRegular className="w-3 h-3 text-emerald-500" />
+                          <span className="text-emerald-500">Copied JSON</span>
+                        </>
+                      ) : (
+                        <>
+                          <CopyRegular className="w-3 h-3" />
+                          <span>Copy JSON</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+
+                <div className="bg-muted/40 border border-border p-size120 rounded-none overflow-x-auto max-h-48">
+                  {selectedLog.details ? (
+                    <pre className="font-mono text-xs text-foreground whitespace-pre-wrap">
+                      {JSON.stringify(selectedLog.details, null, 2)}
+                    </pre>
+                  ) : (
+                    <span className="text-xs text-muted-foreground italic">No details payload</span>
+                  )}
+                </div>
               </div>
             </div>
           )}
 
           <DialogFooter>
             <Button
-              type="button"
               variant="outline"
               size="sm"
               onClick={() => setSelectedLog(null)}
-              className="text-xs rounded-none cursor-pointer"
+              className="rounded-none text-xs cursor-pointer"
             >
               <DismissRegular className="w-3.5 h-3.5 mr-1" />
               Close

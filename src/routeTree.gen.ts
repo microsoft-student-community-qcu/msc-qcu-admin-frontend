@@ -20,7 +20,9 @@ import { Route as AdminNotificationsRouteImport } from './routes/_admin.notifica
 import { Route as AdminMembersRouteImport } from './routes/_admin.members'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
 import { Route as AdminApplicationsRouteImport } from './routes/_admin.applications'
+import { Route as AdminEventsRegistrationsRouteImport } from './routes/_admin.events.registrations'
 import { Route as AdminEventsListRouteImport } from './routes/_admin.events.list'
+import { Route as AdminEventsAttendanceRouteImport } from './routes/_admin.events.attendance'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -76,9 +78,20 @@ const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
   path: '/applications',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminEventsRegistrationsRoute =
+  AdminEventsRegistrationsRouteImport.update({
+    id: '/events/registrations',
+    path: '/events/registrations',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminEventsListRoute = AdminEventsListRouteImport.update({
   id: '/events/list',
   path: '/events/list',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsAttendanceRoute = AdminEventsAttendanceRouteImport.update({
+  id: '/events/attendance',
+  path: '/events/attendance',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -94,7 +107,9 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AdminNotificationsRoute
   '/settings': typeof AdminSettingsRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/events/attendance': typeof AdminEventsAttendanceRoute
   '/events/list': typeof AdminEventsListRoute
+  '/events/registrations': typeof AdminEventsRegistrationsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AdminRouteWithChildren
@@ -108,7 +123,9 @@ export interface FileRoutesByTo {
   '/notifications': typeof AdminNotificationsRoute
   '/settings': typeof AdminSettingsRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/events/attendance': typeof AdminEventsAttendanceRoute
   '/events/list': typeof AdminEventsListRoute
+  '/events/registrations': typeof AdminEventsRegistrationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -123,7 +140,9 @@ export interface FileRoutesById {
   '/_admin/notifications': typeof AdminNotificationsRoute
   '/_admin/settings': typeof AdminSettingsRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/_admin/events/attendance': typeof AdminEventsAttendanceRoute
   '/_admin/events/list': typeof AdminEventsListRoute
+  '/_admin/events/registrations': typeof AdminEventsRegistrationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -139,7 +158,9 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/settings'
     | '/auth/reset-password'
+    | '/events/attendance'
     | '/events/list'
+    | '/events/registrations'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -153,7 +174,9 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/settings'
     | '/auth/reset-password'
+    | '/events/attendance'
     | '/events/list'
+    | '/events/registrations'
   id:
     | '__root__'
     | '/_admin'
@@ -167,7 +190,9 @@ export interface FileRouteTypes {
     | '/_admin/notifications'
     | '/_admin/settings'
     | '/auth/reset-password'
+    | '/_admin/events/attendance'
     | '/_admin/events/list'
+    | '/_admin/events/registrations'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -258,11 +283,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminApplicationsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/events/registrations': {
+      id: '/_admin/events/registrations'
+      path: '/events/registrations'
+      fullPath: '/events/registrations'
+      preLoaderRoute: typeof AdminEventsRegistrationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/events/list': {
       id: '/_admin/events/list'
       path: '/events/list'
       fullPath: '/events/list'
       preLoaderRoute: typeof AdminEventsListRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/events/attendance': {
+      id: '/_admin/events/attendance'
+      path: '/events/attendance'
+      fullPath: '/events/attendance'
+      preLoaderRoute: typeof AdminEventsAttendanceRouteImport
       parentRoute: typeof AdminRoute
     }
   }
@@ -274,7 +313,9 @@ interface AdminRouteChildren {
   AdminMembersRoute: typeof AdminMembersRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminEventsAttendanceRoute: typeof AdminEventsAttendanceRoute
   AdminEventsListRoute: typeof AdminEventsListRoute
+  AdminEventsRegistrationsRoute: typeof AdminEventsRegistrationsRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -283,7 +324,9 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMembersRoute: AdminMembersRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  AdminEventsAttendanceRoute: AdminEventsAttendanceRoute,
   AdminEventsListRoute: AdminEventsListRoute,
+  AdminEventsRegistrationsRoute: AdminEventsRegistrationsRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

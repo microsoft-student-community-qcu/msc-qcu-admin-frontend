@@ -13,3 +13,23 @@ export const formatTimeAgo = (dateStr: string): string => {
   const diffDays = Math.floor(diffHours / 24);
   return `${diffDays}d ago`;
 };
+
+/**
+ * Formats an ISO date string or Date object into "YYYY-MM-DDTHH:mm" format for datetime-local inputs.
+ */
+export const formatForDateTimeLocal = (dateInput?: string | Date | null): string => {
+  if (!dateInput) return "";
+  try {
+    const d = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+    if (isNaN(d.getTime())) return "";
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    const year = d.getFullYear();
+    const month = pad(d.getMonth() + 1);
+    const day = pad(d.getDate());
+    const hours = pad(d.getHours());
+    const minutes = pad(d.getMinutes());
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  } catch {
+    return "";
+  }
+};

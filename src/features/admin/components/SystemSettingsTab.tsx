@@ -155,7 +155,7 @@ export const SystemSettingsTab: React.FC = () => {
             return (
               <Card
                 key={config.key}
-                className="rounded-none border-transparent bg-card shadow-4 hover:bg-muted/40 transition-colors flex flex-col justify-between"
+                className="rounded-none border-0 bg-card shadow-4 ring-1 ring-foreground/10 hover:bg-muted/30 transition-colors flex flex-col justify-between"
               >
                 <CardHeader className="space-y-size160 p-size200">
                   {/* Top Bar: Icon + Status + Switch */}
@@ -207,7 +207,7 @@ export const SystemSettingsTab: React.FC = () => {
                 </CardHeader>
 
                 {/* Footer Metadata */}
-                <CardFooter className="border-t border-border/60 p-size120 bg-muted/10 flex items-center justify-between text-xs text-muted-foreground">
+                <CardFooter className="border-t border-border p-size120 bg-muted/10 flex items-center justify-between text-xs text-muted-foreground">
                   <span className="font-mono text-xs text-muted-foreground/70">
                     {config.key}
                   </span>
