@@ -241,144 +241,172 @@ export const RoleManagementTab: React.FC = () => {
       </div>
 
       {/* Users Table with Infinite Scroll */}
-      <div className="flex-1 min-h-0 overflow-auto">
-        <Table>
-          <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[300px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                User
-              </TableHead>
-              <TableHead className="w-[140px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Student ID
-              </TableHead>
-              <TableHead className="w-[160px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Role
-              </TableHead>
-              <TableHead className="w-[150px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Joined
-              </TableHead>
-              <TableHead className="w-[100px] pr-size200 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Actions
-              </TableHead>
+      <Table containerClassName="flex-1 min-h-0 overflow-auto">
+        <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="w-[300px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              User
+            </TableHead>
+            <TableHead className="w-[140px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Student ID
+            </TableHead>
+            <TableHead className="w-[160px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Role
+            </TableHead>
+            <TableHead className="w-[150px] px-size160 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Joined
+            </TableHead>
+            <TableHead className="w-[100px] pr-size200 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Actions
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {isLoading ? (
+            Array.from({ length: 8 }).map((_, idx) => (
+              <TableRow key={idx} className="h-14">
+                <TableCell className="pl-size200">
+                  <div className="flex items-center gap-size120">
+                    <Skeleton className="w-8 h-8 rounded-none shrink-0" />
+                    <div className="space-y-1.5 flex-1">
+                      <Skeleton className="h-3.5 w-32" />
+                      <Skeleton className="h-2.5 w-44" />
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="px-size160">
+                  <Skeleton className="h-3 w-20" />
+                </TableCell>
+                <TableCell className="px-size160">
+                  <Skeleton className="h-5 w-24 rounded-none" />
+                </TableCell>
+                <TableCell className="px-size160">
+                  <Skeleton className="h-3 w-20" />
+                </TableCell>
+                <TableCell className="pr-size200 text-right">
+                  <Skeleton className="h-7 w-20 ml-auto rounded-none" />
+                </TableCell>
+              </TableRow>
+            ))
+          ) : isError ? (
+            <TableRow>
+              <TableCell colSpan={5} className="h-64 text-center">
+                <div className="flex flex-col items-center justify-center text-muted-foreground gap-2">
+                  <WarningRegular className="w-8 h-8 text-destructive" />
+                  <p className="text-sm font-semibold text-foreground">
+                    Failed to load users
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Could not fetch authoritative directory. Please try again.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => refetch()}
+                    className="mt-2 text-xs h-8 rounded-none cursor-pointer"
+                  >
+                    Retry
+                  </Button>
+                </div>
+              </TableCell>
             </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              Array.from({ length: 8 }).map((_, index) => (
-                <TableRow key={index}>
-                  <TableCell className="pl-size200">
-                    <div className="flex items-center gap-size120">
-                      <Skeleton className="h-8 w-8 rounded-none" />
-                      <div className="space-y-1">
-                        <Skeleton className="h-3.5 w-28" />
-                        <Skeleton className="h-3 w-40" />
-                      </div>
+          ) : users.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="h-64 text-center">
+                <div className="flex flex-col items-center justify-center text-muted-foreground gap-2">
+                  <SearchRegular className="w-8 h-8 text-muted-foreground/40" />
+                  <p className="text-sm font-medium text-foreground">
+                    No users found
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Try adjusting your search keywords or role filter criteria.
+                  </p>
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : (
+            users.map((user) => (
+              <TableRow
+                key={user.id}
+                className="h-14 hover:bg-muted/40 transition-colors"
+              >
+                {/* User Info Column */}
+                <TableCell className="pl-size200">
+                  <div className="flex items-center gap-size120">
+                    <Avatar className="w-8 h-8 rounded-none border border-border shrink-0">
+                      <AvatarFallback className="rounded-none bg-primary/10 text-primary font-semibold text-xs">
+                        {user.name.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs font-semibold text-foreground truncate">
+                        {user.name}
+                      </span>
+                      <span className="text-[11px] text-muted-foreground truncate">
+                        {user.email}
+                      </span>
                     </div>
-                  </TableCell>
-                  <TableCell className="px-size160">
-                    <Skeleton className="h-3.5 w-20" />
-                  </TableCell>
-                  <TableCell className="px-size160">
-                    <Skeleton className="h-5 w-24" />
-                  </TableCell>
-                  <TableCell className="px-size160">
-                    <Skeleton className="h-3.5 w-20" />
-                  </TableCell>
-                  <TableCell className="pr-size200 text-right">
-                    <Skeleton className="h-7 w-16 ml-auto" />
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : isError ? (
-              <TableRow className="hover:bg-transparent border-0">
-                <TableCell colSpan={5} className="h-72 sm:h-80 text-center text-destructive p-0 border-0">
-                  <div className="flex flex-col items-center justify-center gap-size80 h-full w-full select-none">
-                    <WarningRegular className="w-8 h-8" />
-                    <p className="text-xs font-medium">Failed to load user accounts.</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => refetch()}
-                      className="text-xs rounded-none cursor-pointer mt-size40"
-                    >
-                      Try Again
-                    </Button>
                   </div>
                 </TableCell>
-              </TableRow>
-            ) : users.length === 0 ? (
-              <TableRow className="hover:bg-transparent border-0">
-                <TableCell colSpan={5} className="h-72 sm:h-80 text-center text-muted-foreground p-0 border-0">
-                  <div className="flex flex-col items-center justify-center gap-size80 h-full w-full select-none">
-                    <PersonRegular className="w-10 h-10 text-muted-foreground/40" />
-                    <p className="text-sm font-semibold text-foreground">No users found</p>
-                    <p className="text-xs text-muted-foreground">
-                      No accounts matched the specified search or filter criteria.
-                    </p>
-                  </div>
+
+                {/* Student ID */}
+                <TableCell className="px-size160 font-mono text-xs text-muted-foreground">
+                  {user.studentId || "N/A"}
+                </TableCell>
+
+                {/* Role Badge */}
+                <TableCell className="px-size160">
+                  <Badge
+                    variant="outline"
+                    className={`rounded-none text-[11px] font-medium py-0.5 px-2 tracking-wide inline-flex items-center border ${
+                      user.role === "SUPERADMIN"
+                        ? "bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30 font-semibold"
+                        : user.role === "ADMIN_HR"
+                          ? "bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30"
+                          : user.role === "ADMIN_LOGISTICS_HEAD" ||
+                              user.role === "ADMIN_LOGISTICS"
+                            ? "bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30"
+                            : user.role === "ADMIN_FINANCE_HEAD" ||
+                                user.role === "ADMIN_FINANCE"
+                              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30"
+                              : "bg-muted text-muted-foreground border-transparent"
+                    }`}
+                  >
+                    {ROLE_DISPLAY_NAMES[user.role] || user.role}
+                  </Badge>
+                </TableCell>
+
+                {/* Joined Date */}
+                <TableCell className="px-size160 text-xs text-muted-foreground">
+                  {formatDate(user.createdAt)}
+                </TableCell>
+
+                {/* Actions Column */}
+                <TableCell className="pr-size200 text-right">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenEditRole(user)}
+                    className="h-8 px-2.5 text-xs rounded-none gap-1 font-medium cursor-pointer"
+                  >
+                    <PersonEditRegular className="w-3.5 h-3.5" />
+                    <span>Edit Role</span>
+                  </Button>
                 </TableCell>
               </TableRow>
-            ) : (
-              users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="pl-size200">
-                    <div className="flex items-center gap-size120">
-                      <Avatar className="h-8 w-8 rounded-none border border-border/60">
-                        {user.image && <AvatarImage src={user.image} alt={user.name} />}
-                        <AvatarFallback className="rounded-none bg-primary/10 text-primary text-xs font-semibold">
-                          {user.name ? user.name.charAt(0).toUpperCase() : "U"}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground truncate">
-                          {user.name}
-                        </p>
-                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-size160 font-mono text-xs text-muted-foreground">
-                    {user.studentId || "-"}
-                  </TableCell>
-                  <TableCell className="px-size160">
-                    <Badge
-                      variant="outline"
-                      className={`text-xs font-medium py-0 h-5 px-2 rounded-none border ${
-                        ROLE_BADGE_CLASSES[user.role] || "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {ROLE_DISPLAY_NAMES[user.role] || user.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="px-size160 text-xs text-muted-foreground">
-                    {formatDate(user.createdAt)}
-                  </TableCell>
-                  <TableCell className="pr-size200 text-right">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleOpenEditRole(user)}
-                      className="h-7 text-xs px-2.5 rounded-none font-medium gap-size40 cursor-pointer"
-                    >
-                      <PersonEditRegular className="w-3.5 h-3.5" />
-                      <span>Edit Role</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+            ))
+          )}
+        </TableBody>
+      </Table>
 
-        {/* Infinite Scroll Sentinel */}
-        {hasNextPage && <div ref={sentinelRef} className="h-4 w-full" />}
+      {/* Infinite Scroll Sentinel */}
+      {hasNextPage && <div ref={sentinelRef} className="h-4 w-full shrink-0" />}
 
-        {isFetchingNextPage && (
-          <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse">
-            Loading more users...
-          </div>
-        )}
-      </div>
+      {isFetchingNextPage && (
+        <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse shrink-0">
+          Loading more users...
+        </div>
+      )}
 
       {/* Role Mutation Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={(open) => !open && handleCloseDialog()}>

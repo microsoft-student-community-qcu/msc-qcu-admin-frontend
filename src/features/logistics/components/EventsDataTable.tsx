@@ -163,10 +163,9 @@ export function EventsDataTable() {
       </div>
 
       {/* Main Table Area */}
-      <div className="flex-1 overflow-auto min-h-0">
-        <Table>
-          <TableHeader className="sticky top-0 z-10 bg-muted/40 border-b border-border/60 shadow-1">
-            <TableRow className="hover:bg-transparent">
+      <Table containerClassName="flex-1 overflow-auto min-h-0">
+        <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+          <TableRow className="hover:bg-transparent">
               <TableHead className="w-[320px] text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 Event & Venue
               </TableHead>
@@ -396,7 +395,6 @@ export function EventsDataTable() {
             )}
           </TableBody>
         </Table>
-      </div>
 
       {/* Slide-Over Attendee Drawer */}
       <EventDrawer

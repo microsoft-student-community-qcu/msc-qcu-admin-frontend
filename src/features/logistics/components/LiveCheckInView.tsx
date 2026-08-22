@@ -165,7 +165,7 @@ export function LiveCheckInView() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-card shadow-4 ring-1 ring-foreground/10 overflow-hidden">
+    <div className="h-[calc(100vh-7.5rem)] flex flex-col bg-card shadow-4 ring-1 ring-foreground/10 overflow-hidden w-full">
       {/* Top Event Selection Bar */}
       <div className="p-size160 border-b border-border bg-muted/10 shrink-0 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-size160">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-size160 flex-1">
@@ -342,9 +342,8 @@ export function LiveCheckInView() {
       </div>
 
       {/* Live Attendee Roster Table */}
-      <div className="flex-1 overflow-auto min-h-0">
-        <Table>
-          <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+      <Table containerClassName="flex-1 overflow-auto min-h-0">
+        <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[280px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Attendee Name
@@ -536,7 +535,6 @@ export function LiveCheckInView() {
             </TableRow>
           </TableBody>
         </Table>
-      </div>
     </div>
   );
 }

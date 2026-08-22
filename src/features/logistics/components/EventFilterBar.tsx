@@ -35,7 +35,7 @@ export const EventFilterBar: React.FC<EventFilterBarProps> = ({
           placeholder="Search events by title, venue..."
           value={searchQuery}
           onChange={(e) => onSearchQueryChange(e.target.value)}
-          className="pl-9 h-9"
+          className="pl-9 h-9 text-xs sm:text-sm rounded-none bg-background placeholder:text-muted-foreground"
         />
       </div>
 

@@ -239,8 +239,7 @@ export const AuditLogsTab: React.FC = () => {
       </div>
 
       {/* Audit Logs Table with Infinite Scroll */}
-      <div className="flex-1 min-h-0 overflow-auto">
-        <Table>
+      <Table containerClassName="flex-1 min-h-0 overflow-auto">
           <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[180px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -381,18 +380,17 @@ export const AuditLogsTab: React.FC = () => {
                 </TableRow>
               ))
             )}
-          </TableBody>
-        </Table>
+        </TableBody>
+      </Table>
 
-        {/* Infinite Scroll Sentinel */}
-        {hasNextPage && <div ref={sentinelRef} className="h-4 w-full" />}
+      {/* Infinite Scroll Sentinel */}
+      {hasNextPage && <div ref={sentinelRef} className="h-4 w-full shrink-0" />}
 
-        {isFetchingNextPage && (
-          <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse">
-            Loading more audit entries...
-          </div>
-        )}
-      </div>
+      {isFetchingNextPage && (
+        <div className="p-size120 flex justify-center text-xs text-muted-foreground animate-pulse shrink-0">
+          Loading more audit entries...
+        </div>
+      )}
 
       {/* Log Details Inspection Dialog */}
       <Dialog open={!!selectedLog} onOpenChange={(open) => !open && setSelectedLog(null)}>

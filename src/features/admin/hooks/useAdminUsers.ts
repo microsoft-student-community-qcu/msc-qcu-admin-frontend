@@ -75,7 +75,7 @@ export function useUpdateUserRole() {
 export function useAdminUsers(options?: UseAdminUsersOptions) {
   const [search, setSearch] = React.useState(options?.initialSearch ?? "");
   const [role, setRole] = React.useState(options?.initialRole ?? "ALL");
-  const pageSize = options?.initialPageSize ?? 20;
+  const pageSize = options?.initialPageSize ?? 15;
 
   const debouncedSearch = useDebounce(search, options?.debounceMs ?? 300);
 

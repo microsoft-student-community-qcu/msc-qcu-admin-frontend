@@ -148,7 +148,7 @@ export const EventAttendeesTab: React.FC<EventAttendeesTabProps> = ({
               placeholder="Search Name, Student ID, Email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 h-8 text-xs"
+              className="pl-9 h-8 text-xs rounded-none bg-background placeholder:text-muted-foreground"
             />
           </div>
 

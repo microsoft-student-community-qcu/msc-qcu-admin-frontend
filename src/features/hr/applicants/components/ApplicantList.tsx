@@ -109,7 +109,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({
                   onSearchSubmit(searchQuery);
                 }
               }}
-              className="pl-9 h-9"
+              className="pl-9 h-9 text-xs sm:text-sm rounded-none bg-background placeholder:text-muted-foreground"
             />
           </div>
 

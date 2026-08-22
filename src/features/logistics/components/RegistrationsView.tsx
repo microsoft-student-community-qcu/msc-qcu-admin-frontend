@@ -11,6 +11,7 @@ import {
   BuildingRegular,
   LockClosedRegular,
   WarningRegular,
+  FilterRegular,
 } from "@fluentui/react-icons";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -160,18 +161,18 @@ export function RegistrationsView() {
   };
 
   return (
-    <div className="h-full flex flex-col bg-card shadow-4 ring-1 ring-foreground/10 overflow-hidden">
+    <div className="h-[calc(100vh-7.5rem)] flex flex-col bg-card shadow-4 ring-1 ring-foreground/10 overflow-hidden w-full">
       {/* Header Toolbar: Search, Event Selector, Status Tabs, and Refresh */}
-      <div className="p-size200 border-b border-border bg-muted/10 shrink-0 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-size160">
-        <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-size160 max-w-3xl">
-          {/* Search Input (connected directly to search & setSearch from hook) */}
+      <div className="p-size160 border-b border-border bg-card shrink-0 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-size160">
+        <div className="flex flex-1 flex-col sm:flex-row items-stretch sm:items-center gap-size120 max-w-2xl">
+          {/* Search Input */}
           <div className="relative flex-1">
-            <SearchRegular className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <SearchRegular className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search registrant by name, student ID, email..."
-              className="pl-10 h-10 text-sm rounded-none bg-background placeholder:text-muted-foreground"
+              className="pl-9 h-9 text-xs sm:text-sm rounded-none bg-background placeholder:text-muted-foreground"
             />
           </div>
 
@@ -180,7 +181,7 @@ export function RegistrationsView() {
             value={selectedEventId}
             onValueChange={(val) => setSelectedEventId(val || "ALL")}
           >
-            <SelectTrigger className="w-full sm:w-72 !h-10 text-xs sm:text-sm rounded-none bg-background font-medium shrink-0 border-input">
+            <SelectTrigger className="w-full sm:w-60 !h-9 text-xs font-medium rounded-none bg-background shrink-0 border-input">
               <SelectValue placeholder="Filter by event...">
                 {selectedEventId === "ALL"
                   ? "All Events"
@@ -204,8 +205,9 @@ export function RegistrationsView() {
           </Select>
         </div>
 
-        {/* Status Filter Tabs (connected directly to setStatus from hook) & Refresh */}
-        <div className="flex items-center gap-size80 justify-between lg:justify-end overflow-x-auto">
+        {/* Status Filter Tabs & Refresh */}
+        <div className="flex items-center gap-1 overflow-x-auto pb-1 lg:pb-0 scrollbar-none justify-between lg:justify-end">
+          <FilterRegular className="w-4 h-4 text-muted-foreground shrink-0 hidden sm:block mr-1" />
           <div className="flex items-center gap-1">
             {(
               [
@@ -218,38 +220,35 @@ export function RegistrationsView() {
             ).map((tab) => (
               <Button
                 key={tab.key}
-                variant={activeTab === tab.key ? "default" : "outline"}
+                variant={activeTab === tab.key ? "default" : "ghost"}
                 size="sm"
                 onClick={() => handleTabChange(tab.key)}
-                className={`h-10 px-3.5 text-xs font-semibold rounded-none cursor-pointer transition-colors ${
-                  activeTab === tab.key
-                    ? "bg-primary text-primary-foreground shadow-1"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="h-8 text-xs px-3 rounded-none font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 {tab.label}
               </Button>
             ))}
           </div>
 
+          <div className="h-5 w-px bg-border/60 mx-1 hidden sm:block" />
+
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={() => refetch()}
-            className="h-10 w-10 rounded-none shrink-0 cursor-pointer text-muted-foreground hover:text-foreground"
-            title="Refresh Registrations"
+            className="h-8 w-8 rounded-none shrink-0 cursor-pointer text-muted-foreground hover:text-foreground"
+            title="Refresh"
           >
             <ArrowClockwiseRegular
-              className={`w-4 h-4 ${isFetching ? "animate-spin" : ""}`}
+              className={`w-3.5 h-3.5 ${isFetching ? "animate-spin" : ""}`}
             />
           </Button>
         </div>
       </div>
 
       {/* Main Registrations Table */}
-      <div className="flex-1 overflow-auto min-h-0">
-        <Table>
-          <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+      <Table containerClassName="flex-1 min-h-0 overflow-auto">
+        <TableHeader className="sticky top-0 z-20 bg-card [&_tr]:border-0 [&_th]:sticky [&_th]:top-0 [&_th]:z-20 [&_th]:bg-card [&_th]:border-b [&_th]:border-border [&_th]:shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[240px] pl-size200 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Registrant
@@ -558,7 +557,6 @@ export function RegistrationsView() {
             </TableRow>
           </TableBody>
         </Table>
-      </div>
     </div>
   );
 }
