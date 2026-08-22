@@ -17,6 +17,11 @@ export const getApiBaseURL = (): string => {
   return "https://admin.msc-qcu.tech/api/v1";
 };
 
+export const getApiV2BaseURL = (): string => {
+  const v1 = getApiBaseURL();
+  return v1.replace(/\/api\/v1\/?$/, "/api/v2");
+};
+
 export const getAuthBaseURL = () => {
   const apiUrl = getApiBaseURL();
   if (!apiUrl) {

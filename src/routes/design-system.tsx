@@ -316,7 +316,7 @@ function DesignSystemPage() {
               </div>
               <div className="space-y-2">
                 <Label>Toggle Group</Label>
-                <ToggleGroup type="single">
+                <ToggleGroup>
                   <ToggleGroupItem value="a">A</ToggleGroupItem>
                   <ToggleGroupItem value="b">B</ToggleGroupItem>
                   <ToggleGroupItem value="c">C</ToggleGroupItem>
@@ -377,9 +377,7 @@ function DesignSystemPage() {
             </CardHeader>
             <CardContent className="flex flex-wrap gap-4">
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">Dialog</Button>
-                </DialogTrigger>
+                <DialogTrigger render={<Button variant="outline">Dialog</Button>} />
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle>Edit profile</DialogTitle>
@@ -400,9 +398,7 @@ function DesignSystemPage() {
               </Dialog>
 
               <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline">Alert Dialog</Button>
-                </AlertDialogTrigger>
+                <AlertDialogTrigger render={<Button variant="outline">Alert Dialog</Button>} />
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -416,9 +412,7 @@ function DesignSystemPage() {
               </AlertDialog>
 
               <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline">Sheet</Button>
-                </SheetTrigger>
+                <SheetTrigger render={<Button variant="outline">Sheet</Button>} />
                 <SheetContent>
                   <SheetHeader>
                     <SheetTitle>Are you absolutely sure?</SheetTitle>
@@ -520,7 +514,7 @@ function DesignSystemPage() {
               <CardTitle>Accordion & Collapsible</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion className="w-full">
                 <AccordionItem value="item-1">
                   <AccordionTrigger>Is it accessible?</AccordionTrigger>
                   <AccordionContent>

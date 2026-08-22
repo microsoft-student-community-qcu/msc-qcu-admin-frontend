@@ -1,19 +1,12 @@
 import * as React from "react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { UserProfile } from "@/components/shared/sidebar";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export const Route = createFileRoute("/_admin/events/list")({
   beforeLoad: () => {
-    try {
-      const rawUser = sessionStorage.getItem("currentUser");
-      if (rawUser) {
-        const user = JSON.parse(rawUser) as UserProfile;
-        if (user.role === "ADMIN_HR") {
-          throw redirect({ to: "/dashboard" });
-        }
-      }
-    } catch (e) {
-      if (e instanceof Error && e.message.includes("Redirect")) throw e;
+    const role = useAuthStore.getState().user?.role;
+    if (role === "ADMIN_HR" || role === "ADMIN_FINANCE" || role === "ADMIN_FINANCE_HEAD") {
+      throw redirect({ to: "/dashboard" });
     }
   },
   component: EventsRoute,

@@ -2,7 +2,7 @@ import * as React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useLocation } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon } from "lucide-react";
+import { WeatherSunnyRegular, WeatherMoonRegular } from "@fluentui/react-icons";
 
 export function Header() {
   const location = useLocation();
@@ -56,7 +56,9 @@ export function Header() {
   const getPageTitle = (pathname: string) => {
     if (pathname.startsWith("/dashboard")) return "Dashboard";
     if (pathname.startsWith("/applications")) return "Applicants";
+    if (pathname.startsWith("/members")) return "Members";
     if (pathname.startsWith("/events")) return "Events";
+    if (pathname.startsWith("/settings")) return "Settings";
     if (pathname.startsWith("/design-system")) return "Design System";
     if (pathname.startsWith("/notifications")) return "Notifications";
     return "Administration";
@@ -78,7 +80,11 @@ export function Header() {
           aria-label="Toggle theme"
           className="h-9 w-9 shrink-0 text-muted-foreground hover:text-foreground"
         >
-          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {isDark ? (
+            <WeatherSunnyRegular className="w-5 h-5" />
+          ) : (
+            <WeatherMoonRegular className="w-5 h-5" />
+          )}
         </Button>
       </div>
     </header>

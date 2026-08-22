@@ -1,14 +1,48 @@
 import * as React from "react";
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, isRedirect } from "@tanstack/react-router";
 import { getApiBaseURL } from "@/utils/env";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { AdminLayout } from "@/components/shared/admin-layout";
+import { useAuthStore } from "@/store/useAuthStore";
+import type { UserProfile } from "@/features/auth/types";
 
 export const Route = createFileRoute("/_admin")({
   beforeLoad: async ({ location }) => {
-    const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
-    if (!res.ok) throw redirect({ to: "/login", search: { redirect: location.href } });
+    try {
+      const res = await fetch(`${getApiBaseURL()}/users/me`, { credentials: "include" });
+      if (!res.ok) {
+        useAuthStore.getState().clearUser();
+        throw redirect({ to: "/login", search: { redirect: location.href } });
+      }
+      const json = await res.json();
+      const raw = json.data;
+      const name = raw.name || `${raw.firstName || ""} ${raw.lastName || ""}`.trim() || "Admin";
+      const userProfile: UserProfile = {
+        id: raw.id,
+        email: raw.email,
+        name,
+        firstName: raw.firstName,
+        lastName: raw.lastName,
+        studentId: raw.studentId,
+        role: raw.role,
+        avatarFallback: name
+          .split(" ")
+          .map((n: string) => n[0])
+          .join("")
+          .toUpperCase()
+          .substring(0, 2),
+        image: raw.image,
+        emailVerified: raw.emailVerified,
+      };
+
+      useAuthStore.getState().setUser(userProfile);
+      return { currentUser: userProfile };
+    } catch (e) {
+      if (isRedirect(e) || (e instanceof Error && e.message.includes("Redirect"))) throw e;
+      useAuthStore.getState().clearUser();
+      throw redirect({ to: "/login", search: { redirect: location.href } });
+    }
   },
   component: AdminRoute,
 });

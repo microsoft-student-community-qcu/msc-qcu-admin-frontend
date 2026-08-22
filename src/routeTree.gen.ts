@@ -15,6 +15,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
 import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as AdminSettingsRouteImport } from './routes/_admin.settings'
 import { Route as AdminNotificationsRouteImport } from './routes/_admin.notifications'
 import { Route as AdminMembersRouteImport } from './routes/_admin.members'
 import { Route as AdminDashboardRouteImport } from './routes/_admin.dashboard'
@@ -49,6 +50,11 @@ const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   id: '/auth/reset-password',
   path: '/auth/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   id: '/notifications',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AdminDashboardRoute
   '/members': typeof AdminMembersRoute
   '/notifications': typeof AdminNotificationsRoute
+  '/settings': typeof AdminSettingsRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/events/list': typeof AdminEventsListRoute
 }
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AdminDashboardRoute
   '/members': typeof AdminMembersRoute
   '/notifications': typeof AdminNotificationsRoute
+  '/settings': typeof AdminSettingsRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/events/list': typeof AdminEventsListRoute
 }
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/_admin/dashboard': typeof AdminDashboardRoute
   '/_admin/members': typeof AdminMembersRoute
   '/_admin/notifications': typeof AdminNotificationsRoute
+  '/_admin/settings': typeof AdminSettingsRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/_admin/events/list': typeof AdminEventsListRoute
 }
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/members'
     | '/notifications'
+    | '/settings'
     | '/auth/reset-password'
     | '/events/list'
   fileRoutesByTo: FileRoutesByTo
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/members'
     | '/notifications'
+    | '/settings'
     | '/auth/reset-password'
     | '/events/list'
   id:
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/_admin/dashboard'
     | '/_admin/members'
     | '/_admin/notifications'
+    | '/_admin/settings'
     | '/auth/reset-password'
     | '/_admin/events/list'
   fileRoutesById: FileRoutesById
@@ -211,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_admin/settings': {
+      id: '/_admin/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_admin/notifications': {
       id: '/_admin/notifications'
       path: '/notifications'
@@ -254,6 +273,7 @@ interface AdminRouteChildren {
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminMembersRoute: typeof AdminMembersRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminEventsListRoute: typeof AdminEventsListRoute
 }
 
@@ -262,6 +282,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminDashboardRoute: AdminDashboardRoute,
   AdminMembersRoute: AdminMembersRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminEventsListRoute: AdminEventsListRoute,
 }
 

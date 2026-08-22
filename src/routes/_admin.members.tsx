@@ -12,21 +12,20 @@ import {
 import { MemberProfileSheet } from "@/features/hr/members/components/MemberProfileSheet";
 import { formatOffice } from "@/features/hr/shared/utils/formatters";
 import { useFilterStore } from "@/store/useFilterStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { Button } from "@/components/ui/button";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 export const Route = createFileRoute("/_admin/members")({
   beforeLoad: () => {
-    try {
-      const rawUser = sessionStorage.getItem("currentUser");
-      if (rawUser) {
-        const user = JSON.parse(rawUser);
-        if (user.role !== "ADMIN_HR") {
-          throw redirect({ to: "/dashboard" });
-        }
-      }
-    } catch (e) {
-      if (e instanceof Error && e.message.includes("Redirect")) throw e;
+    const role = useAuthStore.getState().user?.role;
+    if (
+      role === "ADMIN_LOGISTICS" ||
+      role === "ADMIN_LOGISTICS_HEAD" ||
+      role === "ADMIN_FINANCE" ||
+      role === "ADMIN_FINANCE_HEAD"
+    ) {
+      throw redirect({ to: "/dashboard" });
     }
   },
   component: MembersRoute,

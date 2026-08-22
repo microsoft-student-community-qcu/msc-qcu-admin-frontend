@@ -1,11 +1,18 @@
-export type UserRole = "ADMIN_HR" | "ADMIN_LOGISTICS" | "APPLICANT" | "MEMBER";
+import { UserRole } from "@/types/roles";
+
+export type { UserRole };
 
 export interface UserProfile {
-  id?: string;
+  id: string;
   email: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
+  studentId?: string;
   role: UserRole;
-  avatarFallback?: string;
+  avatarFallback: string;
+  image?: string | null;
+  emailVerified?: boolean;
 }
 
 export interface SessionInfo {
@@ -25,7 +32,8 @@ export interface SignInResponse {
     role: UserRole;
     firstName?: string;
     lastName?: string;
+    studentId?: string;
   };
   session?: SessionInfo;
-  token?: string; // fallback if session token is root level
+  token?: string;
 }

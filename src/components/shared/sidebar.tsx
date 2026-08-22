@@ -18,8 +18,8 @@ import {
   BoardRegular,
   PeopleRegular,
   CalendarLtrRegular,
-  SignOutRegular,
   PersonRegular,
+  SettingsRegular,
 } from "@fluentui/react-icons";
 import logo from "@/assets/qcu-msc-logo.png";
 import {
@@ -33,6 +33,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useAuthStore } from "@/store/useAuthStore";
 
 const items = [
   {
@@ -55,47 +56,44 @@ const items = [
     url: "/events/list",
     icon: CalendarLtrRegular,
   },
+  {
+    title: "Settings",
+    url: "/settings",
+    icon: SettingsRegular,
+  },
 ];
-
-export interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  role: "ADMIN_HR" | "ADMIN_LOGISTICS";
-  avatarFallback: string;
-}
 
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = React.useState<UserProfile | null>(() => {
-    const rawUser = sessionStorage.getItem("currentUser");
-    if (rawUser) {
-      try {
-        return JSON.parse(rawUser) as UserProfile;
-      } catch (err) {
-        console.error("Failed to parse user session", err);
-      }
-    }
-    return null;
-  });
+  const currentUser = useAuthStore((state) => state.user);
 
   const handleLogout = () => {
+    useAuthStore.getState().clearUser();
     sessionStorage.clear();
     navigate({ to: "/login" });
   };
 
   const visibleItems = React.useMemo(() => {
-    if (currentUser?.role === "ADMIN_LOGISTICS") {
-      // Logistics can only see Dashboard and Events
-      return items.filter((item) => item.url === "/dashboard" || item.url.startsWith("/events"));
+    if (!currentUser) return [];
+
+    switch (currentUser.role) {
+      case "SUPERADMIN":
+        return items;
+      case "ADMIN_HR":
+        return items.filter(
+          (item) =>
+            item.url === "/dashboard" || item.url === "/applications" || item.url === "/members",
+        );
+      case "ADMIN_LOGISTICS":
+      case "ADMIN_LOGISTICS_HEAD":
+        return items.filter((item) => item.url === "/dashboard" || item.url === "/events/list");
+      case "ADMIN_FINANCE":
+      case "ADMIN_FINANCE_HEAD":
+        return items.filter((item) => item.url === "/dashboard");
+      default:
+        return [];
     }
-    if (currentUser?.role === "ADMIN_HR") {
-      // HR should not see Events
-      return items.filter((item) => !item.url.startsWith("/events"));
-    }
-    // Super Admin can see everything
-    return items;
   }, [currentUser]);
 
   return (
@@ -165,7 +163,10 @@ export function Sidebar() {
               className="p-1 h-12 hover:bg-transparent! active:bg-transparent! cursor-default group-data-[collapsible=icon]:p-0!"
             >
               <Avatar className="h-9 w-9 rounded-none shrink-0 group-data-[collapsible=icon]:h-8 group-data-[collapsible=icon]:w-8">
-                <AvatarImage src="" alt={currentUser?.name || "Admin User"} />
+                <AvatarImage
+                  src={currentUser?.image || ""}
+                  alt={currentUser?.name || "Admin User"}
+                />
                 <AvatarFallback className="bg-primary/10 rounded-none text-primary text-md font-semibold">
                   {currentUser?.avatarFallback || "AU"}
                 </AvatarFallback>

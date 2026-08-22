@@ -4,6 +4,7 @@ import { login } from "../services/authApi";
 
 import { loginSchema } from "../schemas/loginSchema";
 import { SignInResponse, UserProfile, UserRole } from "../types";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
   const navigate = useNavigate();
@@ -50,8 +51,12 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
           `${json.user.firstName || ""} ${json.user.lastName || ""}`.trim() ||
           "Admin";
         const account: UserProfile = {
+          id: json.user.id || "",
           email: json.user.email,
           name: name,
+          firstName: json.user.firstName,
+          lastName: json.user.lastName,
+          studentId: json.user.studentId,
           role: role as UserRole, // Cast to UserRole enum type
           avatarFallback: name
             .split(" ")
@@ -60,6 +65,8 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
             .toUpperCase()
             .substring(0, 2),
         };
+
+        useAuthStore.getState().setUser(account);
 
         setIsTransitioning(true);
 
@@ -75,8 +82,8 @@ export function useLoginForm(cardRef: React.RefObject<HTMLDivElement | null>) {
           navigate({ to: "/dashboard" });
         }, 300);
       }
-    } catch (err: any) {
-      const msg = err.message || "";
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err || "");
       if (
         msg.toLowerCase().includes("failed to fetch") ||
         msg.toLowerCase().includes("load failed") ||
